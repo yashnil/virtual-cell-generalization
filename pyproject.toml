@@ -1,0 +1,57 @@
+[project]
+name = "virtual-cell-generalization"
+version = "0.1.0"
+description = "Zero-shot genetic perturbation prediction across unseen cellular contexts (2026 Arc Virtual Cell Challenge + research project)"
+readme = "README.md"
+authors = [
+    { name = "yashnil", email = "yashnilmohanty@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "anndata>=0.12.19",
+    "h5py>=3.16.0",
+    "ipykernel>=7.3.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.1",
+    "numpy>=2.4.6",
+    "pandas>=2.3.3",
+    "pyyaml>=6.0.3",
+    "scanpy>=1.11.5",
+    "scikit-learn>=1.9.0",
+    "scipy>=1.17.1",
+    "torch>=2.14.0",
+]
+
+[project.scripts]
+virtual-cell-generalization = "virtual_cell_generalization:main"
+
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+# Both packages live under src/; `virtual_cell` is the research package.
+module-name = ["virtual_cell", "virtual_cell_generalization"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    "ignore::FutureWarning",
+    "ignore::DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+extend-exclude = ["data", "outputs", "notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.6",
+]

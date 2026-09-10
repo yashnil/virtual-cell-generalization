@@ -1,0 +1,39 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Biological datasets
+data/raw/*
+data/processed/*
+data/external/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Challenge/model artifacts
+*.h5ad
+*.vcc
+*.ckpt
+*.pt
+*.pth
+
+# Experiments
+wandb/
+outputs/
+runs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+# Exploration outputs
+outputs/
+reports/figures/
