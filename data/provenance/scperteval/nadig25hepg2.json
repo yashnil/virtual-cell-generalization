@@ -1,0 +1,22 @@
+{
+  "dataset": "nadig25hepg2",
+  "cell_line": "HepG2",
+  "filename": "nadig25hepg2_processed_complete.h5ad",
+  "source_url": "https://storage.googleapis.com/scperteval/processed/nadig25hepg2_processed_complete.h5ad",
+  "source_project": "https://github.com/Virtual-Cell-Research-Community/scPertEval",
+  "scperteval_commit": "4685f11927e887745737600170da7a655b727553",
+  "retrieval_date": "2026-09-19",
+  "file_size_bytes": 1236448196,
+  "expected_size_bytes": 1236448196,
+  "size_matches": true,
+  "upstream_md5_base64": "AmgRZbNFVwWbOYlZII8yLw==",
+  "local_md5_base64": "AmgRZbNFVwWbOYlZII8yLw==",
+  "md5_matches": true,
+  "local_sha256": "b25cd23e74b94c0fec44a00b8bdfd21673ad391068df56da9cf81f38bc692221",
+  "publication": "Nadig et al., Nat. Genet. 57(5):1228-1237 (2025)",
+  "publication_doi": "10.1038/s41588-025-02169-3",
+  "accession": "GEO GSE264667",
+  "inherited_preprocessing": "CRISPRi Perturb-seq (10x 3'). Replogle 2022 essential-gene panel for K562/RPE1 (not the genome-wide K562 screen); Nadig 2025 companion screens for HepG2/Jurkat. Guide-to-cell assignment, doublet/quality calls and upstream cell filtering as deposited. The >=30 cells-per-perturbation floor is inherited from upstream. Gene detection differs per dataset.",
+  "scperteval_preprocessing": "1) Label cleaning: one perturbation label per cell, all non-targeting controls collapsed to the literal label 'control', guide/plasmid suffixes stripped, combinations joined with '+', cells with a missing label dropped. 2) Log-normalisation: scanpy normalize_total(target_sum=1e4) then log1p. 3) Light QC: filter_cells(min_genes=200), filter_genes(min_cells=3). 4) Trim to X + obs['perturbation'] + gene names; sparse float32, gzip. No HVG selection, no scaling, no PCA, no batch correction. Raw counts are NOT retained in the hosted files.",
+  "local_path": "data/raw/scperteval/nadig25hepg2_processed_complete.h5ad"
+}

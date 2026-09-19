@@ -1,0 +1,16 @@
+# Protocol freeze record
+#
+# Written 2026-09-19, BEFORE any scPertEval data was downloaded or any result
+# computed. These SHA-256 digests pin the research specification and the
+# decomposition implementation as they stood at freeze time.
+#
+# Purpose: make any post-hoc alteration of the decomposition protocol detectable.
+# The protocol must NOT be changed in response to results. If a digest below no
+# longer matches, the protocol was edited after freezing and every downstream
+# result must be re-examined.
+#
+# Verify with:  shasum -a 256 -c data/provenance/scperteval/protocol_freeze.txt
+4ed469c2fbae58c6b2d23e59ad2973e90c5949f9e048d56e168c9303e789b991  reports/scperteval_four_context_data_spec.md
+9250b9eb0963edc862b54e34e2b9824ca04c25df91a3750de17895d493509cda  reports/molina_zhang_reproduction_spec.md
+456877e648626a380559a426bfe3388fe3e19cafc655a55ee9f46f3f2ed1a457  src/virtual_cell/decomposition/anova.py
+305f8cd6ec92d611ea05273a149a5fef63592b389ca723ed00265c8d520cb6cd  tests/test_decomposition.py

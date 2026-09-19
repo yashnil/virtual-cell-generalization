@@ -64,7 +64,8 @@ trained. The official Arc 2026 **validation control bundle has been downloaded
 and audited**. An exact Molina & Zhang reproduction is **blocked and closed** —
 their released processed data does not exist publicly — and has been replaced by
 an **independent four-context re-derivation** on standardized public scPertEval
-data, which is **ready but not yet downloaded**.
+data. The canonical v1 decomposition **has now been run**; the gate is not yet
+passed (the preprocessing-sensitivity criteria remain untested).
 
 Implemented:
 
@@ -85,15 +86,22 @@ Implemented:
   decomposition (`delta = mu + alpha + beta + gamma`), faithful to Molina &
   Zhang's reference implementation, with projective template removal and
   split-half noise correction.
+- `virtual_cell.data.scperteval`: the four-context scPertEval bundle — registry
+  with audited sizes/checksums, memory-safe metadata reads, identifier-only
+  intersections, and streaming pseudobulk.
+- `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
+  `scripts/build_four_context_decomposition.py`: download, checksum/provenance,
+  and the canonical decomposition pipeline.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 101 tests — the data assumptions above, 29 pinning invariants of
-  the official Arc bundle (skipped when the git-ignored data are absent), and
-  41 pinning the mathematics of the decomposition.
+- `tests/`: 124 tests — the data assumptions above, 29 pinning invariants of
+  the official Arc bundle, 41 pinning the mathematics of the decomposition, and
+  23 covering the scPertEval bundle and pseudobulk (data-gated tests skip when
+  the git-ignored data are absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -144,6 +152,18 @@ This second track is **not** a reproduction of Molina & Zhang and must never be
 described as one; matching their reported 27.8 / 29.4 / 23.5 / 19.3 is
 explicitly not a gate criterion.
 
+**Canonical v1 result** ([`reports/four_context_decomposition_v1.md`](reports/four_context_decomposition_v1.md)):
+on the frozen 1,264-perturbation x 6,640-gene balanced design, response energy
+splits into template 20.27%, conserved beta 30.07%, interaction gamma 21.05% and
+measurement noise 28.62% (50 split-half resamples, sd < 0.05 pp). The more
+informative number is per-component reproducibility: mu 100%, alpha 99.8%,
+**beta 80.8%, gamma 49.5%** — the interaction is real and substantial but is
+about half measurement noise, and carries 75% of all noise in the decomposition.
+
+Gate status: criteria 1, 3 and 4 pass; criteria 2 and 5 (stability across
+preprocessing choices) are **not yet tested**, so the gate is **not passed** and
+no novel prediction architecture may be built yet.
+
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41
 mathematical tests — exact reconstruction, zero-sum constraints,
@@ -189,6 +209,7 @@ tests/                   pytest suite for data assumptions
 reports/                 literature notes, research log, data audits
 data/raw, data/processed, data/external   git-ignored datasets
 data/provenance/         source, checksums and manifests for downloaded data
+data/splits/             frozen, committed experimental designs
 outputs/                 git-ignored exploration outputs and figures
 ```
 

@@ -1,0 +1,19 @@
+design_version: four_context_v1
+script_version: 1.0.0
+generated: '2026-09-19'
+generation_parameters:
+  n_splits: 50
+  seed: 42
+  genes: all shared genes, no HVG selection
+  normalisation: none applied; X is already scPertEval log1p(CP10K)
+  delta: perturbation_mean - control_mean on the frozen gene set
+artifacts:
+  delta_tensor.npy: d785c2ed7a143659fd0b30649e04542aa28d1c96dc7715a5ae8d94b85e9ab7af
+  control_means.npy: af33d36c66a430ffc24b47b6ddedb1fa8acd7f40885207aea60f003141962587
+  cell_counts.npy: 394a2645eb37c742ff13658c204bf1a45def42955def9f3cbddd4c810876006c
+  split_half_reliability.npy: a4a2121cfbae5f08ee7000a5c4864870cdbaff39a2f096fef86d64527eb373f2
+source_dataset_sha256:
+  replogle22k562: f381278e4deda43a757adcc26e89ca4bb8c2006401938dc82a79e9d222473c14
+  replogle22rpe1: 25cb5bad6cd7abd834baa191ffa4b0b414dbfe3f5c6b927999380d2d4bc3ae3d
+  nadig25hepg2: b25cd23e74b94c0fec44a00b8bdfd21673ad391068df56da9cf81f38bc692221
+  nadig25jurkat: eaad2b2c58ed76d4d3e14c08f0d1602cff3e28445833d4885dd38029ac956ee8

@@ -672,3 +672,148 @@ from the previous entry are unchanged and are what the new track will use.
 `data/provenance/` in the same form as the Arc bundle, freeze the 1,264 × 6,640
 split files, then run the decomposition and the §5 sensitivity battery.
 Still no novel architecture until the gate passes.
+
+---
+
+## 2026-09-19 — Independent four-context decomposition v1 (canonical result)
+
+### What was done
+
+Downloaded the four approved scPertEval datasets and ran the frozen protocol
+end to end. Full report: `reports/four_context_decomposition_v1.md`.
+
+**Protocol preserved first.** Before any download,
+`data/provenance/scperteval/protocol_freeze.txt` pinned SHA-256 digests of both
+spec documents, `virtual_cell/decomposition/anova.py` and
+`tests/test_decomposition.py`. Re-verified after the run: **all four match**, so
+the decomposition protocol was not altered in response to results.
+
+Downloads: all four files at exact audited byte sizes, **all four upstream MD5s
+match** the values recorded before download; local SHA-256 computed. Provenance
+in `data/provenance/scperteval/` (per-dataset JSON + manifest + checksum file).
+scPertEval @ `4685f11927e887745737600170da7a655b727553`, retrieved 2026-09-19.
+
+### [Know] The frozen design reproduces the remote audit exactly
+
+Recomputed locally, independently of the HTTP metadata audit: **1,264 shared
+perturbations, 6,640 shared genes** — identical to the audited expectation.
+Committed to `data/splits/four_context_v1/` with a manifest recording counts,
+ordering rules, source hashes and the explicit statement that intersections use
+identifier presence only.
+
+### [Know] Canonical decomposition, delta tensor (4, 1264, 6640)
+
+All invariants pass before interpretation: reconstruction 4.44e-16, zero-sum
+≤2.6e-12, **SS partition exact (rel err 0.0)**, max cross term 2.53e-17.
+Total response energy 41.4168.
+
+| component | uncorrected | noise-corrected (50 resamples, seed 42) |
+|---|---:|---:|
+| μ | 12.75 % | — |
+| α | 7.54 % | — |
+| template (μ+α) | 20.29 % | **20.27 %** (sd 0.010) |
+| β conserved | 37.22 % | **30.07 %** (sd 0.016) |
+| γ interaction | 42.49 % | **21.05 %** (sd 0.033) |
+| noise | — | **28.62 %** (sd 0.044) |
+
+Resample uncertainty is negligible (<0.12 pp range on every share).
+
+### [Know] Per-component reproducibility is the key result
+
+Cross-half signal ÷ raw SS: **μ 100.0 %, α 99.8 %, β 80.8 %, γ 49.5 %**
+(overall 71.4 %). The template is essentially noise-free, β is largely
+reproducible, and **γ is about half signal and half noise** — which is exactly
+why uncorrected γ (42.5 %) halves to 21.1 %. γ carries 75 % of all measurement
+noise in the decomposition. Skipping the noise correction would roughly double
+the apparent interaction.
+
+- **β is materially non-zero**: 30.07 % of energy, 80.8 % reproducible.
+- **γ is materially non-zero**: 21.05 %, comparable to the template, with median
+  ‖γ_{c,p}‖ (3.3–4.3) of the same order as median ‖β_p‖ (3.02).
+- **γ is reproducible, but only about half of it is.** Real and substantial, yet
+  the noisiest component and untrustworthy per-(context, perturbation) without
+  accounting for depth.
+
+### [Know] Simpson's paradox in the reliability-vs-depth relationship
+
+Marginal Spearman(cells, reliability) is only **0.110**, which initially looked
+like a failure of gate criterion 4. It is Simpson's paradox: ‖δ‖ correlates with
+reliability at 0.756 but **negatively with cell count at −0.492**, because
+`E‖δ̂‖² = ‖δ‖² + noise/n` inflates measured effect magnitude at low depth.
+Stratified by effect-size quintile, Spearman(cells, reliability) is **+0.48 to
++0.92 in every stratum** and median reliability rises monotonically across
+cell-count quintiles within each. **Criterion 4 is met once effect size is
+controlled for.** Worth remembering: raw ‖δ‖ is depth-biased upward, so any
+future filtering or ranking on effect magnitude must not use it naively.
+
+### [Know] Other findings
+
+- **Correction to our own spec:** §1.4 predicted `expm1(X)` row sums slightly
+  below 1e4 (gene filtering after normalisation). They are **exactly 10000.0**
+  in all four datasets, so filtering preceded normalisation. Harmless direction;
+  protocol unaffected.
+- Reliability is **strongly bimodal** (mode near 0, second near 0.75) — expected
+  in an essential-gene screen where many perturbations are near-null. Overall
+  median 0.313; only 25.7 % (K562) to 57.1 % (RPE1) exceed r = 0.5.
+- **RPE1 is cleanest** (median reliability 0.570) yet has the **largest** median
+  ‖γ‖ (4.26) — higher reliability with larger γ argues its interaction is
+  genuinely biological.
+- **HepG2 is thinnest** (median 57 cells/pert) and contributes disproportionate
+  noise, as the spec predicted.
+- **Transferability is narrowly distributed**: β fraction median 0.412, only
+  21.4 % β-dominated (>0.5), 8.5 % below 0.3. Most perturbations mix conserved
+  and context-specific response rather than being cleanly one or the other.
+
+### [Don't compare] Molina & Zhang
+
+Their template 27.8 / β 29.4 / γ 23.5 / noise 19.3 % is recorded in the report
+**once, as contextual reference only**. Different cell set, different
+undocumented 2,000-HVG response space, different filtering. Our β (30.1) and γ
+(21.1) landing nearby is interesting but is **not** reproduction, and the
+differences are **not** evidence of a bug in either analysis. The naming rule
+holds: this is the *independent four-context decomposition*.
+
+### Performance
+
+Runtime **9.4 min** end to end (pseudobulk ~105 s for all four contexts;
+split-half ~7 min). Peak RSS **21.2 GB** of 68.7 GB — dominated by the 13.4 GB
+disk-backed half-mean memmap's page cache, deleted after use. No full matrix was
+ever densified and only one context's cell matrix was resident at a time.
+
+### Gate status — NOT yet passed
+
+| # | criterion | status |
+|---|---|---|
+| 1 | mathematics passes all invariants | **PASS** |
+| 2 | stable across preprocessing choices | **NOT TESTED** (v1 scope) |
+| 3 | β and γ quantified | **PASS** |
+| 4 | split-half separates signal from noise | **PASS** (monotone within effect strata) |
+| 5 | no pathological preprocessing dependence | **NOT TESTED** |
+
+Criteria 2 and 5 need the sensitivity battery, deliberately out of v1 scope.
+**No novel prediction architecture until the gate passes.**
+
+### Predeclared for the sensitivity stage (recorded, not run)
+
+A secondary check must **independently split control cells too**. The primary
+scheme reuses one full-context control mean in both halves, inducing correlated
+error that can bias the noise estimate downward. Predeclared before the run;
+deliberately not executed, so the primary result stands unmodified.
+
+### Commands run
+
+```
+./scripts/download_scperteval.sh                       # 4/4 OK, exact byte sizes
+uv run python scripts/scperteval_provenance.py         # 4/4 MD5 OK
+uv run python scripts/build_four_context_decomposition.py   # 9.4 min, exit 0
+uv run pytest -v                                       # 124 passed
+uv run ruff check . && uv run ruff format --check .
+uv build
+```
+
+### Next step
+
+Stop and review the canonical result before anything else. Then the sensitivity
+battery for criteria 2 and 5 (min-cells 30/50/100, gene space, response scaling,
+3-context subsets, 50 vs 200 resamples, seeds, and the control-split secondary
+scheme), with the tolerance declared in advance.

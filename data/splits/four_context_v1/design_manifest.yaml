@@ -1,0 +1,37 @@
+design_version: four_context_v1
+generated: '2026-09-19'
+generation_script: scripts/build_four_context_decomposition.py
+script_version: 1.0.0
+counts:
+  n_contexts: 4
+  n_shared_perturbations: 1264
+  n_shared_genes: 6640
+contexts:
+- replogle22k562
+- replogle22rpe1
+- nadig25hepg2
+- nadig25jurkat
+cell_lines:
+  replogle22k562: K562
+  replogle22rpe1: RPE1
+  nadig25hepg2: HepG2
+  nadig25jurkat: Jurkat
+ordering_rules:
+  contexts: frozen declaration order in virtual_cell.data.scperteval.CONTEXTS
+  perturbations: sorted() ascending over the four-way intersection of obs labels
+  genes: sorted() ascending over the four-way intersection of var_names
+selection_rule: 'Intersections depend ONLY on identifier presence (obs[''perturbation'']
+  categories and var_names). No expression value is consulted. There is no expression-dependent
+  feature selection: no HVG, no variance filter, no outcome-dependent filtering.'
+control_label: control
+perturbation_key: perturbation
+source_dataset_sha256:
+  replogle22k562: f381278e4deda43a757adcc26e89ca4bb8c2006401938dc82a79e9d222473c14
+  replogle22rpe1: 25cb5bad6cd7abd834baa191ffa4b0b414dbfe3f5c6b927999380d2d4bc3ae3d
+  nadig25hepg2: b25cd23e74b94c0fec44a00b8bdfd21673ad391068df56da9cf81f38bc692221
+  nadig25jurkat: eaad2b2c58ed76d4d3e14c08f0d1602cff3e28445833d4885dd38029ac956ee8
+scperteval_commit: 4685f11927e887745737600170da7a655b727553
+file_sha256:
+  contexts.txt: ff44c676310edca95c9005f596c7770b657d00814befd2b236045bf3c51436ae
+  shared_perturbations.txt: f52b70382761030ff616d43441da4453c997ead975da06cd5a8e03815e26dc1e
+  shared_genes.txt: 4a1a9ed9c1d422bb992600fe53b7073fd030314172c36116cc1900e1d4be4b0f
