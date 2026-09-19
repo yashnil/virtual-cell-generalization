@@ -817,3 +817,138 @@ Stop and review the canonical result before anything else. Then the sensitivity
 battery for criteria 2 and 5 (min-cells 30/50/100, gene space, response scaling,
 3-context subsets, 50 vs 200 resamples, seeds, and the control-split secondary
 scheme), with the tolerance declared in advance.
+
+---
+
+## 2026-09-19 (later) — Predeclared robustness battery; independent gate PASSES
+
+### What was done
+
+Froze canonical v1 (`data/provenance/scperteval/canonical_v1_freeze.txt`, 12
+digests covering the report, frozen design, derived arrays, summary and the two
+code files) **before** running the battery, then ran variants A–E. Full report:
+`reports/four_context_decomposition_sensitivity.md`. Canonical v1 was not
+modified; both freezes re-verify (12/12 and 4/4) after the run.
+
+Battery code lives in a **separate** module (`virtual_cell.analysis.robustness`)
+precisely because `scperteval.py` is frozen. At canonical settings the new,
+independent code path reproduces canonical v1 to 0.01 pp — two implementations
+agreeing is itself a useful check.
+
+Runtime 57.8 min, peak RSS 23.2 GB of 68.7 GB.
+
+### [Know] All three canonical conclusions survived every variant
+
+Across all 21 variant x feature-space combinations:
+
+| quantity | min | max |
+|---|---:|---:|
+| beta share | **27.98 %** | 30.79 % |
+| gamma share (corrected) | **20.55 %** | 22.80 % |
+| gamma share (uncorrected) | 38.51 % | 45.05 % |
+| beta reproducibility | 77.4 % | 85.0 % |
+| gamma reproducibility | 45.6 % | 57.7 % |
+
+Invariants everywhere: reconstruction <= 4.44e-16, SS partition <= 5.15e-16,
+zero-sum <= 1.07e-13. Uncorrected gamma is roughly **double** corrected gamma in
+every single variant.
+
+### [Know] A — control-estimation error can only touch the template
+
+Independently splitting the control cells changed template by **-0.246 pp** and
+noise by **+0.246 pp**, and changed **beta and gamma by exactly 0.000 pp**.
+Reproducibility: mu -0.48 pp, alpha **-2.46 pp**, beta and gamma **0.000 pp**.
+
+This is algebraically necessary, and worth remembering: the control profile
+enters `delta[c,p] = pert_mean[c,p] - ctrl[c]` as a term depending on context but
+**not** perturbation. In `beta_p = mean_c delta - mu` the two `mean_c ctrl` terms
+cancel; in `gamma = delta - mu - alpha_c - beta_p` the `-ctrl[c]` in delta
+cancels against the one inside `alpha_c`. A per-context constant lives entirely
+in the mu+alpha subspace, orthogonal to beta and gamma.
+
+**So reusing the control mean in the canonical scheme could not have inflated
+beta or gamma.** The concern was real for the template and provably void for the
+two components the science rests on.
+
+### [Know] B — depth causally improves reliability; the v1 paradox is resolved
+
+Same **643 fixed (context, perturbation) pairs** (all with >=200 cells)
+re-estimated at n = 15/30/50/100 cells per half, 25 repeats each. Nothing
+conditions on observed ||delta||.
+
+| n | median reliability | 95 % CI |
+|---:|---:|---|
+| 15 | 0.0966 | [0.081, 0.111] |
+| 30 | 0.1762 | [0.149, 0.205] |
+| 50 | 0.2626 | [0.226, 0.291] |
+| 100 | **0.4188** | [0.373, 0.455] |
+
+Adjacent CIs do not overlap. Within-pair: 15->100 median +0.3010, **99.53 %
+improve**; 90.8 % (584/643) increase at every step; all four contexts improve
+(HepG2 +0.370 with 100 % improving). Within-repeat sd falls monotonically
+(0.037 -> 0.018). The weak marginal correlation in v1 was indeed the
+depth-magnitude confound; this design removes it rather than conditioning on the
+biased norm.
+
+### [Know] C — feature space
+
+Control-derived global HVG rule (per-context variance over **control cells
+only**, averaged across contexts, ranked descending; one ranking for all four
+contexts; no perturbation response consulted).
+
+| genes | template | beta | gamma | noise | beta repro | gamma repro |
+|---:|---:|---:|---:|---:|---:|---:|
+| 6,640 | 20.27 % | 30.07 % | 21.04 % | 28.62 % | 80.8 % | 49.5 % |
+| 4,000 | 22.38 % | 29.69 % | 21.79 % | 26.13 % | 82.0 % | 52.7 % |
+| 2,000 | 25.25 % | 30.79 % | 22.22 % | 21.74 % | 85.0 % | 57.7 % |
+
+beta moves 1.1 pp and gamma 1.2 pp across a 3.3x change in feature-space size.
+
+### [Know] D — aggregation order
+
+`log(mean(CP10K))` is the noisier estimator: on all 6,640 genes it moves 2.1 pp
+of beta and 0.5 pp of gamma into noise (beta 27.98 %, gamma 20.55 %, noise
+32.39 %). Direction is what Jensen predicts (linear-scale averaging gives
+high-count cells more leverage). The gap narrows to 0.7 pp of beta at 2,000 HVGs.
+Both conclusions survive under either order.
+
+### [Know] E — seed stability
+
+Five seeds, all 6,640 genes: ranges of **0.0104 / 0.0072 / 0.0057 / 0.0199 pp**
+for template / beta / gamma / noise. Seed choice is irrelevant.
+
+### Gate: ALL SIX CRITERIA PASS
+
+Invariants valid; beta non-degenerate (never < 27.98 %); gamma non-degenerate
+after correction (never < 20.55 %); conclusions independent of any single
+preprocessing choice; controlled subsampling confirms depth improves reliability;
+no variant reverses the interpretation. **The independent four-context
+decomposition gate is met.** It does not become a Molina & Zhang reproduction.
+
+### [Don't understand / constraints for what comes next]
+
+1. **Absolute per-perturbation reliability is low.** Even at n=100 median r is
+   0.42; at observed median depth most perturbations are well below. Aggregate
+   shares are stable to ~0.01 pp, but an individual (context, perturbation)
+   response is often poorly determined. Future per-perturbation modelling must
+   carry a reliability weight or filter.
+2. **gamma's ~50 % reproducibility is the binding ceiling on any gamma
+   predictor.** Evaluated against raw gamma, achievable correlation is bounded
+   well below 1 regardless of model quality. Evaluate against the
+   noise-corrected/reliable portion, or report the ceiling alongside.
+3. HepG2 stays the weak context (only 43 pairs with >=200 cells).
+4. **||delta|| is depth-biased upward** — never use it as an effect-size filter
+   or ranking key without a depth correction.
+
+### Commands run
+
+```
+uv run python scripts/run_four_context_sensitivity.py     # 57.8 min, exit 0
+uv run python scripts/plot_four_context_sensitivity.py
+uv run pytest -v ; uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+### Next step
+
+Stop for review. No predictive model was built — no Ridge, MLP, gamma predictor,
+D predictor, transferability classifier or generative model.

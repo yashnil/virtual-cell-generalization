@@ -89,19 +89,23 @@ Implemented:
 - `virtual_cell.data.scperteval`: the four-context scPertEval bundle — registry
   with audited sizes/checksums, memory-safe metadata reads, identifier-only
   intersections, and streaming pseudobulk.
+- `virtual_cell.analysis.robustness`: sensitivity variants — control-split
+  schemes, aggregation orders, control-derived HVG ranking, controlled-depth
+  reliability.
 - `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
-  `scripts/build_four_context_decomposition.py`: download, checksum/provenance,
-  and the canonical decomposition pipeline.
+  `scripts/build_four_context_decomposition.py`,
+  `scripts/run_four_context_sensitivity.py`,
+  `scripts/plot_four_context_sensitivity.py`.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 124 tests — the data assumptions above, 29 pinning invariants of
-  the official Arc bundle, 41 pinning the mathematics of the decomposition, and
-  23 covering the scPertEval bundle and pseudobulk (data-gated tests skip when
-  the git-ignored data are absent).
+- `tests/`: 144 tests — the data assumptions above, 29 pinning invariants of
+  the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
+  covering the scPertEval bundle and pseudobulk, and 20 pinning the robustness
+  variants (data-gated tests skip when the git-ignored data are absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -160,9 +164,20 @@ informative number is per-component reproducibility: mu 100%, alpha 99.8%,
 **beta 80.8%, gamma 49.5%** — the interaction is real and substantial but is
 about half measurement noise, and carries 75% of all noise in the decomposition.
 
-Gate status: criteria 1, 3 and 4 pass; criteria 2 and 5 (stability across
-preprocessing choices) are **not yet tested**, so the gate is **not passed** and
-no novel prediction architecture may be built yet.
+**Robustness battery** ([`reports/four_context_decomposition_sensitivity.md`](reports/four_context_decomposition_sensitivity.md)):
+across 21 variant x feature-space combinations — independent control split, three
+feature spaces, both aggregation orders, five seeds — beta stays in 27.98-30.79%
+and noise-corrected gamma in 20.55-22.80%, while uncorrected gamma (38.5-45.1%)
+is roughly double corrected gamma everywhere. Independently splitting the control
+cells changes beta and gamma by *exactly* 0.000 pp, moving 0.25 pp from template
+into noise — control-estimation error is confined to the mu+alpha subspace by
+construction. A controlled experiment on 643 fixed (context, perturbation) pairs
+re-estimated at 15/30/50/100 cells shows median reliability rising 0.097 -> 0.419
+with non-overlapping CIs and 99.5% of pairs improving.
+
+**Gate status: all six criteria pass — the independent four-context
+decomposition gate is met.** It remains an independent re-derivation, not a
+Molina & Zhang reproduction. No predictive model has been built.
 
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41
