@@ -57,10 +57,11 @@ perturbation-specific conserved-effect model is not that baseline and can
 score above 0. Sources are cited in
 `reports/literature_notes.md`.
 
-## Current status (as of 2026-09-06)
+## Current status (as of 2026-09-18)
 
-Phase 1 (understand the problem and set up infrastructure). No models have
-been trained and no Arc data have been downloaded.
+Phase 1 (understand the problem and set up infrastructure). No models have been
+trained. The official Arc 2026 **validation control bundle has been downloaded
+and audited**; no public perturbation datasets have been downloaded yet.
 
 Implemented:
 
@@ -69,19 +70,53 @@ Implemented:
   exactly one context label per file, exact label matching).
 - `virtual_cell.data.summary`: per-context statistics (cells, genes, library
   size mean/median/min/max, sparsity, genes detected per cell).
+- `virtual_cell.data.arc2026`: the official Arc 2026 control bundle as a module
+  — manifest/`gene_names.csv`/`pert_counts.csv` loading, memory-safe streaming
+  over the CSR count matrices, a single-pass per-context audit, cross-context
+  invariant checks, panel composition, and checksum helpers.
 - `virtual_cell.data.synthetic`: deterministic synthetic control contexts for
   pipeline development (Poisson noise, no biology).
 - `virtual_cell.preprocessing.pseudobulk`: library-size normalisation, mean
   expression profiles, shared-gene alignment, cross-context basal comparison.
+- `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
+  official controls; writes tables and figures to
+  `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 31 tests covering the data assumptions above.
+- `tests/`: 60 tests covering the data assumptions above, 29 of them pinning
+  invariants of the official bundle (skipped when the git-ignored data are
+  absent).
 
-Not yet implemented: real data download, gene intersection across public
-datasets, differential expression, leave-one-context-out splits, baselines,
-decomposition, models, and the `.vcc` submission pipeline. See the research
-log for the ordered next steps.
+### Official validation controls, audited 2026-09-18
+
+All 44 invariants passed. Full report:
+[`reports/arc2026_controls_audit.md`](reports/arc2026_controls_audit.md).
+
+| | A | B | C |
+|---|---|---|---|
+| shape (cells x genes) | 18,400 x 18,533 | 18,400 x 18,533 | 18,400 x 18,533 |
+| sparsity | 0.678 | 0.702 | 0.683 |
+| library size median | 20,109 | 19,946 | 20,034 |
+| genes detected median | 6,147 | 5,756 | 6,006 |
+
+Control cells only (`target_gene == 'non-targeting'`), 46 shared non-targeting
+guides x 400 cells per context, identical gene order across contexts matching
+`gene_names.csv` exactly, raw integer counts stored as float32 CSR. Basal
+pseudobulk Pearson: A-B 0.688, A-C 0.602, B-C 0.732 — the three contexts are
+far apart at baseline and separate completely under PCA.
+
+Two findings that constrain later work: the 18,533-gene panel excludes all
+ribosomal protein genes and mitochondrial rRNA, so absolute expression is not
+comparable to unfiltered public data; and context B has a low-depth tail
+(2.5% of cells under 2,000 UMIs) that A and C do not, so any per-cell QC
+threshold will hit B alone.
+
+Not yet implemented: public perturbation dataset download (Replogle 2022,
+Nadig 2025), gene intersection across datasets, differential expression,
+leave-one-context-out splits, baselines, the response decomposition, models,
+and the `.vcc` submission pipeline. See the research log for the ordered next
+steps.
 
 ## Setup
 
@@ -89,6 +124,7 @@ Requires Python 3.11 and [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync                                   # create .venv and install everything
+uv run python scripts/audit_arc2026_controls.py    # needs data/raw/arc2026/controls/
 uv run python scripts/make_synthetic_controls.py
 uv run python scripts/explore_synthetic_contexts.py
 uv run pytest
@@ -111,8 +147,9 @@ src/virtual_cell/        research package
   preprocessing/         normalisation and pseudobulk
   models/ evaluation/ visualization/   placeholders for later phases
 tests/                   pytest suite for data assumptions
-reports/                 literature notes and research log
+reports/                 literature notes, research log, data audits
 data/raw, data/processed, data/external   git-ignored datasets
+data/provenance/         source, checksums and manifests for downloaded data
 outputs/                 git-ignored exploration outputs and figures
 ```
 

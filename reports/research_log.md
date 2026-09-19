@@ -261,3 +261,142 @@ Ridge/MLP baselines and score them with cell-eval2 on a leave-one-line-out
 split, so we know what a beta-only Arc submission is worth before any
 interaction model is built. Do not implement the interaction model until this
 milestone is complete.
+
+---
+
+## 2026-09-18 — Read-only audit of the official Arc 2026 validation controls
+
+### Context
+
+The official Arc Virtual Cell Challenge 2026 validation control bundle was
+downloaded to `data/raw/arc2026/controls/` (six files, provenance and SHA-256
+digests under `data/provenance/`). This entry covers a strictly read-only audit
+of that bundle. No model was trained, no raw file was modified, and A/B/C were
+not used as perturbation-response training data. Full report:
+`reports/arc2026_controls_audit.md`.
+
+### What was implemented
+
+- `src/virtual_cell/data/arc2026.py` — the official bundle as a module: layout
+  constants and `bundle_paths` / `missing_bundle_files`; `Arc2026Manifest` with
+  `load_manifest`, `load_gene_names`, `load_pert_counts`; memory-safe HDF5
+  access (`stream_row_chunks`, `read_obs`, `read_var_names`, `read_shape`,
+  `x_encoding`, `x_dtype`) so a 1e8-entry CSR matrix is never densified;
+  `audit_context_file` producing a `ContextAudit` in one streaming pass;
+  `audit_summary_table`, `depth_quantile_table`, `basal_mean_table`,
+  `top_basal_difference_genes`, `cell_id_overlaps`, `panel_composition`,
+  `subsample_context`; `check_cross_context_invariants` returning one
+  `InvariantCheck` per invariant so all failures are reported at once;
+  `same_labels`, `sha256sum`, `parse_checksum_file`.
+- `scripts/audit_arc2026_controls.py` — reproducible audit entry point. Prints
+  the full report, writes tables and four figures to
+  `outputs/arc2026_controls_audit/` (git-ignored), and exits non-zero naming
+  the failures if any invariant fails. Runs in about 25 s.
+- `tests/test_arc2026_controls.py` — 29 tests, skipped when the git-ignored
+  bundle is absent. Suite is now 60 tests (was 31).
+
+### Result: all 44 invariants passed
+
+A/B/C are each 18,400 cells x 18,533 genes, CSR float32, no explicit stored
+zeros, counts finite, non-negative and integer-valued (max 977 / 1,753 /
+2,462). Identical gene sets in identical order, matching `gene_names.csv`
+element-for-element. Exactly one context label per file, control cells only
+(`target_gene == 'non-targeting'`), 46 shared non-targeting guides x 400 cells,
+unique and cross-context-disjoint cell ids. The manifest is self-consistent:
+`46 x 400 = 18,400 = control_cells` and
+`control_cells + 300 x 400 = 138,400 = ground_truth_cells`, so the hidden
+ground truth includes the control cells.
+
+Median depth is comparable across contexts (about 20,000 UMIs, 5,500-6,100
+genes detected per cell).
+
+| | A | B | C |
+|---|---|---|---|
+| sparsity | 0.6777 | 0.7022 | 0.6827 |
+| library size median / mean | 20,109 / 21,134 | 19,946 / 19,990 | 20,034 / 21,157 |
+| library size min | 3,275 | 710 | 3,447 |
+| genes detected median | 6,147 | 5,756 | 6,006 |
+
+Basal pseudobulk Pearson: A-B 0.688, A-C 0.602, B-C 0.732 (Spearman 0.788 /
+0.758 / 0.851). PCA of control cells separates the three contexts completely
+(PC1 26.8%, PC2 15.3%).
+
+### Discrepancies and risks found
+
+- **One invariant failed on the first run and was a false alarm.**
+  `var_names == gene_names.csv` reported FAIL because the `.h5ad` `var` index
+  is pandas `string` dtype while the CSV loads as `object`, and
+  `Index.equals` is False across those dtypes. All 18,533 labels were verified
+  identical in identical order. Fixed with `arc2026.same_labels`, which
+  compares values and order only and still rejects reordering, case changes and
+  whitespace (tested).
+- **[Know] The 18,533-gene panel excludes the highest-abundance transcript
+  families**: zero `RPL*`/`RPS*`, zero `MRPL*`/`MRPS*`, zero `MT-RNR*`; GAPDH,
+  EEF1A1, PTMA, MALAT1, NEAT1, LDHA, XIST also absent; the 12 protein-coding
+  `MT-` genes are kept. The profile is therefore much flatter than raw 10x
+  (top 10 genes hold 3.0-4.7% of the library) and the mitochondrial fraction is
+  0.30-0.60%. **Absolute expression is not comparable to unfiltered public
+  data**, and the Replogle/Nadig intersection will lose the ribosomal block
+  entirely. Pinned by a test so a changed panel fails loudly.
+- **[Know] The counts are real scRNA-seq, not a simulation.** Checked because
+  the flat profile above is unusual. Per-gene variance/mean has median
+  1.45-1.63 with a tail to 208-377 (overdispersed, not Poisson). The 12 `MT-`
+  genes have mean pairwise r = 0.42 across cells versus 0.01 for random
+  expressed genes; the HIST1 cluster is likewise elevated. The 300 CRISPRi
+  targets are expressed in the controls (median mean-count 0.86-1.23 versus
+  0.13-0.20 for a typical panel gene, none zero). Gene symbols carry real
+  biology, so gene-keyed priors (DepMap, GO, networks) can be joined on them.
+- **[Know] Context B has a low-depth tail that A and C do not**: 458 cells
+  (2.49%) below 2,000 UMIs and 178 below 1,000, against zero in A and C. Any
+  per-cell QC threshold will remove cells from B and almost none from A or C.
+  Choose one threshold, apply it identically, report per-context cell loss.
+- **[Don't understand] ACTB is near-absent in A and B** (0.88 and 1.28 mean
+  counts per cell) but the top gene in C (120). Not explained by panel
+  filtering, since ACTB is in the panel. Recorded as an open observation; no
+  identity inference was attempted.
+- **[Know] Cells-per-perturbation ambiguity is resolved for the validation
+  phase.** `pert_counts.csv` in this release has only a `target_gene` column
+  and no count column; the budget is `cells_per_pert = 400` from the manifest,
+  uniform across all 300 targets. The earlier conflict between the cell-eval2
+  brief ("unconstrained") and the vcc CLI ("exactly 400") resolves in favour of
+  400 for this bundle. Re-check for the final D/E/F phase.
+- **[Know] The synthetic-vs-Arc label collision is now live.** Synthetic
+  contexts are also called A/B/C. They are in `data/raw/synthetic/` and the Arc
+  bundle in `data/raw/arc2026/controls/`, and the Arc loaders are a separate
+  module, but renaming the synthetic labels (`SYN_A`) is still worth doing.
+- **[Suspect, weakened] Nearest-context transfer has little to lean on.** Basal
+  Pearson of 0.60-0.73 between validation contexts is below the 0.82-0.85 of
+  our own synthetic data and below what is typical between human cell lines,
+  and the PCA separation is complete. The contexts are far apart at baseline,
+  which raises rather than lowers the difficulty of zero-shot transfer.
+
+### Commands run
+
+```
+shasum -a 256 -c data/provenance/arc2026_controls_sha256.txt   # all OK, before and after
+uv run python scripts/audit_arc2026_controls.py                # 44/44 invariants passed
+uv run pytest -v                                               # 60 passed
+uv run ruff check .                                            # All checks passed
+uv run ruff format --check .                                   # 19 files already formatted
+uv build                                                       # wheel contains both packages
+```
+
+### Next steps (ordered, unchanged in intent)
+
+The reproduction gate stands. **No interaction model or other novel
+architecture until it is complete.**
+
+1. **Next action:** acquire the four public CRISPRi cell lines used by Molina
+   and Zhang — Replogle 2022 (K562, RPE1) and Nadig 2025 (HepG2, Jurkat) —
+   pinning dataset versions and recording provenance and SHA-256 digests the
+   same way the Arc bundle was, then build the gene intersection against the
+   Arc 18,533-gene panel and record how much is lost (expect the ribosomal
+   block to drop out entirely).
+2. Per-context, per-perturbation pseudobulk on those four lines; frozen
+   leave-one-context-out split files under `data/splits/`.
+3. Differential expression matching Arc's definition, plus a pseudobulk DE for
+   the research track; the six Arc metrics locally via `cell-eval2`.
+4. Baselines 0 to 5 from `plans.MD`; first leave-one-context-out benchmark table.
+5. Reproduce the Molina/Zhang decomposition with the noise correction and
+   report per-component variance (template / beta / gamma / noise) and the
+   zero-shot ceiling for gamma. This is the Phase 3 gate.
