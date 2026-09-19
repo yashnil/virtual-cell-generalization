@@ -61,7 +61,10 @@ score above 0. Sources are cited in
 
 Phase 1 (understand the problem and set up infrastructure). No models have been
 trained. The official Arc 2026 **validation control bundle has been downloaded
-and audited**; no public perturbation datasets have been downloaded yet.
+and audited**. An exact Molina & Zhang reproduction is **blocked and closed** —
+their released processed data does not exist publicly — and has been replaced by
+an **independent four-context re-derivation** on standardized public scPertEval
+data, which is **ready but not yet downloaded**.
 
 Implemented:
 
@@ -78,15 +81,19 @@ Implemented:
   pipeline development (Poisson noise, no biology).
 - `virtual_cell.preprocessing.pseudobulk`: library-size normalisation, mean
   expression profiles, shared-gene alignment, cross-context basal comparison.
+- `virtual_cell.decomposition.anova`: our own four-component response
+  decomposition (`delta = mu + alpha + beta + gamma`), faithful to Molina &
+  Zhang's reference implementation, with projective template removal and
+  split-half noise correction.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 60 tests covering the data assumptions above, 29 of them pinning
-  invariants of the official bundle (skipped when the git-ignored data are
-  absent).
+- `tests/`: 101 tests — the data assumptions above, 29 pinning invariants of
+  the official Arc bundle (skipped when the git-ignored data are absent), and
+  41 pinning the mathematics of the decomposition.
 
 ### Official validation controls, audited 2026-09-18
 
@@ -111,6 +118,38 @@ ribosomal protein genes and mitochondrial rRNA, so absolute expression is not
 comparable to unfiltered public data; and context B has a low-depth tail
 (2.5% of cells under 2,000 UMIs) that A and C do not, so any per-cell QC
 threshold will hit B alone.
+
+### Response-decomposition gate — two tracks
+
+**Exact Molina & Zhang reproduction: BLOCKED, closed.** Audit of
+[`xinyizhanglab/perturbation-decomposition`](https://github.com/xinyizhanglab/perturbation-decomposition)
+@ `a152147` found that the processed pseudobulk and DepMap embeddings its README
+calls "included" are excluded by its own `.gitignore`, with no releases, tags,
+forks or external deposit, and that the upstream preprocessing which builds its
+response space is absent from the repository entirely. Details and the full
+frozen specification of their method:
+[`reports/molina_zhang_reproduction_spec.md`](reports/molina_zhang_reproduction_spec.md).
+
+**Independent four-context re-derivation: READY.** Standardized public data for
+the same four cell lines is available from
+[scPertEval](https://github.com/Virtual-Cell-Research-Community/scPertEval)
+@ `4685f11` — K562, RPE1, HepG2 and Jurkat as log-normalised AnnData with fully
+documented preprocessing. Audited without downloading (24.2 MB of HDF5 metadata
+read over HTTP range requests): **1,264 perturbations and 6,640 genes shared
+across all four**, 7.549 GB total. Specification, proposed pipeline and gate
+criteria:
+[`reports/scperteval_four_context_data_spec.md`](reports/scperteval_four_context_data_spec.md).
+
+This second track is **not** a reproduction of Molina & Zhang and must never be
+described as one; matching their reported 27.8 / 29.4 / 23.5 / 19.3 is
+explicitly not a gate criterion.
+
+Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
+removal, split-half noise correction) is implemented and verified by 41
+mathematical tests — exact reconstruction, zero-sum constraints,
+balanced-design orthogonality, planted-component recovery, permutation
+invariance, split-half behaviour, frozen sets, malformed-input rejection, and
+verbatim equivalence with the reference algebra.
 
 Not yet implemented: public perturbation dataset download (Replogle 2022,
 Nadig 2025), gene intersection across datasets, differential expression,

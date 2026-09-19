@@ -400,3 +400,275 @@ architecture until it is complete.**
 5. Reproduce the Molina/Zhang decomposition with the noise correction and
    report per-component variance (template / beta / gamma / noise) and the
    zero-shot ceiling for gamma. This is the Phase 3 gate.
+
+---
+
+## 2026-09-18 (later) — Molina & Zhang reproduction gate: Task 1 done, Tasks 2–3 blocked
+
+### Context
+
+Started the mandatory reproduction gate. Audited the authors' official
+repository, implemented our own decomposition, and prepared the raw-data
+acquisition plan. Full frozen specification:
+`reports/molina_zhang_reproduction_spec.md`. Arc A/B/C were not touched.
+
+### Headline: the authors' processed data does not exist publicly
+
+`xinyizhanglab/perturbation-decomposition` @
+`a15214780619736d393f40240e56ba992fd416a3` (retrieved 2026-09-18) is 189 KB of
+source only. Its README claims "Data is included (processed pseudobulk + DepMap
+embeddings, ~90 MB)" and "All predictions are included in `results/` (~150 MB)",
+but `.gitignore` excludes `data/processed/`, `data/raw/`, `*.pkl` and
+`results/`. There are 0 releases, 0 tags, 0 forks, an empty wiki, and the
+organisation has exactly one repository. No Zenodo or figshare deposit was
+found. **There is no reference fixture**, so Task 2's numeric verification and
+all of Task 3 cannot be run as specified.
+
+Compounding this: 34 of ~45 Python files hardcode
+`/mnt/storage01/home/amolina/benchmark_2026`, and `data/prepare_release.py` is
+documented "Run ON THE CLUSTER" and additionally reads a private sibling tree
+`agop-perturbation/morph_pipeline/` that is not public. The DepMap embeddings
+ship from that private pipeline.
+
+### [Know] The authoritative decomposition is in a figure script, not the module
+
+`decomposition/anova.py` — the entry point the README documents — is **not** the
+paper's decomposition. The paper's numbers come from `figures/fig1_f.py`. They
+differ on the denominator (`np.var(D)` vs uncentred `mean ||D[c,p]||²`), on
+whether `mu` is reported at all, on cell-line ordering (sorted vs declaration
+order), and critically `anova.py` has **no noise correction**. Its three
+fractions do not sum to 1. Running the documented command cannot produce
+27.8 / 29.4 / 23.5 / 19.3 even with the data in hand.
+
+Decomposition as actually implemented: plain balanced two-way ANOVA by cell
+means; `template` is `mu + alpha` combined; noise is a **residual** left after
+subtracting four reproducible components estimated by 50 split-half resamples
+(`RandomState(42)`) using **cross-half dot products**, with controls *not* split
+and an odd cell dropped. Template removal for the second bar is **projective**,
+not subtractive.
+
+### [Know] Defects in the released code
+
+- `evaluation/metrics.py::evaluate_predictions` calls `centroid_accuracy` and
+  `median_rank`, neither defined anywhere → `NameError`. This is the README's
+  own Quick Start snippet.
+- `configs/datasets.yaml`: the `nadig_hepg2` block is mis-indented and parses to
+  `None`, leaking 8 keys as siblings. HepG2 is unconfigurable as shipped.
+- `configs/datasets.yaml`: the Replogle `raw_url` (figshare 21999546) points to
+  an unrelated PLoS ONE figure, *"Characteristics of the Greifer and the
+  Axon-Hook"*, and the same wrong ID is given for both K562 and RPE1. Correct
+  record is figshare+ 20029387.
+- `process.py` writes `{cl}_pseudobulk.pkl`; `anova.py` reads `{cl}.pkl`.
+- Min cells per perturbation is 5 in the data scripts but **10** in the figure
+  that produces the paper's numbers.
+
+### [Don't understand] The upstream preprocessing is absent
+
+Both data scripts **consume** `obsm["X_hvg"]`; nothing in the repository creates
+it. Normalisation, log transform, HVG flavour and batch handling are all
+unspecified (`configs` says only `n_hvgs: 2000`). The paper's per-line cell and
+perturbation counts (K562 188,590 cells / 1,383 perts; RPE1 173,737 / 1,499;
+HepG2 96,616 / 1,340; Jurkat 184,470 / 1,537) are also much smaller than the raw
+deposits, so an undocumented filtering step sits in between. A byte-faithful
+raw-data reproduction is therefore not currently possible.
+
+### What was implemented
+
+- `src/virtual_cell/decomposition/anova.py`: our own implementation, faithful to
+  `fig1_f.py`. `build_response_tensor` (shared-perturbation intersection, frozen
+  orders, balance checks), `decompose`, `total_sum_of_squares`,
+  `sums_of_squares`, `uncorrected_fractions`, `project_out_template`,
+  `cross_half_signal`, `split_half_delta_tensors`, `split_half_signal`,
+  `noise_corrected_fractions`, `beta_fraction_per_perturbation`.
+- `tests/test_decomposition.py`: 41 tests. Exact reconstruction; all zero-sum
+  conditions; SS partition and pairwise orthogonality; **planted-component
+  recovery** (components and SS budget planted in synthetic tensors and
+  recovered exactly, establishing correctness without the authors' data);
+  permutation invariance; split-half unbiasedness, monotone noise growth as
+  cells per perturbation fall, and seed reproducibility; frozen perturbation /
+  cell-line / gene sets; rejection of unbalanced, malformed and non-finite
+  input; and **verbatim equivalence with the reference algebra**, by
+  transcribing `fig1_f.py` L78–90, L94–104, L131–144 into the tests and
+  asserting agreement to 1e-12.
+
+Nothing was tuned toward the paper's percentages; those remain unverified.
+
+### Raw data acquisition plan (verified, not started)
+
+| cell line | source | exact file | size |
+|---|---|---|---|
+| K562 | figshare+ 20029387 | `K562_essential_raw_singlecell_01.h5ad` | 10.66 GB |
+| RPE1 | figshare+ 20029387 | `rpe1_raw_singlecell_01.h5ad` | 8.70 GB |
+| HepG2 | GEO GSE264667 | `GSE264667_hepg2_raw_singlecell_01.h5ad` | 5.2 GB |
+| Jurkat | GEO GSE264667 | `GSE264667_jurkat_raw_singlecell_01.h5ad` | 8.7 GB |
+| DepMap 2024Q2 | DepMap portal | `CRISPRGeneEffect.csv` | ~0.1 GB |
+
+Total ≈ 33.4 GB. GEO filenames confirmed against the FTP listing; figshare
+filenames, sizes and stable file endpoints confirmed against the figshare API.
+**Awaiting approval before downloading.**
+
+### Commands run
+
+```
+uv run pytest -v          # 101 passed
+uv run ruff check .       # All checks passed
+uv run ruff format --check .
+uv build                  # wheel contains both packages
+```
+
+### Gate status
+
+**NOT passed.** Task 1 complete, Task 2 implemented and mathematically verified
+but numerically unverified, Task 3 blocked, Task 4 complete and awaiting
+approval. The hard rule stands: no interaction model or other novel architecture
+until the gate passes.
+
+### Next steps (ordered)
+
+1. **Decision required from the user** on how to unblock the reference data.
+   Options: (a) email the corresponding authors for `data/processed/` and
+   `results/`; (b) open a GitHub issue on the repo; (c) proceed to raw-data
+   acquisition (~33.4 GB) and accept that our preprocessing will be *our own*
+   reconstruction, making this an independent re-derivation rather than a
+   byte-faithful reproduction; (d) wait for the peer-reviewed version.
+2. If (c): download the five files above, reconstruct normalisation + 2,000-HVG
+   selection ourselves, document every choice as a deviation, and report the
+   decomposition with sensitivity analysis over the unspecified choices.
+3. Only then compare against 27.8 / 29.4 / 23.5 / 19.3 and judge the gate.
+4. Implement beta-only transfer and beta/gamma-recovery metrics — noting these
+   are **our** constructions, absent from the authors' repository.
+5. Arc alignment stage, strictly after the gate.
+
+---
+
+## 2026-09-18 (later still) — reproduction track closed; independent four-context track opened
+
+### Decision
+
+Per the user: do **not** contact Arc or the paper's authors, and do **not**
+download the ~33.4 GB of raw deposits. The missing artifacts are specific to the
+Molina & Zhang reproducibility repository, not to the Virtual Cell Challenge.
+Use the public **scPertEval** standardized datasets instead.
+
+Gate amended in two tracks:
+
+- **Exact Molina & Zhang reproduction — BLOCKED, now closed as unachievable
+  from public materials.**
+- **Independent four-context re-derivation — READY.**
+
+**Naming rule, binding from here on:** this work is the *independent
+four-context decomposition*. It is never to be called a Molina & Zhang
+reproduction, and its numbers are never to be presented as reproducing theirs.
+Recorded in `reports/scperteval_four_context_data_spec.md` §3 and as an
+amendment (§7) to `reports/molina_zhang_reproduction_spec.md`.
+
+### Source audit
+
+`Virtual-Cell-Research-Community/scPertEval` @
+**`4685f11927e887745737600170da7a655b727553`** (`main`, release v0.2.0,
+2026-09-09), retrieved 2026-09-18, MIT. Data in the public read-only bucket
+`gs://scperteval/processed/`, also plain HTTPS (all four return HTTP 200).
+
+| dataset | cell line | bytes | GB |
+|---|---|---:|---:|
+| `replogle22k562` | K562 | 2,430,512,332 | 2.431 |
+| `replogle22rpe1` | RPE1 | 1,877,364,555 | 1.877 |
+| `nadig25hepg2` | HepG2 | 1,236,448,196 | 1.236 |
+| `nadig25jurkat` | Jurkat | 2,004,474,709 | 2.004 |
+| **total** | | **7,548,799,792** | **7.549** |
+
+### [Know] Contents verified directly, without downloading
+
+Read the remote HDF5 metadata over HTTP range requests — **24.2 MB fetched of
+7,549 MB**, no expression data transferred.
+
+| | K562 | RPE1 | HepG2 | Jurkat |
+|---|---|---|---|---|
+| cells | 308,646 | 240,774 | 133,757 | 258,202 |
+| genes | 8,563 | 8,749 | 9,623 | 8,881 |
+| controls | 10,691 | 11,485 | 4,976 | 12,013 |
+| perturbations | 1,971 | 2,016 | 1,818 | 2,137 |
+| min cells/pert | 30 | 30 | 30 | 30 |
+
+All four: `X` = CSR float32 `log1p(CP10K)`; `obs` has only `perturbation`; `var`
+has only the index; `layers`/`obsm`/`uns`/`varm`/`varp` all empty; gene ids are
+HGNC symbols; control label is the literal `control`; no `+` combinations.
+
+- **[Know] Raw counts are not retained anywhere** — the raw layer was dropped in
+  trimming. Anything needing counts must go back to the original deposits.
+- **[Know] The four datasets do not share a gene space** (8,563–9,623). The
+  four-way intersection is **6,640 genes**; union 11,909. Each dataset loses
+  22–31 % of its genes to the intersection.
+- **[Know] Shared perturbations across all four: 1,264** (union 2,374, pairwise
+  1,511–1,872). 1,072 of the 1,264 target a gene that is itself in the shared
+  response space; 192 do not.
+- **[Know] The ≥30 cells-per-perturbation floor is inherited from upstream**, so
+  every min-cells threshold from 1 to 30 yields the same 1,264 perturbations —
+  M&Z's 5 and 10 are both no-ops here. Raising it costs a lot: 50 → 577,
+  100 → 96.
+- **[Know] scPertEval's own preprocessing is fully specified**, unlike M&Z's:
+  label cleaning → `normalize_total(1e4)` + `log1p` → `filter_cells(min_genes=200)`,
+  `filter_genes(min_cells=3)` → trim. **No HVG selection, no scaling, no PCA,
+  no batch correction.** This is the decisive advantage over the blocked track.
+- **[Know] Corroboration of common ancestry:** scPertEval's measured control
+  counts are *identical* to M&Z's reported controls (10,691 / 11,485 / 4,976 /
+  12,013). Both derive from the same deposits with the same control definition.
+  They diverge downstream — M&Z report 188,590 K562 cells / 1,383 perturbations
+  against 308,646 / 1,971 here — via a filtering step M&Z never document. So our
+  numbers are **not expected to match theirs**, and a mismatch is not evidence
+  of a bug in either.
+- Year correction: the HepG2/Jurkat source is **Nadig et al. 2025**
+  (Nat. Genet. 57:1228–1237, doi 10.1038/s41588-025-02169-3), not "2024" as
+  M&Z's config says.
+
+### Storage preflight
+
+`df -h ~` → 1.8 Ti total, 620 Gi used, **1.2 Ti available**. The 7.549 GB
+download is **0.6 % of free space**. No decompression copy needed. **Safe.**
+
+### Proposed pipeline (full detail in the spec)
+
+Frozen 1,264 × 6,640 balanced design, committed to `data/splits/` before any
+analysis. `ctrl_mean[c]` = mean over that line's `control` cells on the shared
+genes; `delta[c,p]` = perturbation mean − control mean; **no further transform**
+(X is already log1p(CP10K)). All 6,640 shared genes used initially; HVGs belong
+in the sensitivity analysis only, since undocumented HVG selection is precisely
+what made M&Z irreproducible. Decomposition via
+`virtual_cell.decomposition.anova` on the uncentred `mean ||delta||²`
+denominator, reporting `mu` and `alpha` both separately and merged. Split-half:
+disjoint equal halves within each (line, perturbation), both referenced to the
+**full** control mean, 50 resamples, fixed seed; feasible everywhere since the
+smallest perturbation has 30 cells.
+
+Leakage rule recorded now for the later transfer stage: intersections use
+**identity only, never expression**, so freezing them is safe; but any step that
+looks at expression (HVG, PCA, scaling) must be fitted on **source lines only**.
+
+### Gate criteria (do not require 27.8 / 29.4 / 23.5 / 19.3)
+
+1. decomposition mathematics passes all invariants;
+2. shares stable across preprocessing choices, tolerance declared in advance;
+3. beta and gamma quantified with uncertainty and non-degenerate;
+4. split-half separates reproducible signal from noise (share in (0,1),
+   monotone in cells per perturbation, stable across seeds);
+5. no single preprocessing choice flips a qualitative conclusion.
+
+### Commands run
+
+```
+uv run pytest -v          # 101 passed
+uv run ruff check .       # All checks passed
+uv run ruff format --check .
+uv build                  # wheel contains both packages
+```
+
+No new code was written this session; the decomposition module and its 41 tests
+from the previous entry are unchanged and are what the new track will use.
+
+### Next step
+
+**Awaiting download approval.** On approval: fetch the four files (7.549 GB) to
+`data/raw/scperteval/`, verify against the recorded MD5s, write provenance to
+`data/provenance/` in the same form as the Arc bundle, freeze the 1,264 × 6,640
+split files, then run the decomposition and the §5 sensitivity battery.
+Still no novel architecture until the gate passes.
