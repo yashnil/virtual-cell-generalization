@@ -952,3 +952,127 @@ uv run pytest -v ; uv run ruff check . ; uv run ruff format --check . ; uv build
 
 Stop for review. No predictive model was built — no Ridge, MLP, gamma predictor,
 D predictor, transferability classifier or generative model.
+
+---
+
+## 2026-09-19 (later) — Zero-shot recoverability diagnostic v1
+
+Froze all decomposition-phase artifacts first
+(`decomposition_phase_freeze.txt`, 21 digests; re-verified 21/21 after). Full
+report: `reports/zero_shot_recoverability_v1.md`. Runtime 7.4 min, peak RSS
+18.3 GB. **No model was built.**
+
+### [Know] Two exact identities govern source-only transfer
+
+With `A[p] = mean_S delta[c,p]` over the three sources:
+
+1. `delta[c*,p] - A[p] = (4/3)(alpha_{c*} + gamma[c*,p])`; centred over
+   perturbations it is **exactly `(4/3) gamma[c*,p]`**. So "predict the transfer
+   residual" and "predict gamma" are the same problem — and gamma must never be
+   a predictor input.
+2. `A[p]` carries `-gamma[c*,p]/3`, so conserved transfer is **mildly
+   anti-correlated with the held-out interaction by construction**.
+
+Both proved as tests on planted components.
+
+### [Know] Conserved transfer: right direction, wrong magnitude
+
+Median per-perturbation Pearson **0.306** pooled (0.277 K562, 0.357 RPE1, 0.326
+HepG2, 0.283 Jurkat). Basal-weighted combinations are indistinguishable from the
+plain source mean (0.310); **nearest-context is clearly worse (0.239)** —
+averaging beats picking with only three sources.
+
+**But response energy explained is NEGATIVE** (−0.138 pooled; −0.467 K562,
++0.098 RPE1, −0.065 HepG2, −0.184 Jurkat): as a point prediction of raw response
+it is worse than predicting zero. The held-out template `alpha_{c*}` is
+unrecoverable from source responses and the source mean substitutes
+`-alpha_{c*}/3`. **Any model scored on magnitude — Arc's metrics included — must
+fix template and scale, not just direction.**
+
+### [Know] Reliability normalisation, derived and validated
+
+`corr(h1,h2) = rho_half`; a perfect latent predictor reaches `sqrt(rho_half)`,
+**not** `rho_half`; `rho_latent = r_obs / sqrt(rho_half)`;
+`rho_full = 2 rho_half/(1+rho_half)`. Validated on synthetic latent+noise:
+reliability recovers the planted ratio to ±0.02, the ceiling matches `sqrt(rho)`
+and differs from `rho` by >0.05, and disattenuation recovers planted
+correlations of 0.3/0.6/0.9 to ±0.05.
+
+Target reliabilities — K562 rho_half 0.241, RPE1 **0.571**, HepG2 0.226, Jurkat
+0.276. Reliability-normalised conserved transfer: **0.49–0.64**, i.e. about half
+the attainable latent correlation.
+
+### [Know] Gamma is recoverable zero-shot ONLY where a similar partner exists
+
+| held out | r(gamma_true, gamma_hat) | ceiling | frac > 0 |
+|---|---:|---:|---:|
+| K562 | **+0.185** | 0.607 | 85.8 % |
+| Jurkat | **+0.217** | 0.585 | 93.3 % |
+| HepG2 | +0.033 | 0.534 | 59.9 % |
+| RPE1 | +0.002 | 0.743 | 50.8 % |
+
+Explanation: cross-context gamma correlation against the **forced null of
+-1/(C-1) = -0.333** (because `sum_c gamma = 0`) shows exactly one pair above
+null — **K562–Jurkat, excess +0.196**, also the most basally similar pair
+(0.934). Spearman(basal similarity, excess) = +0.714 over 6 pairs, but it rests
+on one point: hypothesis, not finding. K562 and Jurkat each have a
+gamma-correlated partner in their source set; RPE1 and HepG2 do not.
+
+**"gamma exists and is reproducible" != "gamma can be predicted zero-shot".**
+It is context-dependent, and four contexts cannot say more.
+
+### [Know] Source agreement is the actionable transferability feature
+
+Spearman vs conserved-transfer success: **source agreement +0.828 raw, +0.726
+after reliability normalisation** — and it is computable at inference from source
+contexts alone. Target reliability drops +0.864 → +0.472 under normalisation
+(most of its raw association was the noise artefact). Target-gene basal
+expression +0.094, basal context distance −0.036, cells/pert −0.023: all useless
+per-perturbation.
+
+Three classes found: **transferable** (POLRMT, SMG5, TFAM; normalised r
+0.86–0.92); **reliably context-specific** (BCR in K562 at rho 0.917 but r
+−0.074; NSMCE2/EXOSC1/SHQ1/GRWD1 in RPE1; GAB2, IPO7) — all with near-zero
+source agreement, so flaggable in advance; and **large but unreliable** (PIAS4,
+PSMC1, ANAPC1... all Jurkat, 31–36 cells, ‖delta‖ ~6, reliability ~0.00–0.05) —
+the depth-biased ‖delta‖ artefact made concrete.
+
+### Bug found and fixed mid-run (recorded because it nearly passed)
+
+The first gamma-reliability implementation replaced only the *target* row with a
+half while leaving the three sources at full data. Since `gamma[c,p]` depends on
+all four contexts, the source contribution was identical in both "halves" and
+reliability came out at **0.90–0.94** — irreconcilable with the canonical 49.5 %
+gamma reproducibility, which is what exposed it. It also averaged gamma across
+repeats before correlating. Fixed to split **every** context and average
+per-repeat correlations; corrected values are 0.17–0.38. **Lesson: any
+split-half on a quantity derived from all contexts must split all of them.**
+
+### Decision point
+
+Ranked by evidence, not novelty:
+
+1. **Transferability / D prediction — strongest.** Source agreement already
+   gives +0.726 normalised association using only inference-time information,
+   with no model. Well-posed, evaluable, immediately useful.
+2. **Template and scale calibration — underrated, arguably first.** Negative
+   energy explained is the largest failure mode found; the target's own control
+   cells are available at inference; cheap and high leverage.
+3. **Pathway-level gamma — plausible, untested.** Gene-level gamma sits near its
+   noise floor; aggregation should raise reliability.
+4. **Exact gene-level gamma — weakest.** Works in 2 of 4 folds, recovers a third
+   to half of a ceiling that is itself only 0.53–0.74, with four contexts.
+
+Recommended: (1) with (2), and (3) as a cheap diagnostic before committing to (4).
+
+### Caveats
+
+Four contexts / six pairs — do not fit anything of appreciable capacity to
+context. K562–Jurkat are both suspension leukaemia lines *and* share a dataset of
+origin (Replogle vs Nadig), so the "similar partner" effect is confounded and
+cannot be separated here. Disattenuation is undefined below rho 0.05, excluding
+13–33 % of pairs per fold. Reliability used 10 repeats, not the canonical 50.
+
+### Next step
+
+Stop for review before any modelling.

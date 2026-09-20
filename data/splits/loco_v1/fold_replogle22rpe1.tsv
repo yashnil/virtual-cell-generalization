@@ -1,0 +1,5 @@
+# leave-one-context-out fold
+target	replogle22rpe1
+source	replogle22k562
+source	nadig25hepg2
+source	nadig25jurkat

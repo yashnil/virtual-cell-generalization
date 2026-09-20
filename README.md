@@ -92,20 +92,26 @@ Implemented:
 - `virtual_cell.analysis.robustness`: sensitivity variants — control-split
   schemes, aggregation orders, control-derived HVG ranking, controlled-depth
   reliability.
+- `virtual_cell.analysis.loco`: leave-one-context-out folds, source-only
+  zero-shot baselines, and the derived/validated reliability corrections
+  (`sqrt(rho)` ceiling, disattenuation, Spearman-Brown).
 - `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
   `scripts/build_four_context_decomposition.py`,
   `scripts/run_four_context_sensitivity.py`,
-  `scripts/plot_four_context_sensitivity.py`.
+  `scripts/plot_four_context_sensitivity.py`,
+  `scripts/run_zero_shot_recoverability.py`,
+  `scripts/plot_zero_shot_recoverability.py`.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 144 tests — the data assumptions above, 29 pinning invariants of
+- `tests/`: 171 tests — the data assumptions above, 29 pinning invariants of
   the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
-  covering the scPertEval bundle and pseudobulk, and 20 pinning the robustness
-  variants (data-gated tests skip when the git-ignored data are absent).
+  covering the scPertEval bundle and pseudobulk, 20 pinning the robustness
+  variants, and 27 pinning the LOCO leakage algebra and the reliability
+  corrections (data-gated tests skip when the git-ignored data are absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -177,7 +183,25 @@ with non-overlapping CIs and 99.5% of pairs improving.
 
 **Gate status: all six criteria pass — the independent four-context
 decomposition gate is met.** It remains an independent re-derivation, not a
-Molina & Zhang reproduction. No predictive model has been built.
+Molina & Zhang reproduction.
+
+### Zero-shot recoverability diagnostic
+
+[`reports/zero_shot_recoverability_v1.md`](reports/zero_shot_recoverability_v1.md).
+Four frozen leave-one-context-out folds with an enforced leakage contract
+(tested by replacing the whole target row with noise and requiring every
+baseline to be bit-identical). Conserved source-only transfer reaches median
+per-perturbation Pearson **0.306**, or **0.49-0.64** of the attainable latent
+correlation after reliability normalisation — but explains **negative** response
+energy (-0.138), because the held-out template and scale are not recoverable
+from source responses. Gamma is partially recoverable zero-shot **only where a
+genuinely similar partner context exists** (K562 r=0.185, Jurkat r=0.217; RPE1
+and HepG2 ~0), tracking the single cross-context pair whose gamma correlation
+exceeds the forced null. **Source agreement** among the three source responses
+predicts transfer success at Spearman **+0.726** after reliability
+normalisation and is computable at inference time.
+
+No predictive model has been built.
 
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41

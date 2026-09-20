@@ -1,0 +1,49 @@
+split_version: loco_v1
+generated: '2026-09-19'
+generation_script: scripts/run_zero_shot_recoverability.py
+script_version: 1.0.0
+design: four_context_v1
+n_perturbations: 1264
+n_genes: 6640
+folds:
+- target: replogle22k562
+  sources:
+  - replogle22rpe1
+  - nadig25hepg2
+  - nadig25jurkat
+- target: replogle22rpe1
+  sources:
+  - replogle22k562
+  - nadig25hepg2
+  - nadig25jurkat
+- target: nadig25hepg2
+  sources:
+  - replogle22k562
+  - replogle22rpe1
+  - nadig25jurkat
+- target: nadig25jurkat
+  sources:
+  - replogle22k562
+  - replogle22rpe1
+  - nadig25hepg2
+allowed_inputs:
+- basal/control cells of the held-out context
+- perturbation identity
+- perturbation responses of the three source contexts
+- external priors free of target perturbation outcomes
+forbidden_inputs:
+- any perturbation-response measurement from the held-out context
+- feature selection using held-out perturbation responses
+- normalisation fitted to held-out perturbation responses
+- hyperparameter selection using held-out perturbation outcomes
+- four-context beta or gamma (both contain the held-out response)
+evaluation_only_quantities:
+- held-out delta
+- four-context gamma
+- target response template (mean over perturbations)
+- target split halves
+file_sha256:
+  fold_replogle22k562.tsv: d76747d8198086031baaf5b72189309b4e8ed82a964d679a2c1376f0ab6e9197
+  fold_replogle22rpe1.tsv: 814474a6ca184587f77970b45ebf088d618b4c136f2d71eb49b7f1066cd985b6
+  fold_nadig25hepg2.tsv: 70ce4dd0fed404da4fa97a2b542d01eeeca78dbba52de4d4e1ab378e7ef51929
+  fold_nadig25jurkat.tsv: 05a4d274a2902490153baad5fdb3c083093f88ecbed2a5086f69b6cb9dec9260
