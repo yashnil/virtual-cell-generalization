@@ -1391,3 +1391,99 @@ uv run python scripts/plot_pathway_residual_model.py
 uv run pytest -v   # 264 passed
 uv run ruff check . ; uv run ruff format --check . ; uv build
 ```
+
+---
+
+## 2026-09-20 (final) — Pathway residual model v2 (clean gamma): NEGATIVE; pathway modelling TERMINATED
+
+Froze v1 permanently first (`pathway_residual_v1_freeze.txt`, 15 digests, with
+the retained conclusion written into the freeze file itself). All nine freeze
+records verify before and after v2. Report:
+`reports/pathway_residual_model_v2_clean_gamma.md`.
+
+**Exactly one thing changed: the training target.** Enforced by
+`test_features_are_identical_to_v1` (v2 design matrix must be byte-identical to
+v1's) paired with `test_v2_target_differs_from_v1_target` so the claim cannot be
+vacuous.
+
+### [Know] The beta fix worked — gamma prediction improved a lot
+
+`centre_p(Y[c] - A) = gamma[c] - mean_S gamma`; beta cancels **exactly, before
+centring, for any source-set size**. With 3 sources it is `(4/3)gamma`
+(verified to 1e-10 on planted data); with 2 sources (inner folds) it is
+`gamma[c] - (gamma[a]+gamma[b])/2` — beta-free but a different combination.
+
+| held out | r(R_hat, gamma) v1 | **v2** | ||R_hat||/||R_true|| v2 |
+|---|---:|---:|---:|
+| K562 | +0.469 | **+0.778** | 0.98 |
+| Jurkat | +0.428 | **+0.623** | 0.77 |
+| RPE1 | +0.132 | +0.182 | 0.22 |
+| HepG2 | −0.054 | +0.125 | 0.37 |
+
+### [Know] And it STILL did not improve response prediction — in any context
+
+| held out | sel lam | lam_theory | Δr | bootstrap CI |
+|---|---:|---:|---:|---|
+| K562 | 0.25 | 0.90 | −0.0036 | [−0.0134, +0.0069] |
+| RPE1 | 0.25 | 0.89 | **−0.0173** | **[−0.0243, −0.0107] excludes 0** |
+| HepG2 | 0.50 | 0.88 | −0.0042 | [−0.0195, +0.0039] |
+| Jurkat | 0.25 | 0.90 | −0.0060 | [−0.0133, +0.0051] |
+
+**The decisive diagnostic: at lam_theory (0.88–0.90, the mathematically correct
+amount) every context is substantially WORSE** — K562 −0.0175, RPE1 −0.1003,
+HepG2 −0.0260, Jurkat −0.0467. If R_hat were an accurate `(4/3)gamma` estimate,
+lam_theory would be optimal by construction. That it is strongly harmful means
+the correction is **directionally right but not accurate enough per element**:
+at r=0.78, ~40 % of its variance is error, injected into a response whose gamma
+share is ~21 %. Inner selection correctly shrank lam to 0.25–0.5 but no positive
+lam helps.
+
+Hallmark vs matched-random: p=0.67–0.95, all z ≤ 0. Reactome reproduces the
+pattern fold-for-fold (RPE1 again significantly harmful; Jurkat abstains at
+lam=0).
+
+### TERMINATED — predeclared stopping rule fired on all three conditions
+
+(1) K562/Jurkat show no usable gain; (2) three of four CIs include zero and the
+fourth is negative; (3) matched-random performs equivalently. Any one sufficed.
+
+**No pathway model v3.** Revisiting would need new external evidence — more
+contexts or a materially more accurate gamma estimator — not another iteration
+on these four cell lines.
+
+### The chain, now complete
+
+1. gamma exists and is reproducible — **TRUE**
+2. gamma is recoverable zero-shot at pathway resolution, genuinely from biology
+   not aggregation — **TRUE** (p=0.010 vs 100 geometry-preserving nulls)
+3. a learned gamma correction improves the actual response prediction —
+   **FALSE**, tested twice, mechanism identified and removed, still false.
+
+Step 3 fails quantitatively, not conceptually: **a correction must be far more
+accurate than "substantially correlated" before it pays for itself.**
+
+### Honest counter-evidence recorded
+
+One inner-selection miss: for RPE1 the capacity ladder shows M2 at lam=0.25
+would have scored 0.7206 vs baseline 0.7058 (**+0.0148**), but inner selection
+chose M1 (0.6885). So in one of four folds a better option existed and was not
+selected. It does not change the verdict — a single unreplicated +0.015 that was
+not selectable is exactly what the predeclared rule exists to discount — but it
+is the strongest counter-evidence available and is in the report.
+
+### Next primary direction (stated explicitly as required)
+
+**Transferability / confidence, NOT another gamma model.** Scale-calibrated
+conserved transfer is the best available point predictor and was never beaten.
+Source agreement predicts transfer success at Spearman +0.50 to +0.61 within
+every outer context, survives joint confound control (+0.14 to +0.55), is
+monotone by quartile, and is computable at inference from sources alone — the
+only component that has worked in every experiment.
+
+### Commands run
+
+```
+uv run python scripts/run_pathway_residual_model_v2.py
+uv run pytest -v   # 281 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```

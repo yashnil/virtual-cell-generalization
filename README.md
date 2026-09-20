@@ -102,6 +102,8 @@ Implemented:
   vectorised recoverability.
 - `virtual_cell.modelling.pathway_residual`: nested-LOCO pathway residual model
   — scale-calibrated baseline, low-capacity families, shrinkage selection.
+- `virtual_cell.modelling.pathway_gamma_v2`: the v2 clean (beta-free) gamma
+  target and the theory coefficient `(3+s)/4`.
 - `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
   `scripts/build_four_context_decomposition.py`,
   `scripts/run_four_context_sensitivity.py`,
@@ -118,15 +120,15 @@ Implemented:
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 264 tests — the data assumptions above, 29 pinning invariants of
+- `tests/`: 281 tests — the data assumptions above, 29 pinning invariants of
   the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
   covering the scPertEval bundle and pseudobulk, 20 pinning the robustness
   variants, 27 pinning the LOCO leakage algebra and reliability corrections, and
   34 pinning the template/scale estimators, pathway aggregation and candidate
   transferability targets, and 28 pinning the null constructions used for
   representation falsification, and 31 pinning nested LOCO, the residual
-  algebra and outer-target isolation (data-gated tests skip when data are
-  absent).
+  algebra and outer-target isolation, and 17 pinning the v2 clean-target algebra
+  (data-gated tests skip when data are absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -261,6 +263,17 @@ shrunk conserved effect, and while the model *does* recover gamma in K562
 sign and the two cancel. Source-agreement confidence remains strongly calibrated
 (Spearman +0.53 to +0.60, monotone in every context) and is the one component
 that works as intended.
+
+**v2 removed the contamination and the verdict held**
+([`reports/pathway_residual_model_v2_clean_gamma.md`](reports/pathway_residual_model_v2_clean_gamma.md)).
+Training on the beta-free target raised gamma prediction sharply (K562
+r = 0.47 -> **0.78**, Jurkat 0.43 -> 0.62) but still improved response prediction
+in **no** context, and at the mathematically correct coefficient
+`lambda = (3+s)/4` every context got materially worse. The predeclared stopping
+rule fired on all three conditions, so **pathway modelling is terminated and
+there will be no v3**. The next primary direction is a transferability /
+confidence model on scale-calibrated conserved transfer plus source agreement —
+not another gamma model.
 
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41

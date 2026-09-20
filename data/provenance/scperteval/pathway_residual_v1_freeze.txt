@@ -1,0 +1,29 @@
+# Pathway residual model v1 — PERMANENT FREEZE
+#
+# Written 2026-09-20, after v1 and BEFORE the single permitted v2 follow-up.
+#
+# RETAINED CONCLUSION, not to be revised by any later experiment:
+#   "Pathway residual model v1 did not improve outer zero-shot response
+#    prediction."
+#   Selected: K562 M0/lam=0, RPE1 M1/lam=0.75, HepG2 M2/lam=0.75, Jurkat M0/lam=0.
+#   Outer deltas in median Pearson: 0.0000 / -0.0153 / -0.0034 / 0.0000.
+#   Oracle lambda sweep capped the maximum attainable gain at +0.0033.
+#
+# v2 changes ONE thing: the training target. Everything else is reused.
+#
+# Verify:  shasum -a 256 -c data/provenance/scperteval/pathway_residual_v1_freeze.txt
+27b83c5b85ebfee30422c8539d24705c95060eb5acc3c8b94633a57c211a015c  reports/pathway_residual_model_v1.md
+7eedb2f801142764e9e45b68c69b911a6d97e579aace9bb8823a49ae193ca42c  outputs/pathway_residual_v1/summary.json
+65695267f7f2270564b662c46a7802b17020b477c18f131cdfb56a931ec38894  outputs/pathway_residual_v1/hallmark_folds.csv
+6de72ebfbba191a29aa28c946e1f31b1912577cc2c7ec0d4a0c5f51e8b6b0735  outputs/pathway_residual_v1/reactome_folds.csv
+85f471631166424de77900c9489d0d538d1e8f338f38e7c384c1a6f29c94bb03  outputs/pathway_residual_v1/capacity_ladder.csv
+5b1df66a8a90a97956633292566990009b6ce10c6143ec73f4cfbd29715a85c3  outputs/pathway_residual_v1/residual_diagnostics.csv
+eede28aad5f0c7588f7b1fba9ea94b7513768c25519b685634c9ac3cc67a0e8f  outputs/pathway_residual_v1/forced_m2_diagnostics.csv
+8f2c110d010075a3721545d7b0776ba87e8752d9345b8932c5cfc439d6dcf7be  outputs/pathway_residual_v1/oracle_lambda_sweep.csv
+6f4c1e13723569daf3996bc020ebf696e9b8fab7d906c5eace7b8fd0d76e3d21  outputs/pathway_residual_v1/confidence_strata.csv
+85d11dcfab5aa4c3c6c7707c1a73b817592c0044db37e37d30d25a2d9ee370ce  outputs/pathway_residual_v1/null_replicates.csv
+37397ba39f46a55084809a260424c1d0e301a16751e9d98a40658a59d574614f  outputs/pathway_residual_v1/null_comparison.csv
+c0edf283703acb39f9cd81ecd7cc72fcadc325d30f90f85c4777bbc417dc1818  outputs/pathway_residual_v1/coefficients.csv
+fda98e0be14b48199a166dab780d8dc55af0318fdc0d7fe9a25978798001cea3  src/virtual_cell/modelling/pathway_residual.py
+05a647de585eab6f747ba4c56686f009bde91efeae9f808605d34aa4b56fd03f  scripts/run_pathway_residual_model.py
+f08a5b9b0a9dc4f709a399b942375eef7257e57ea133a5dda861d5afee81ee06  tests/test_pathway_residual.py
