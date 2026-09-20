@@ -1076,3 +1076,318 @@ cannot be separated here. Disattenuation is undefined below rho 0.05, excluding
 ### Next step
 
 Stop for review before any modelling.
+
+---
+
+## 2026-09-20 — Transferability foundations v1
+
+Froze zero-shot artifacts first (`zero_shot_v1_freeze.txt`, 14 digests). All
+four freeze records re-verify after: 4/4, 12/12, 21/21, 14/14. Full report:
+`reports/transferability_foundations_v1.md`. Runtime 0.8 min. **No model
+trained.** Every new estimator has a leakage test that scrambles the held-out
+response matrix and requires bit-identical output.
+
+### [Disproved] Basal control expression cannot recover the context template
+
+Three independent signals agree: gene-wise r(alpha, basal deviation) is ≈0 and
+**flips sign** across folds (−0.056, −0.046, −0.263, +0.065); only **0.15–8.2 %**
+of ‖alpha‖² lies in the span of the source basal deviations; and the fitted
+global scalar k changes sign across folds (−0.0071, −0.0078, **+0.0025**,
+−0.0134). Only a weak magnitude association survives (Spearman 0.27–0.34
+between |alpha| and |basal dev|) — no usable direction.
+
+Performance confirms it: `direct_basal` is catastrophic (energy −6 to −17),
+`global_scalar` changes nothing, and `ridge_subspace` helps in three folds and
+**hurts in HepG2** — a concrete demonstration of over-capacity with three
+source points.
+
+**This overturns the hypothesis I carried in from the zero-shot phase.** I
+expected template offset to be the main lever for negative energy explained. It
+is not.
+
+### [Know] Scale calibration is the lever, not template offset
+
+| estimator | K562 | RPE1 | HepG2 | Jurkat |
+|---|---:|---:|---:|---:|
+| source mean (zero) | −0.467 | +0.098 | −0.065 | −0.184 |
+| **scale_only** (available) | **−0.211** | **+0.189** | **+0.094** | **−0.012** |
+| oracle_alpha (ceiling) | −0.424 | +0.378 | −0.058 | −0.133 |
+| scale + oracle_alpha (ceiling) | **+0.046** | **+0.425** | **+0.119** | **+0.117** |
+
+**Even the oracle template leaves energy negative in 3 of 4 folds** — with true
+alpha the residual is exactly `(4/3) gamma`, so the template was never the
+dominant error. A single scalar shrinkage fitted by inner leave-one-source-out
+(**0.455, 0.440, 0.428, 0.469** — strikingly consistent) lifts every fold, turns
+HepG2 positive and Jurkat to ≈0, and is fully inference-available. Shrinkage is
+≈0.44 rather than 1 because the source mean carries `beta − gamma/3` and cannot
+predict gamma at all, so the variance-optimal prediction is heavily shrunk.
+
+### [Know] Source agreement validated per fold and under confounding
+
+Spearman vs reliability-normalised success, **each fold independently**: K562
++0.729, RPE1 +0.838, HepG2 +0.622, Jurkat +0.704, all with bootstrap CIs far
+from zero. Joint partial controlling source magnitude, source reliability,
+source cells and target-gene basal: **+0.525, +0.301, +0.142, +0.547**. It does
+add information beyond detecting weak/noisy perturbations, but the margin is
+modest and weakest in the noisiest context.
+
+**Analysis error caught and corrected:** the first confound set included
+`source_min_pair_agreement`, which drove the partial to +0.12–0.19. That is the
+*minimum* of the same pairwise correlations whose *mean* is the exposure —
+over-adjustment, not confound control. Reported separately and excluded.
+
+### [Know] Pathway-level gamma is ~3x more recoverable than gene-level
+
+MSigDB 2024.1.Hs, Hallmark + Reactome, SHA-256 recorded, used as released.
+Predeclared aggregation: unweighted mean over set genes present in the frozen
+space, sets with <10 genes dropped (45 Hallmark, 874 Reactome qualify).
+Aggregation is linear so decompose-then-score == score-then-decompose (tested).
+
+Median r(gamma_true, gamma_hat), basal_affine:
+
+| held out | gene | Hallmark | ceiling | normalised |
+|---|---:|---:|---:|---:|
+| K562 | +0.185 | **+0.570** | 0.874 | **0.652** |
+| Jurkat | +0.217 | **+0.510** | 0.852 | **0.599** |
+| RPE1 | +0.002 | **+0.182** | 0.937 | 0.194 |
+| HepG2 | +0.033 | +0.026 | 0.801 | 0.032 |
+
+Partly a reliability effect (pathway rho_full 0.64–0.88 vs gene 0.28–0.55) but
+**ceiling-normalised values also rise sharply** (K562 0.32 → 0.65), so it is not
+purely noise suppression. **HepG2 stays at zero at every resolution** —
+aggregation reveals structure where it exists rather than manufacturing it.
+Hallmark (45 coarse sets) beats Reactome (874 finer) consistently.
+
+### [Know] Best-behaved candidate D
+
+`D_unexplained_fraction = <h1−A, h2−A> / <h1, h2>`. Unbiased under a stated
+noise model; recovers planted `(1−share)²` to ±0.05; correctly **exceeds 1** for
+predictions worse than zero (so it must not be clipped); immune to the depth
+bias that disqualifies a raw residual norm (which grows monotonically with noise
+at fixed latent signal — tested). **Edge case:** the per-pair denominator is a
+noisy ‖L‖² and destabilises near zero, so `pooled_unexplained_fraction` is the
+headline statistic and per-pair values need a reliability filter. Observed
+pooled: 1.296 / 0.752 / 0.798 / 1.007; fraction worse than zero 40–84 %.
+**Not selected.**
+
+### Recommendation: B — pathway-level gamma, with scale calibration and source agreement
+
+Evidence-ranked. Pathway gamma is the only place a *large* amount of previously
+invisible structure appeared. Scale calibration is a cheap available fix for the
+biggest point-prediction failure and should be folded in regardless.
+Transferability is real but modest after adjustment — better as a confidence
+output than a primary target. **Template recovery from basal is ruled out.**
+Exact gene-level gamma is now clearly dominated.
+
+Lowest-capacity model justified: scale-calibrated conserved transfer (one
+scalar) + source-agreement confidence. Two scalars and one descriptive feature.
+
+### Commands run
+
+```
+uv run python scripts/run_transferability_foundations.py
+uv run python scripts/plot_transferability_foundations.py
+uv run pytest -v ; uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+### Next step
+
+Stop for review before building anything.
+
+---
+
+## 2026-09-20 (later) — Pathway gamma representation falsification
+
+Froze foundations first (`foundations_v1_freeze.txt`, 12 digests). All six freeze
+records re-verify. Report: `reports/pathway_gamma_falsification_v1.md`. Runtime
+5.0 min. **No model trained.**
+
+### Design
+
+Every representation — Hallmark, Reactome, matched random gene sets, random
+projections — applied as the same linear map `R @ W.T`, so output dimensionality
+and arithmetic are exactly matched and only *which genes are grouped* differs.
+Primary null is **gene-label permutation**, which preserves set sizes, **all
+pairwise set-set overlaps** (`(MP)(MP)^T = MM^T`) and the gene-degree multiset.
+100 replicates per null type, constructions fixed in advance.
+
+### [Know] Pathway biology beats matched random aggregation — 3 of 4 contexts
+
+Reliability-normalised gamma recovery:
+
+| held out | Hallmark | permuted null | gaussian null | genes | p | z |
+|---|---:|---|---|---:|---:|---:|
+| K562 | **0.652** | 0.305±0.057 | 0.300±0.040 | 0.305 | 0.010 | +6.1 |
+| RPE1 | **0.194** | 0.015±0.040 | 0.015±0.027 | 0.002 | 0.010 | +4.5 |
+| HepG2 | 0.032 | 0.065±0.037 | 0.065±0.029 | 0.062 | 0.842 | **−0.9** |
+| Jurkat | **0.599** | 0.378±0.032 | 0.363±0.024 | 0.372 | 0.010 | +6.8 |
+
+p = 0.010 is the 100-replicate floor: no null replicate reached the observed
+value in those three folds.
+
+**The decisive panel:** random 45-dim aggregation reproduces **gene-level
+performance almost exactly** after reliability normalisation (K562 0.305 vs
+0.305; Jurkat 0.378 vs 0.372). Raw `r_gamma` does rise under random aggregation
+(0.185 → 0.194 for K562) purely because averaging raises reliability — and the
+normalisation removes exactly that. **So the whole benefit of dimensionality
+reduction per se is a reliability artefact; what remains is biology.**
+
+All three null types are statistically indistinguishable, so aggregation
+geometry (overlaps, gene degrees, sparsity) contributes nothing.
+
+**HepG2 is a clean negative**: Hallmark (0.032) sits *below* its null (0.065).
+Pathway aggregation does not manufacture signal where none exists.
+
+Reactome (874 sets, independent ontology) reproduces the pattern fold-for-fold
+against its own permuted null: K562 z=+7.9, RPE1 z=+7.9, Jurkat z=+5.1, HepG2
+z=+1.5 (n.s.). Hallmark beats Reactome in the two strong folds.
+
+### [Know] Dependence is pair-specific and asymmetric
+
+Hallmark, every two-source subset (separates "lost a partner" from "fewer
+sources"):
+
+| target | all 3 | drop K562 | drop RPE1 | drop HepG2 | drop Jurkat |
+|---|---:|---:|---:|---:|---:|
+| K562 | +0.570 | — | +0.341 | +0.567 | **+0.337** |
+| RPE1 | +0.182 | +0.171 | — | +0.011 | +0.182 |
+| HepG2 | +0.026 | +0.003 | +0.116 | — | −0.078 |
+| Jurkat | +0.510 | **−0.195** | +0.424 | +0.533 | — |
+
+- **Jurkat is wholly K562-dependent**: −0.195 without it, but +0.533 when HepG2
+  is dropped instead. Spread across dropped sources = 0.73.
+- **K562 survives without Jurkat** (+0.337, −41 %); losing RPE1 costs the same.
+  Its signal is not specifically Jurkat-dependent.
+- RPE1's modest signal depends on **HepG2** — a third, different pairing.
+- Two-source reduction is not the cause: RPE1 is unchanged at two sources.
+
+### [Disproved] The dataset-ancestry confound I have been flagging since 2026-09-19
+
+K562/RPE1 are Replogle; HepG2/Jurkat are Nadig. The two **same-dataset** pairs
+rank 4th and 5th of six on gamma excess over null (−0.074, −0.077); mean excess
+is **−0.076 same-dataset vs +0.034 cross-dataset**. Both informative pairings
+(K562–Jurkat, RPE1–HepG2) **cross** the dataset boundary. Dataset ancestry does
+not explain gamma sharing and is mildly anti-correlated with it. Weak (n=6, two
+same-dataset pairs) but it points firmly away from the confound.
+
+**The lineage confound for K562–Jurkat (both suspension leukaemia) is untouched
+and remains unresolvable with four contexts.**
+
+### Decision: pathway-level modelling is JUSTIFIED, with scope stated
+
+Criteria 1, 2, 4 pass cleanly; criterion 3 passes in quantified partial form.
+Honest framing is **not** "pathway gamma is predictable" but "pathway-level
+gamma is recoverable for *some* target contexts, and which ones is itself
+context-dependent and not predictable from four contexts."
+
+Scope for any model built next: evaluate **per held-out context, never pooled**;
+report the matched-random null alongside every number; treat **HepG2 as a
+known-negative control** (success there is suspect); do **not** claim
+independence between K562 and Jurkat results; carry scale calibration and
+source-agreement confidence regardless.
+
+### Commands run
+
+```
+uv run python scripts/run_pathway_falsification.py
+uv run python scripts/plot_pathway_falsification.py
+uv run pytest -v   # 233 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+### Next step
+
+Stop for review.
+
+---
+
+## 2026-09-20 (later) — Pathway residual model v1: NEGATIVE result
+
+Froze all discovery artifacts first (`discovery_phase_freeze.txt`, 26 digests).
+All eight freeze records verify **before and after** modelling. Modelling code
+went into a new namespace `virtual_cell.modelling`; no frozen module changed.
+Report: `reports/pathway_residual_model_v1.md`.
+
+### Headline
+
+**The learned pathway correction never improves the outer target.** Selected by
+inner pseudo-LOCO: K562 **M0/lam=0**, RPE1 M1/lam=0.75, HepG2 M2/lam=0.75,
+Jurkat **M0/lam=0**. Outer deltas: K562 0.0000, RPE1 **−0.0153**, HepG2
+**−0.0034**, Jurkat 0.0000. M0 is at least as good as M1/M2 on Pearson in every
+fold. M3 never evaluated (precondition not met).
+
+### [Know] It is NOT a nested-LOCO selection failure — oracle sweep settles it
+
+Oracle lambda sweep (evaluation-only): max attainable gain is **+0.0033**
+(K562), **+0.0024** (HepG2), **0.0000** (RPE1, Jurkat). lam=0 is essentially
+optimal everywhere. The obvious alternative explanation — "inner folds can't see
+the K562–Jurkat pairing because the partner is the outer target" — is excluded.
+
+### [Know] The mechanism: beta contamination cancels a real gamma gain
+
+Residual algebra, asserted as a test:
+`R = Y − B = (4/3)alpha + (1−s)beta + (1+s/3)gamma`. Centring removes alpha
+exactly but **leaves (1−s)beta**, which at s≈0.55 is nearly half the conserved
+effect. Forced-M2 diagnostic:
+
+| held out | r(R_hat, gamma) | r(R_hat, beta-like) | deterministic r(gamma-hat, gamma) |
+|---|---:|---:|---:|
+| K562 | **+0.469** | **−0.424** | +0.570 |
+| Jurkat | **+0.428** | **−0.491** | +0.510 |
+| RPE1 | +0.132 | +0.838 | +0.182 |
+| HepG2 | −0.054 | +0.767 | +0.026 |
+
+**The model DOES find gamma in K562/Jurkat (r≈0.43–0.47, approaching the
+deterministic 0.51–0.57) — but simultaneously predicts the beta component with
+the WRONG SIGN, and the two cancel.** In RPE1/HepG2 the correction is almost
+pure beta re-prediction. Third link in a chain that must never be collapsed:
+*gamma exists and is reproducible* ≠ *gamma is recoverable zero-shot* ≠
+**predicting gamma improves the response prediction**. The first two hold; the
+third is falsified for this construction.
+
+### [Know] Other results
+
+- **Hallmark vs matched-random modelling: indistinguishable** (p=0.48–1.00,
+  z=−1.0 to +0.2) — because neither produces a gain. Does NOT contradict the
+  falsification battery, which compared gamma *recovery*, not response
+  *prediction*.
+- **Reactome reproduces the pattern**: one small positive (K562 +0.012), two
+  negatives, one abstention.
+- **Features**: two dominate by an order of magnitude — `source_mean` (0.082)
+  and `weighted_source` (0.072), i.e. the raw conserved response. Every
+  biological/target feature is ~0: source_agreement 0.0021 (sign-inconsistent),
+  basal_pathway_deviation 0.0019 (sign-inconsistent), target_gene_basal 0.0007.
+- **[Criticism of our own model] It did NOT shrink in the known-negative.**
+  HepG2 got lam=0.75 and degraded (−0.018 energy); its correction is pure beta
+  (r=+0.767) with no gamma (−0.054). Shrinkage worked in K562/Jurkat, not HepG2.
+- **Source-agreement confidence works**: Spearman(agreement, corrected r) =
+  +0.602/+0.534/+0.529/+0.572, strictly monotone by quartile in all four
+  contexts. **The only component of the system that works as intended.**
+
+### Limitation inherent to n=4
+
+Inner pseudo-targets are built from **two** sources while the outer prediction
+uses **three**, so `source_mean` has different noise/attenuation at fit vs
+application time. Unavoidable here; partially absorbed by per-fold
+standardisation; genuinely limits what any nested-LOCO model can learn.
+
+### Next step (user has NOT approved)
+
+**(a) One narrow pre-specified retest**: define the learning target against the
+*unshrunk* transfer (s=1), where `centred R = (4/3)gamma` exactly and the beta
+contamination vanishes by construction, then add the gamma correction to the
+scale-calibrated baseline. One-line change; directly removes the identified
+mechanism. **If it does not produce an outer gain in K562 or Jurkat, stop
+pathway modelling.** Do not iterate beyond one attempt.
+
+**(b) Otherwise pivot to transferability / D**, the only demonstrably working
+component.
+
+### Commands run
+
+```
+uv run python scripts/run_pathway_residual_model.py
+uv run python scripts/plot_pathway_residual_model.py
+uv run pytest -v   # 264 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```

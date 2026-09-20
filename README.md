@@ -95,23 +95,38 @@ Implemented:
 - `virtual_cell.analysis.loco`: leave-one-context-out folds, source-only
   zero-shot baselines, and the derived/validated reliability corrections
   (`sqrt(rho)` ceiling, disattenuation, Spearman-Brown).
+- `virtual_cell.analysis.foundations`: template/scale estimators, MSigDB pathway
+  aggregation, candidate transferability targets, and partial correlation.
+- `virtual_cell.analysis.falsification`: matched null representations
+  (gene-label permutation, size-matched resampling, random projection) and
+  vectorised recoverability.
+- `virtual_cell.modelling.pathway_residual`: nested-LOCO pathway residual model
+  — scale-calibrated baseline, low-capacity families, shrinkage selection.
 - `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
   `scripts/build_four_context_decomposition.py`,
   `scripts/run_four_context_sensitivity.py`,
   `scripts/plot_four_context_sensitivity.py`,
   `scripts/run_zero_shot_recoverability.py`,
-  `scripts/plot_zero_shot_recoverability.py`.
+  `scripts/plot_zero_shot_recoverability.py`,
+  `scripts/run_transferability_foundations.py`,
+  `scripts/plot_transferability_foundations.py`,
+  `scripts/run_pathway_falsification.py`,
+  `scripts/plot_pathway_falsification.py`.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 171 tests — the data assumptions above, 29 pinning invariants of
+- `tests/`: 264 tests — the data assumptions above, 29 pinning invariants of
   the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
   covering the scPertEval bundle and pseudobulk, 20 pinning the robustness
-  variants, and 27 pinning the LOCO leakage algebra and the reliability
-  corrections (data-gated tests skip when the git-ignored data are absent).
+  variants, 27 pinning the LOCO leakage algebra and reliability corrections, and
+  34 pinning the template/scale estimators, pathway aggregation and candidate
+  transferability targets, and 28 pinning the null constructions used for
+  representation falsification, and 31 pinning nested LOCO, the residual
+  algebra and outer-target isolation (data-gated tests skip when data are
+  absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -201,7 +216,51 @@ exceeds the forced null. **Source agreement** among the three source responses
 predicts transfer success at Spearman **+0.726** after reliability
 normalisation and is computable at inference time.
 
-No predictive model has been built.
+### Transferability foundations
+
+[`reports/transferability_foundations_v1.md`](reports/transferability_foundations_v1.md).
+Three results. **Basal control expression does not encode the context response
+template** — gene-wise alignment is ~0 and sign-inconsistent, and only 0.15-8.2%
+of alpha lies in the span of source basal deviations. **Scale calibration, not
+template offset, fixes the negative energy explained**: a single scalar
+shrinkage (0.43-0.47, fitted leave-one-source-out on sources alone) lifts every
+fold, while even the *oracle* template leaves three of four negative.
+**Pathway-level gamma is ~3x more recoverable than gene-level** (Hallmark: K562
+0.185 -> 0.570, Jurkat 0.217 -> 0.510, reaching 0.60-0.65 of the measurement
+ceiling), though HepG2 stays at zero at every resolution. Source agreement
+survives joint confound control at +0.14 to +0.55 per fold.
+
+Recommended next direction, chosen on evidence: **pathway-level gamma, combined
+with scale calibration and source-agreement confidence.** Template recovery from
+basal expression is ruled out.
+
+### Representation falsification
+
+[`reports/pathway_gamma_falsification_v1.md`](reports/pathway_gamma_falsification_v1.md).
+The pathway gain is **biology, not aggregation**. Against 100 gene-label-permuted
+nulls that preserve set sizes, all pairwise set overlaps and gene degrees,
+Hallmark wins in K562, RPE1 and Jurkat (z = +4.5 to +6.8, p = 0.010, the
+replicate floor) and Reactome reproduces it. Critically, **random 45-dimensional
+aggregation reproduces gene-level performance exactly** after reliability
+normalisation — so dimensionality reduction alone buys nothing, and the
+correction catches it. HepG2 is a clean negative (below its own null). Jurkat's
+result collapses to -0.195 without K562 while K562 retains +0.337 without
+Jurkat. The dataset-ancestry confound is **refuted**: same-dataset pairs are the
+weakest.
+
+### First predictive model — negative result
+
+[`reports/pathway_residual_model_v1.md`](reports/pathway_residual_model_v1.md).
+A low-capacity, nested-LOCO pathway residual model does **not** improve zero-shot
+prediction beyond scale-calibrated conserved transfer in any context (deltas
+0.000 / -0.015 / -0.003 / 0.000), and an oracle shrinkage sweep caps the maximum
+attainable gain at **+0.003**. The mechanism is identified: the residual target
+`R = (4/3)alpha + (1-s)beta + (1+s/3)gamma` is contaminated by the deliberately
+shrunk conserved effect, and while the model *does* recover gamma in K562
+(r=+0.47) and Jurkat (r=+0.43), it predicts the beta component with the wrong
+sign and the two cancel. Source-agreement confidence remains strongly calibrated
+(Spearman +0.53 to +0.60, monotone in every context) and is the one component
+that works as intended.
 
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41

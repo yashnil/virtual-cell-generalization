@@ -1,0 +1,21 @@
+# Zero-shot recoverability v1 freeze
+#
+# Written 2026-09-20, after the diagnostic and BEFORE the transferability
+# foundations study. Pins the LOCO splits, the diagnostic outputs and the code.
+# Later phases must not alter any of these.
+#
+# Verify:  shasum -a 256 -c data/provenance/scperteval/zero_shot_v1_freeze.txt
+ca4a3fc05402f91ecb85c0d6ccda6923d8eeec8ea7bd4a9a61be993ca20ece65  reports/zero_shot_recoverability_v1.md
+d76747d8198086031baaf5b72189309b4e8ed82a964d679a2c1376f0ab6e9197  data/splits/loco_v1/fold_replogle22k562.tsv
+814474a6ca184587f77970b45ebf088d618b4c136f2d71eb49b7f1066cd985b6  data/splits/loco_v1/fold_replogle22rpe1.tsv
+70ce4dd0fed404da4fa97a2b542d01eeeca78dbba52de4d4e1ab378e7ef51929  data/splits/loco_v1/fold_nadig25hepg2.tsv
+05a4d274a2902490153baad5fdb3c083093f88ecbed2a5086f69b6cb9dec9260  data/splits/loco_v1/fold_nadig25jurkat.tsv
+3a5393da91c297fb6ed28dd47a6204ebbb5d5d1bf969841104c037ff48c3f3cc  data/splits/loco_v1/loco_manifest.yaml
+91da7da3d6fcb489904268cab786ca132513e34c187b253d7894da2b92149fa7  outputs/zero_shot_v1/summary.json
+3b669c413189fd3e14c84395deff7879f2fb1eee359cba79ac3c15f64d7374d5  outputs/zero_shot_v1/loco_metrics.csv
+a45c834d455b91e94d604316f17dc2f484dbf21556b062370b1a8cf320f8d3e3  outputs/zero_shot_v1/loco_reliability.csv
+c8b9566f01761b65924b310d0770068dfc9e4fe9acb6dd75379f0465729b429b  outputs/zero_shot_v1/loco_gamma.csv
+2e3d0f67afa5c6bed3fefbca1fc166ef71044a2900871c9745ccf3e23b19c442  outputs/zero_shot_v1/gamma_cross_context.csv
+f01bda98212b4b61e5c8573a8e99ce1f055b02f5d67cf6c5bc8f9eff640c14a0  outputs/zero_shot_v1/transferability_descriptives.csv
+31fc738f10fd436f2b31a78aae7046747d17d1c5cc51844c8bb37d4c347dddb8  src/virtual_cell/analysis/loco.py
+6f6e26c89f2f1c3fe5e447f45a04818fc9c4ef909d6dbfc5d37e0213ba05fbef  scripts/run_zero_shot_recoverability.py
