@@ -104,6 +104,9 @@ Implemented:
   — scale-calibrated baseline, low-capacity families, shrinkage selection.
 - `virtual_cell.modelling.pathway_gamma_v2`: the v2 clean (beta-free) gamma
   target and the theory coefficient `(3+s)/4`.
+- `virtual_cell.modelling.transferability`: reliability-aware confidence targets
+  (`<h1,h2>`, `<h1-B,h2-B>`, `D`), the derived stability rule, selective
+  prediction and experiment-prioritisation metrics.
 - `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
   `scripts/build_four_context_decomposition.py`,
   `scripts/run_four_context_sensitivity.py`,
@@ -120,7 +123,7 @@ Implemented:
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 281 tests — the data assumptions above, 29 pinning invariants of
+- `tests/`: 314 tests — the data assumptions above, 29 pinning invariants of
   the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
   covering the scPertEval bundle and pseudobulk, 20 pinning the robustness
   variants, 27 pinning the LOCO leakage algebra and reliability corrections, and
@@ -128,7 +131,8 @@ Implemented:
   transferability targets, and 28 pinning the null constructions used for
   representation falsification, and 31 pinning nested LOCO, the residual
   algebra and outer-target isolation, and 17 pinning the v2 clean-target algebra
-  (data-gated tests skip when data are absent).
+  and 33 pinning the reliability-aware targets, selective-prediction metrics and
+  outer-target isolation (data-gated tests skip when data are absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -274,6 +278,27 @@ rule fired on all three conditions, so **pathway modelling is terminated and
 there will be no v3**. The next primary direction is a transferability /
 confidence model on scale-calibrated conserved transfer plus source agreement —
 not another gamma model.
+
+### Transferability / confidence — the simple statistic wins
+
+[`reports/transferability_confidence_model_v1.md`](reports/transferability_confidence_model_v1.md).
+Raw **source agreement** predicts transfer quality in all four held-out contexts
+(Spearman vs -D: 0.554 / 0.786 / 0.656 / 0.556), with **monotone risk-coverage
+and monotone calibration everywhere, including HepG2** — the first phase in
+which HepG2 behaves normally. Restricting to the most-confident 10% cuts median
+D by 41% (K562), 33% (Jurkat), 32% (HepG2), 18% (RPE1), moving K562 and Jurkat
+from *worse than predicting zero* to better. Neither monotone calibration nor a
+regularised multivariable model beat it, so per the predeclared rule the final
+estimator is **raw source agreement** — one number, no fitting, nothing to leak.
+
+A second finding: **trustworthiness and error magnitude are near-opposite
+objectives.** Targeting the least-confident perturbations captures ~half of
+random; ranking by expected error magnitude captures ~twice random. A practical
+system needs both scores and must not use one for the other's job.
+
+**Framing:** the defensible claim is not "we predict context-specific responses"
+but *"we predict conserved responses, and can say in advance how much to trust
+each one."*
 
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41

@@ -1,0 +1,26 @@
+# Pathway modelling — PERMANENT FREEZE (v1 and v2, TERMINATED)
+#
+# Written 2026-09-20, before the transferability/confidence phase.
+#
+# RETAINED CONCLUSIONS, not revisable by any later experiment:
+#   v1: "Pathway residual model v1 did not improve outer zero-shot response
+#        prediction."  Deltas 0.0000 / -0.0153 / -0.0034 / 0.0000.
+#   v2: "Removing beta contamination raised gamma prediction (K562 0.47->0.78,
+#        Jurkat 0.43->0.62) but still improved response prediction in NO
+#        context; at lambda_theory every context was materially worse."
+#        Deltas -0.0036 / -0.0173 / -0.0042 / -0.0060.
+#   PATHWAY MODELLING IS TERMINATED. THERE IS NO V3.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/pathway_modelling_terminated_freeze.txt
+a44abaa81b89779ca8efddffc4cd1b6789e6ac6bba3afbe506561d780466aecf  reports/pathway_residual_model_v2_clean_gamma.md
+06dfb3ea131d6b32e0fe9d0e5abbec304e9877158f3e511427820c16a266f513  outputs/pathway_gamma_v2/summary.json
+e62c25db134dcbc0312906b918dd194f5370ba3635a62c430ca65288de0af552  outputs/pathway_gamma_v2/hallmark_folds.csv
+5b3944daa2a19752a89242a9414f19d546e1277abf37006350d1d7f47150cf7e  outputs/pathway_gamma_v2/reactome_folds.csv
+1a6a14e29ae137751efe769a8f4b3aaca71635762ee664f5209a47a395f0c8ad  outputs/pathway_gamma_v2/capacity_ladder.csv
+b7d20418e4d7009fc1d0a4f048246aa269a82fae0856d3510980a1b8669d5745  outputs/pathway_gamma_v2/residual_diagnostics.csv
+0d134a5201ce50928f66f4892c866c7fb4b373ad3517aaa9d2bb307ff4ed69f1  outputs/pathway_gamma_v2/null_comparison.csv
+e77227c224fc9e129335c453b4b96c0b1f0e716921cc73c11d8f9d711a4bbe73  outputs/pathway_gamma_v2/confidence_strata.csv
+f4ddefc49bf12070602d2ba5342faaf435a40421ef86e2ac43aefe78eee228c0  outputs/pathway_gamma_v2/coefficients.csv
+ad7681a4daae405449b783b7e7db061a48aa8c2612196e60f2a8588878ffaae8  src/virtual_cell/modelling/pathway_gamma_v2.py
+688ef0468b7c0bd6bd208d366391a496e1aab66a66f4e2f161d10573bbc88135  scripts/run_pathway_residual_model_v2.py
+82ae8b68372a58d6457ac68cb204219bbe177ab97b32278db85d6a295d1a61d3  tests/test_pathway_gamma_v2.py

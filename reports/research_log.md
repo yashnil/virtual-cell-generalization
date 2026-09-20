@@ -1487,3 +1487,89 @@ uv run python scripts/run_pathway_residual_model_v2.py
 uv run pytest -v   # 281 passed
 uv run ruff check . ; uv run ruff format --check . ; uv build
 ```
+
+---
+
+## 2026-09-20 (final) — Transferability/confidence model v1: THE SIMPLE STATISTIC WINS
+
+Froze pathway modelling permanently first (`pathway_modelling_terminated_freeze.txt`,
+12 digests with both retained conclusions written into the freeze file). All ten
+freeze records verify before and after. Report:
+`reports/transferability_confidence_model_v1.md`. **Point predictor unaltered.**
+
+### [Know] Reliability-aware targets, validated synthetically
+
+`signal_energy = <h1,h2>` (unbiased for ||L||^2), `residual_energy = <h1-B,h2-B>`
+(unbiased for ||L-B||^2), `D = residual/signal`. Synthetic checks: naive ||h||^2
+inflated >20 % while cross-half is unbiased to 5 %; D recovers planted 0.25 /
+0.0625 / 1.0. **D never clipped** — the D>1 regime is real and observed.
+
+**Stability rule derived from simulation BEFORE any outer fold**, then frozen:
+using the empirical source half-noise sd (0.0600, 6,640 genes), min signal
+energy = **1.9674** (within-tolerance 0.14 → 0.77 → 1.00 across signal
+0.16 → 1.13 → 3.48). My first derivation returned the grid's own lower bound
+because the grid never reached the unstable regime — re-derived over a wider
+range. In practice it excludes almost nothing (stable fraction 0.995–0.999).
+
+### [Know] Raw source agreement predicts transfer quality in every context
+
+Spearman(score, −D): K562 **0.554**, RPE1 **0.786**, HepG2 **0.656**, Jurkat
+**0.556**. Risk-coverage is **monotone in all four contexts** on both metrics.
+Median D falls: K562 1.231 → 0.728 (**−40.9 %**) at 10 % coverage, HepG2
+0.895 → 0.612 (−31.6 %), Jurkat 1.011 → 0.675 (−33.3 %), RPE1 0.805 → 0.664
+(−17.5 %). Calibration strictly monotone by quintile in all four.
+
+**K562 and Jurkat sit above D=1 at full coverage** — the transfer is on average
+worse than predicting zero there — and selection brings them below 1. That is
+the operational value.
+
+**HepG2 works.** First phase in which it behaves normally (Spearman 0.656,
+second highest; −23.1 % D at 50 % coverage).
+
+### [Know] Neither M1 nor M2 beats M0 — predeclared rule fires, STOP
+
+M0 >= learned on ranking in **4/4** contexts and on risk-coverage in **16/20**
+(context, coverage) cells. Ridge coefficients are sign-inconsistent for 9 of 12
+features, with obvious collinearity (`source_agreement` and
+`source_min_agreement` get identical coefficients). **Final estimator = raw
+source agreement.** One number, no fitting, no hyperparameters, nothing to leak.
+
+### [Know] Trustworthiness and error magnitude are near-OPPOSITE objectives
+
+**Targeting the least-confident perturbations captures ~HALF of random**
+(M0 at 20 % budget: 0.10–0.12 vs random 0.20). Structural reason: low source
+agreement tracks low *reproducible signal*, and a perturbation with no
+reproducible response contributes little absolute error however badly predicted.
+
+Ranking by **expected error magnitude** instead captures ~2x random (20 % budget:
+**0.38–0.41**). But that ranking is a terrible trustworthiness score — its
+risk-coverage similarity at 10 % coverage is 0.23–0.41, *below* the
+all-perturbation baseline. **A practical system needs two scores for two
+questions and must never use one for the other's job.**
+
+Also worth remembering: **AURC on absolute residual energy is a degenerate
+metric** — `source_magnitude` and even *random* beat source agreement on it,
+because selecting tiny-response perturbations trivially minimises absolute
+error. Only the normalised metrics (D, reliability-normalised similarity) are
+meaningful for trustworthiness.
+
+### Scientific framing implication
+
+The defensible claim is **not** "we predict context-specific responses" but
+**"we predict conserved responses, and can say in advance, per perturbation and
+per unseen context, how much to trust each prediction."** Directly actionable
+for Arc: a confidence score can gate or weight submitted perturbations with no
+additional measurement.
+
+### Commands run
+
+```
+uv run python scripts/run_transferability_confidence.py
+uv run python scripts/plot_transferability_confidence.py
+uv run pytest -v   # 314 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+### Next step
+
+Stop for review.
