@@ -1,0 +1,3 @@
+# DepMap 24Q4 Public — acquired 2026-09-20, upstream md5 verified on download
+3d8f3ec6dbf2db7ff834b79b508622ec0b226f3518003fe96ecf5a4fcf167e3b  data/raw/depmap/CRISPRGeneEffect.csv
+b7a0c1385e6cef30132b56aff61f1261d11e3f490490b355c430d32ee0dbdcfa  data/raw/depmap/Model.csv

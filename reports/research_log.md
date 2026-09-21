@@ -1573,3 +1573,326 @@ uv run ruff check . ; uv run ruff format --check . ; uv build
 ### Next step
 
 Stop for review.
+
+---
+
+## 2026-09-20 — Arc Challenge Bridge v1
+
+Turning the frozen findings into an Arc-compatible predictor over the official
+18,533-gene raw-count output space. **No model fitted, no submission made, no
+prior conclusion modified.** Gamma, pathway-residual and confidence modelling
+all remain closed.
+
+Reports: `reports/arc2026_submission_requirements.md`, `reports/arc_bridge_v1.md`
+New package: `virtual_cell.arc` (`panel`, `generate`, `metrics`)
+
+### [Blocker] Zero of the 300 Arc targets are perturbed in ANY research context
+
+Across the four contexts the whole programme was built on — `replogle22k562`,
+`replogle22rpe1`, `nadig25hepg2`, `nadig25jurkat` — **0/300 Arc targets appear
+as perturbations**, though all 300 appear as measured output genes. Replogle and
+Nadig screen **essential-gene** libraries; Arc's panel is largely non-essential
+regulatory genes. The libraries are near-disjoint by construction.
+
+Checked, not assumed: source-to-source perturbation intersections are large and
+correct, NTC counts match published values exactly, and spot checks confirm
+"perturbed in: NONE / measured in: all four".
+
+Widening to all seven public scPertEval datasets: **86/300** targets have any
+perturbation data (`kaden25rpe1` 80, `arch1` 13), and only **7** have it in ≥2
+contexts — the minimum for separating `beta_p` from `gamma[c,p]`.
+
+**This is a different generalization axis.** We characterised unseen *context*.
+For 71% of Arc's panel the problem is an unseen *perturbation*, about which this
+project has produced no evidence either way.
+
+### [Know] The score's zero is the MEAN RESPONSE, not the control
+
+From `cell-eval2` `configs/vcc2026.yaml` and
+`docs/vcc2026_metrics/vcc2026-metrics-brief.md` (rule_version 3): six equally
+weighted members, each rescaled `s = (u − b)/(r − b)` with `b` the context's
+mean perturbation response and `r` a replicate of the experiment.
+
+**A control-emitting submission scores −0.311**, not 0 — almost entirely via
+`de_wilcoxon_direction_fidelity_yield_raw`, where calling nothing scores 0
+against a baseline of 0.51. Predicting no effect is a third of a point *worse*
+than predicting the panel mean.
+
+The useful corollary: averaging `delta[c,p] = mu + alpha_c + beta_p + gamma[c,p]`
+over `p` leaves `mu + alpha_c` by the centring constraints, so **the scale's zero
+is exactly the context main effect** — a quantity the foundations phase already
+studied. Estimating it for A/B/C is the cheapest real gain available.
+
+### [Know] The output-space gap is not a gap
+
+166 Arc genes are measured in no public dataset (olfactory receptors, defensins,
+KIRs, testis/keratin genes). **Zero of them clear the metric's 5 CPM control
+gate in any context**, so four of six members never test them, and they hold
+**0.0000%** of the control profile's squared norm for the other two. Restricted
+to the 11,957 genes that are tested, public coverage is **100.00%**.
+
+### [Build] `virtual_cell.arc`
+
+- `panel` — categorises every panel gene (`predicted` / `measured_no_response` /
+  `unmeasured`); `fill` is an explicit argument so zero-filling is a recorded
+  decision, never a default.
+- `generate` — `G0` control resampling, `G1` control transport, `G2`
+  negative-binomial count model. All validated against 3,000 real control cells
+  per context: integer, non-negative, depth and density matching the controls.
+- `metrics` — all six scored members reimplemented, validated against the
+  values the specification states analytically.
+
+**Defect found and fixed:** `G1` re-drawing from a cell's own empirical
+composition lost **17% of detected genes**, which would have biased every
+Wilcoxon member. Blending with the pooled control composition (`smoothing=0.5`)
+restores density to 0.320 against the controls' 0.323.
+
+### [Warning] Arc's contexts are FURTHER APART than any pair we measured
+
+Basal `log1p(CPM)` correlations: A–B 0.780, A–C 0.749, B–C 0.842. The four
+public contexts sit at 0.89–0.93. **Every transfer number in this project was
+obtained on easier context pairs than Arc will score.** Our results are an
+optimistic bound, not a neutral estimate. (Distance only; no identity inference.)
+
+### Commands run
+
+```
+vcc --version ; vcc prep --help ; vcc sample --help
+uv run python scripts/run_arc_bridge.py
+uv run pytest -q   # 356 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+### Next step
+
+Stop for review. Two decisions are the user's:
+1. Approve the 10 GB `arch1` + `kaden25rpe1` download (the only public data with
+   any Arc target coverage, and an Arc-like held-out-context benchmark at 97%
+   gene overlap).
+2. Approve estimating `mu + alpha_c` for A/B/C from basal controls, which moves
+   the floor from −0.31 to 0 across all 300 targets using permitted inputs only.
+
+---
+
+## 2026-09-20 — Unseen-perturbation generalization v1
+
+The Arc bridge established that the central problem is **unseen context +
+unseen perturbation**, not unseen context with seen perturbations. This phase
+built that benchmark and ran it.
+
+Report: `reports/unseen_perturbation_generalization_v1.md`
+New: `virtual_cell.priors` (catalogue, features),
+`virtual_cell.modelling.unseen_perturbation`,
+`virtual_cell.modelling.context_main_effect`
+Acquired: `arch1`, `kaden25rpe1` (approved), `wessels23` (0.2 GB, so the
+coverage audit could be entirely local). All md5-verified against upstream.
+
+### [Know] Unseen beta_p IS predictable — internally
+
+STRING-network k-neighbour transfer, with no measurement of the knockdown
+anywhere: **P1 r=+0.509, 24.7% of response energy removed.** Both axes held
+out (P2): r=+0.235, 2.9% removed.
+
+Prior ranking, consistent across regimes: **STRING > DepMap > Reactome > basal
+> Hallmark.** Network/DepMap/pathway priors beat target-gene basal expression
+by ~20x in energy removed. Combining families adds nothing over STRING alone.
+
+### [Negative] It does NOT survive a real context shift
+
+On `arch1` — 100 perturbations absent from every source, a genuinely external
+context, estimator and hyperparameters frozen beforehand — the same predictor
+scores **r=+0.057 and leaves MORE error than predicting zero** (1.704 vs
+1.000). No estimator beats U0.
+
+The isolating contrast, same context and gene axis: the 17 `arch1`
+perturbations that ARE measured in the sources still transfer at r=+0.302,
+unexplained 0.966 under the frozen scale calibration. **Direct measurement of a
+perturbation survives the context shift; inferring it from gene annotations
+does not.**
+
+The internal benchmark was measuring transfer between four screens sharing a
+study design, protocol and gene panel. Arc's contexts are further apart from
+each other (basal r 0.75–0.84) than ours are (0.89–0.93).
+
+### [Negative] The feasible context main effect also fails externally
+
+`m_c = mu + alpha_c` is the VCC score's zero. Internally, E2 (basal-weighted,
+one scalar fitted inner-LOO) beats the zero response in all four folds — but
+only because of the scalar: E0/E1 recover direction (r 0.68–0.82) and get
+magnitude badly wrong (K562 overshoots 2.1x, RPE1 undershoots to 0.36x).
+
+On `arch1`: **with a perfect oracle scalar, 89.0% is still unexplained**
+(direction r=0.33), against 32–51% internally. `arch1`'s responses are 3–5x
+smaller in norm than the four screens'. **Target controls do not automatically
+deliver score 0.** This is a limit, not a calibration bug.
+
+### [Know] The Tier-0 confidence statistic is NEIGHBOUR AGREEMENT
+
+Source agreement is undefined without source responses. Two candidates tested:
+
+- **Support distance fails** — Spearman vs accuracy: basal **−0.25**
+  (backwards), STRING −0.06, combined +0.02. Hallmark ranks highest and is the
+  worst predictor, so the ranking is anti-correlated with usefulness.
+- **Neighbour agreement works** — do the genes standing in for the unseen one
+  agree with *each other*? DepMap +0.50, combined +0.47, Reactome +0.43,
+  STRING +0.26. Holds externally: **+0.314 on arch1**.
+
+### [Know] Ceilings that make the numbers interpretable
+
+In P2: `oracle_beta` leaves 0.587 unexplained (the rest is gamma — permanently
+closed), scale-calibrated Tier-2 transfer 0.903, best unseen prediction 0.971,
+zero 1.000. So the entire budget for any beta model is 41.3%; Tier-2 captures
+9.7%, Tier-0 captures 2.9%.
+
+Also: **raw conserved transfer scores 1.043 — worse than zero.** The frozen
+scale calibration is not a refinement, it is what makes transfer beat doing
+nothing.
+
+### [Decision] No nonlinear model. Tier 0 gets no prior-based beta.
+
+Ridge already reaches the k-NN ceiling internally and collapses identically
+externally, so the failure is not capacity. 30.8% of Tier-0 Arc targets have no
+STRING representation at all. Adding a prior-based beta to Tier 0 would be
+optimising against the benchmark that `arch1` just proved misleading.
+
+Support tiers frozen in `data/splits/arc_target_support_v1.csv`:
+**TIER 2 = 7, TIER 1 = 79, TIER 0 = 214.**
+
+### Leakage protocol
+
+Both axes held out in the hardest regime; projections fitted on training
+perturbations only. Leakage is tested, not argued: replacing the outer
+context's responses with noise, replacing held-out perturbations' responses in
+every context with noise, and both at once, each leave predictions
+**bit-identical** for every estimator — plus a guard test confirming that
+corrupting the *readable* block does change them.
+
+### Commands run
+
+```
+uv run python scripts/audit_public_datasets.py
+uv run python scripts/run_unseen_perturbation.py
+uv run python scripts/run_arch1_external.py
+uv run pytest -q   # 405 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+All 18 freeze manifests verified: 199 files, 0 failed.
+
+### Next step
+
+Stop for review. The main caveat on the central negative claim is that `arch1`
+is a **single** external observation; a second external context would confirm
+whether the collapse is general or specific to hESC biology and that study's
+CRISPRi efficiency.
+
+---
+
+## 2026-09-21 — External unseen-perturbation validation v1
+
+Diagnostic phase: **why** did the internal unseen-perturbation result fail on
+arch1? No model built, nothing tuned.
+
+Report: `reports/external_unseen_perturbation_validation_v1.md`
+New: `virtual_cell.modelling.external_benchmark` (transcription of the frozen
+arch1 protocol, plus `target_reliability`)
+Audit record: `data/provenance/external_candidates.md`
+
+### [Method] The protocol is provably the frozen one
+
+`run_arch1_external.py` is frozen, so the protocol was transcribed and the
+transcription **checked**: the script re-scores arch1 and refuses to touch
+Kaden unless every number matches `arch1_external.csv`. Max difference
+**9.0e-17**.
+
+### [Negative, and uninformative] Kaden cannot answer the question
+
+`kaden25rpe1` was meant to separate study shift from context shift — an
+independent screen in RPE1, where Replogle RPE1 is already a source.
+
+Unseen prediction fails (knn r=+0.016, ridge +0.018; both worse than zero on
+energy). **But the positive control fails too**: directly measured transfer of
+the same 113 perturbations in the same cell line gives **r=-0.033** (arch1's
+equivalent: +0.302).
+
+Checked before interpreting: Kaden's basal control profile correlates with
+replogle22rpe1 at **r=0.974**, the highest pair in the project — cell line and
+gene axis are right. Yet for the same 113 perturbations Kaden vs each source is
+-0.013 to -0.016, while replogle22rpe1 vs the other three *cell lines* is +0.157
+to +0.205. Two screens of the same perturbations in the same cell line agreeing
+*less* than screens in different cell lines is not a plausible biological
+result.
+
+### [Know] The cause: target-side reliability
+
+Split-half Spearman-Brown of each target context's own responses:
+
+| context | subset | cells/pert | SB | ceiling |
+|---|---|---|---|---|
+| arch1 | measured (17) | 790 | **0.952** | 0.976 |
+| arch1 | unseen (100) | 1,182 | **0.838** | 0.916 |
+| replogle22rpe1 | — | — | 0.570 | 0.755 |
+| kaden25rpe1 | measured (113) | 379 | **0.128** | 0.358 |
+| kaden25rpe1 | unseen TF (300) | 400 | **0.115** | 0.339 |
+
+Kaden is the least reproducible context in the study — 7x below arch1 — with
+the smallest effects (‖delta‖ ~1.9 vs 3.6-6.1 in sources) despite healthy cell
+counts. So this is weak knockdown or weak transcriptional consequence, not thin
+sampling. Disattenuation changes nothing.
+
+**Verdict: Interpretation C.** Kaden is uninformative; it supports neither A nor
+B. The study-vs-context question **remains open**. The arch1 conclusion is
+unchanged and strengthened — its reliability is the highest measured, so its
+failure was never attenuation-limited.
+
+### [New binding criterion] Qualify a benchmark on reliability BEFORE using it
+
+A negative result on a target whose responses do not reproduce is
+uninterpretable: the ceiling on any correlation is sqrt(rho). This criterion
+did not exist before and now governs candidate selection.
+
+### [Audit] Second external context
+
+**Accession correction: GSE212396 is the PILOT** (50/200-gene libraries). The
+~2,285-gene TeloHAEC screen is **GSE210681**.
+
+| | TeloHAEC GSE210681 | Feng targeted |
+|---|---|---|
+| context | endothelial (very distinct) | iPSC (pluripotent, like arch1) |
+| Arc targets | **66** | 5 |
+| our gene axis | **6,613/6,640** | 5,213/6,640 |
+| unseen perturbations | 1,925 nominal | 141 |
+| measured-transfer controls | 250 | **170** |
+| **targets with >=10 sig genes** | **93/2,345 (4.0%)**, median 0 | **444/444 (100%)**, median 189 |
+| usable unseen | **48** | **141** |
+
+TeloHAEC wins every structural criterion and fails the one that matters. Its
+weakness is corroborated by the authors' own program-level MAST (12.9% with any
+significant program) and is consistent with their design — they aggregate into
+60 NMF programs because individual CAD-locus perturbations are weak.
+
+**Selected: Feng.** Limitations stated up front — only 5 Arc targets, a
+pluripotent context not maximally distant from arch1, 5,213 shared genes, and
+median 74 cells/target/line so only the pooled estimate is usable. Its
+distinctive value is 20 cell lines, which tests degradation across contexts
+with study and protocol held fixed — the variable Kaden failed to isolate.
+
+### [Unchanged] Arc Tier-0 policy
+
+Zero perturbation-specific beta for Tier 0. The policy changes only on new
+external evidence; this phase produced none in either direction.
+
+### Commands run
+
+```
+uv run python scripts/run_external_validation.py
+uv run pytest -q   # 411 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+All 19 freeze manifests verified.
+
+### Next step
+
+Stop for review. One decision is the user's: approve the **1.92 GB** download of
+Feng `TargetedScreen_LFC_byGene-perLine.tsv.gz`. Nothing further was downloaded.

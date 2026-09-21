@@ -1,0 +1,75 @@
+# UNSEEN-PERTURBATION GENERALIZATION V1 — FROZEN 2026-09-20
+#
+# BINDING CONCLUSIONS (do not modify):
+#
+# 1. Arc target support tiers are fixed by identifier presence alone:
+#      TIER 2 (>=2 public contexts):   7 / 300
+#      TIER 1 (exactly 1 context):    79 / 300
+#      TIER 0 (never perturbed):     214 / 300
+#
+# 2. Unseen beta_p IS predictable on the internal four-context benchmark.
+#    STRING k-neighbour transfer: P1 r=+0.509, 24.7% energy removed;
+#    P2 (both axes held out) r=+0.235, 2.9% removed.
+#    Prior ranking: STRING > DepMap > Reactome > basal > Hallmark.
+#    Network/DepMap/pathway priors all beat target-gene basal expression.
+#
+# 3. THAT RESULT DOES NOT SURVIVE A REAL CONTEXT SHIFT. On arch1 -- 100
+#    perturbations absent from every source, a genuinely external context --
+#    the same frozen estimator scores r=+0.057 and leaves MORE error than
+#    predicting zero (1.704 vs 1.000). No estimator beats U0.
+#    On the same context and gene axis, Tier-2 scale-calibrated transfer of a
+#    MEASURED perturbation still works (r=+0.302, unexplained 0.966).
+#    Direct measurement transfers; prior-based inference does not.
+#
+# 4. The feasible context main effect also fails externally. With a PERFECT
+#    scalar, 89.0% of arch1's main effect is unexplained (direction r=0.33),
+#    against 32-51% internally. Target controls do NOT automatically deliver
+#    score 0. This is a limit, not a calibration bug.
+#
+# 5. The Tier-0 confidence statistic is NEIGHBOUR AGREEMENT, not support
+#    distance. Support distance is uncorrelated or backwards (basal -0.25,
+#    STRING -0.06); neighbour agreement reaches +0.50 internally and +0.314
+#    on arch1. Source agreement remains undefined for Tier 0.
+#
+# 6. A NONLINEAR MODEL IS NOT WARRANTED. Ridge already reaches the k-NN
+#    ceiling internally and collapses identically externally; the gamma floor
+#    caps any beta model at 41.3% energy reduction in P2; and 30.8% of Tier-0
+#    Arc targets have no STRING representation at all.
+#
+# Tier 0 therefore receives NO prior-based beta in the hybrid Arc strategy.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/unseen_perturbation_v1_freeze.txt
+c56d58d152f74411002977c777a301f5631b5b60e771084f8e0cfbe0619a8be8  reports/unseen_perturbation_generalization_v1.md
+518d5261882cec63742de7d2e0e3a3f41b18d037910198c60f43f2e8a622b6f4  src/virtual_cell/modelling/unseen_perturbation.py
+b2aeae01f2f14c814f0bf223a6045d1ac5de8facaf60b41a9466b1443e475d62  src/virtual_cell/modelling/context_main_effect.py
+02d93ae2c3660233437c8f40a26ed91f5e005eae3e5504272771cb9454f98cd3  src/virtual_cell/priors/__init__.py
+e4fdbbed8c8d981b83d244799e8eca88b8e58277da86b67357f71c3c00cd542f  src/virtual_cell/priors/catalogue.py
+1b4147da51ae05cb380c02aabf77fedd574a547a5ef19ed49e5ad1ef693d9490  src/virtual_cell/priors/features.py
+49586d66f90881db9a4dcd83dc380c4ae8cd56cbba54218945d378738e587a49  tests/test_unseen_perturbation.py
+a38ee742b82632aabced9e97b6e9637b76525ff5b8c863e0658e5284f8623f77  scripts/run_unseen_perturbation.py
+84da5939bf3add345b992ad77a43a74bfb5eeef1f1d5a64cb78fd9698100bd11  scripts/run_arch1_external.py
+493d47acbf5c57fa0851b117bb62d32c94074b52af42915129c463dc35e4502c  scripts/audit_public_datasets.py
+2280f40b2ce874eef335dab169216d7aad476a887dd49b04845a5a5c4b3ed6f4  data/splits/arc_target_support_v1.csv
+82839607d9ba11cae38da20e8b9cff6ba5fd401ba99930046c3248fa7fe0d327  data/provenance/scperteval/acquired_2026_09_20.md
+deb39b62356123db4c32c490f83683e7f2523aa43e6cf4429d430609b6f5a491  data/provenance/scperteval/acquired_2026_09_20_sha256.txt
+873fe5d65235ea8bdfa17275814597b14627f47e75590e1a9f03ad04bc091785  data/provenance/scperteval/public_label_inventory_v2_local.json
+06e1f8ff76c178fd3aa4125a401028d226b8a9c066b372e18724fb633000834c  data/provenance/string/string.md
+5fb9213d5ba2d4e3a7484ea560385f4c0fa8c570bd99723e0606d01ef6e0f123  data/provenance/string/string_sha256.txt
+c451fe4d172d672dc0bb6530217b74bdfeb5918abd50a30b6d284ff381541562  data/provenance/depmap/depmap.md
+39c74857efde3ab6b34293514ff8498a7c8cd78aa32047df9494fe71e25955e9  data/provenance/depmap/depmap_sha256.txt
+b6373e0a44fc27c28e408b21bb2a4cd093ffc416c01417705f256463c727639e  data/provenance/scperteval/arc_bridge_v1_freeze.txt
+107ed91c67fe86ec2db8134fc4dadad8fed69123def09b3b6592847b343af1cf  outputs/unseen_perturbation_v1/arch1_confidence.csv
+e729c51ecd0b109a8dad6f781ba68f90759cd0f98a908ac5cec3c3c803b87d2c  outputs/unseen_perturbation_v1/arch1_external.csv
+c362b6ab4694e6aca4642ca9998a203e1e0d113f3b3f94b56f051938325f7ddd  outputs/unseen_perturbation_v1/arch1_main_effect.csv
+db16e06801ce0a3e4faa2d0bad309de0d58fc542f160fb5d5a3de503160d2453  outputs/unseen_perturbation_v1/arch1_seen_perturbation_reference.csv
+018b6e9eb924fa1e409664757b278872f2d150757a2ef1758e9e32670a352b78  outputs/unseen_perturbation_v1/benchmark_per_perturbation.csv
+2476798119baade4351c456327eadf79c81287cc7d589b3673b2b48c8d432c5e  outputs/unseen_perturbation_v1/benchmark_summary.csv
+64b82b1e7791bc80f109b4959261c8144f52a686db990e27527d7d015ec0ee07  outputs/unseen_perturbation_v1/ceilings.csv
+eb4c23d4ff7dac21b152afff2147eeaeb5c81f5fbd71247835b98f64153dcd1d  outputs/unseen_perturbation_v1/context_main_effect.csv
+30b1acd0f960f0996ac45793ac23a3cabd1146aeefd7ddfc636b12c935e0e786  outputs/unseen_perturbation_v1/dataset_audit.csv
+541b1fa718b6d99d25c06f773b19a1bfbb980d49550ae827e3d72362efe8850a  outputs/unseen_perturbation_v1/prior_coverage.csv
+af666916d29c5639dbfea9860686513bb097e44aa7e205b4ec62255a9c186edf  outputs/unseen_perturbation_v1/support_distance.csv
+7272c7f09eb61bb2eb20357cac5c0516e6ebc5dcaf86456cc17dd554929e2a7b  outputs/unseen_perturbation_v1/support_vs_accuracy.csv
+8d130f43bba0062d6d1ded2f864107d3fc2576f7f2ff886611eaff07b004f505  outputs/unseen_perturbation_v1/zero_support.csv
+ca2e39a76237089f792b7e1a9d9cd60154d6876b90b45e398d9597c77f83af2c  outputs/unseen_perturbation_v1/arch1_summary.json
+48dab306d21b2fb76ca8e33ec8855dd9bcc935bab269a087a6d63920848c14eb  outputs/unseen_perturbation_v1/summary.json

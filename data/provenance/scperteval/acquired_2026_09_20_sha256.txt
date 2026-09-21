@@ -1,0 +1,4 @@
+# scPertEval datasets acquired 2026-09-20
+f85862ecc9d9c34c1765b395105c74af08480471ade27ce8466d742d73c1449e  data/raw/scperteval/arch1_processed_complete.h5ad
+837f05b08c5227bb91e19929896251f6d263ad8d3eb4b3f60f8fffc887c42012  data/raw/scperteval/kaden25rpe1_processed_complete.h5ad
+2cfd1998d79f0d490913f7a9338ee3027efd82979c3be696947a20ac05ba7952  data/raw/scperteval/wessels23_processed_complete.h5ad

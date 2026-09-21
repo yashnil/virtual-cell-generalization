@@ -1,0 +1,45 @@
+# ARC BRIDGE V1 — FROZEN 2026-09-20
+#
+# Recorded at the close of the Arc challenge bridge phase, before any
+# unseen-perturbation work. These artifacts are not revisable.
+#
+# BINDING CONCLUSION (do not modify):
+#
+#   The original four-context perturbation set has 0/300 Arc target overlap.
+#   Across all currently audited scPertEval datasets, only 86/300 Arc targets
+#   have any direct perturbation measurements and only 7/300 appear in >=2
+#   contexts.
+#
+#   Therefore direct conserved-response transfer cannot cover most of the Arc
+#   panel.
+#
+# A second conclusion of this phase, also binding:
+#
+#   The official VCC 2026 score anchors 0 at the context MEAN PERTURBATION
+#   RESPONSE, not at the control. A control-emitting submission scores -0.311.
+#   Averaging the decomposition over p leaves mu + alpha_c, so the scale's zero
+#   is the context main effect.
+#
+# The central Arc problem is therefore UNSEEN CONTEXT + UNSEEN PERTURBATION,
+# not UNSEEN CONTEXT with SEEN PERTURBATIONS as the four-context benchmark
+# studied.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/arc_bridge_v1_freeze.txt
+5f3a01a4ea6e3957686413b4710de534b40cf1a14819b0bfec4ed68f405e3f6a  reports/arc_bridge_v1.md
+edf724cccd3340c798ba972892f2b257a5511a1d06e5d7bc814c666740f487ae  reports/arc2026_submission_requirements.md
+d0a5a962aa38b733fe2f8574e619f7999d9b1f9ff08152fd2dd3a75698aadc84  reports/arc2026_controls_audit.md
+52cbdf3345b359cfcaf3f91903f9f0a27262fcbd596cf3dac0706c5eeb9d9945  src/virtual_cell/arc/__init__.py
+3d9a0ad4ecb0e2ca2ce3c3ec9c8689fb93a9b7655190d1b5df901bbbc89876b4  src/virtual_cell/arc/panel.py
+0c80e8dcf5f8eb60d9a38e4b84ec609800582a43ef91f938d5bf30cffe78101f  src/virtual_cell/arc/generate.py
+0fc094521eee004ebaa50799230bf8615d0671674cffee8789ba63ba1e5d42ef  src/virtual_cell/arc/metrics.py
+b3c89abc8086e0bdd86219eadb4f853ba520abfec1cf0fd2064dc739d053b4fc  tests/test_arc_bridge.py
+d34f6c9faa17f3a146543c3f77d63e19527ffa9dbe27bc2d67a92d7eb0d43861  scripts/run_arc_bridge.py
+8fae5a691492845c22b9a7a74f91ebbf99fc357897f65643ba90cb6400780a23  outputs/arc_bridge_v1/gene_coverage.csv
+fa75663afbe3f82c8f01c7ea7c6ec09aabbedff9ff1bbc361e46cf868b1170f6  outputs/arc_bridge_v1/target_coverage.csv
+018d9db0c91365318bd8221b99e18ea98a732b6d77073e5c34e087b92da9f61a  outputs/arc_bridge_v1/dataset_coverage.csv
+8aadf4594e6fff03970c9ca4aa9e8de0fd83fa8846d06334a17d9299e3edfa83  outputs/arc_bridge_v1/score_accounting.csv
+b845ce476b62b73093fabd40528bb214b7d781ff721c9b75b20a9136ee0d4fd3  outputs/arc_bridge_v1/generator_validation.csv
+0bfd4e7aeb9d349c8e1349396cc1c710bca25dfc9fecee4448092e7ef60f6f02  outputs/arc_bridge_v1/summary.json
+a9786e11ce0c9c604b8d769014a703f57124241ed997c8922bd02e185d4bb5bd  outputs/arc_bridge_v1/arc_basal_log1p_cpm.npy
+0ae6c428b2e61f64256ce7f45a36a2dbef44bf2f9b786d14f27f368244bdb32d  data/provenance/scperteval/public_label_inventory.json
+0b3c5864cbbed9a0899eb24ba13670c2bd86b43ea8ceb1e32a1db7dab321cb64  data/provenance/scperteval/research_conclusions_freeze.txt

@@ -1,0 +1,34 @@
+# RESEARCH CONCLUSIONS — BINDING, FROZEN 2026-09-20
+#
+# Recorded before the Arc challenge bridge phase. These are not revisable
+# during the bridge.
+#
+#   1. Scale-calibrated conserved transfer is THE point-prediction baseline.
+#      B = template + s * centre_p(A), s fitted by inner leave-one-source-out
+#      on source contexts only (fitted 0.52-0.59 across folds).
+#
+#   2. Raw source agreement is THE final confidence statistic. No learned
+#      confidence model is justified: M0 >= learned on ranking in 4/4 contexts
+#      and on risk-coverage in 16/20 (context, coverage) cells.
+#
+#   3. NO gamma or pathway correction is currently justified. Pathway residual
+#      models v1 and v2 both failed to improve outer response prediction; at the
+#      theoretically correct coefficient v2 made every context worse. TERMINATED.
+#
+#   4. Confidence and absolute experiment-priority are DISTINCT objectives.
+#      Targeting least-confident perturbations captures ~half of random error;
+#      ranking by expected error magnitude captures ~twice random. Two scores,
+#      two questions, never interchangeable.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/research_conclusions_freeze.txt
+68824d81c8378b9c6039ce09797090da93710d76cc07ba5bcff1d8d6ff14fb9f  reports/transferability_confidence_model_v1.md
+78218c72904fde54bd66b506bbfbfb5d1139fa0c69556341f07db927e0194b49  outputs/transferability_v1/summary.json
+e3a3e2bcb909123c4e8e14d05aef568dbf742ee3db3d45b9374b2b3f53501fab  outputs/transferability_v1/stability_rule.json
+154ff54143bdb1f5ee04257f13b1a0811e9ffa92c9d15d75876ff2b22a5b34f4  outputs/transferability_v1/ranking.csv
+a427191d4535e908a6644932b9c65b3d41093202ad391375996a024b982c13d9  outputs/transferability_v1/risk_coverage.csv
+e89411baa7db29354dc975a987451b1004db1877fbdcd893a239ae3531482450  outputs/transferability_v1/prioritisation.csv
+2fcbe1aad59adf3ab9a47f02c1016a7deb155c2cbe21256a361e910543175bee  outputs/transferability_v1/calibration.csv
+9a26cd29898fdd6eb9989a662f25e152f213f5a134b9397535c243ec5d9e0e27  outputs/transferability_v1/coefficients.csv
+e142209aa40e851a55023d0d7e5c4b772a473f7e05d3fcaf878d0480abecc5ff  src/virtual_cell/modelling/transferability.py
+840d10e9b721bfd24b0b7627fa1ebe7ba61d5a44befb5721cfb4d513d54427ee  scripts/run_transferability_confidence.py
+e9b7d443241db446b9aaaf23f95fb3dd7a49066723eed7c17289c172890b1636  tests/test_transferability.py

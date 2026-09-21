@@ -340,6 +340,8 @@ scripts/                 reproducible entry points (data generation, exploration
 src/virtual_cell/        research package
   data/                  io, summary statistics, synthetic data
   preprocessing/         normalisation and pseudobulk
+  arc/                   Arc 2026 bridge: panel mapping, count generators, local scorer
+  priors/                biological priors for unseen perturbations, with leakage audit
   models/ evaluation/ visualization/   placeholders for later phases
 tests/                   pytest suite for data assumptions
 reports/                 literature notes, research log, data audits

@@ -1,0 +1,58 @@
+# EXTERNAL UNSEEN-PERTURBATION VALIDATION V1 — FROZEN 2026-09-21
+#
+# BINDING CONCLUSIONS (do not modify):
+#
+# 1. The frozen arch1 conclusion is UNCHANGED:
+#      "STRING-based unseen-perturbation prediction succeeds internally but
+#       fails on arch1."
+#    It is STRENGTHENED: arch1's own split-half reliability is 0.84 (unseen) and
+#    0.95 (measured), the highest of any target context measured, so its
+#    negative result is not attenuation-limited.
+#
+# 2. kaden25rpe1 is an UNINFORMATIVE benchmark — Interpretation C.
+#    Unseen prediction fails (r=+0.016) but so does the POSITIVE CONTROL:
+#    directly measured transfer of the same 113 perturbations in the same cell
+#    line scores r=-0.033. Cause: Kaden's own responses barely reproduce
+#    (Spearman-Brown 0.115-0.128, ceiling ~0.34) despite 400 cells/pert.
+#    Basal control correlation with replogle22rpe1 is 0.974 - the highest pair
+#    in the project - so the cell line and gene axis are correct; the signal is
+#    not there. Kaden provides NO evidence for or against Interpretation B, and
+#    the study-shift versus context-shift question REMAINS OPEN.
+#
+# 3. NEW BINDING CRITERION: an external benchmark must be qualified on TARGET
+#    RELIABILITY before use. A negative result on a target whose own responses
+#    do not reproduce is uninterpretable, because the ceiling on any
+#    correlation is sqrt(rho).
+#
+# 4. Candidate audit. GSE212396 is the PILOT; the 2,285-gene TeloHAEC screen is
+#    GSE210681. TeloHAEC wins on Arc overlap (66 targets), gene axis
+#    (6,613/6,640) and unseen count (1,925 nominal) but FAILS on signal: only
+#    4.0% of targets have >=10 significant genes (BH per perturbation), median
+#    0, leaving 48 usable unseen and 20 usable controls.
+#    Feng et al. targeted screen (444 genes, 20 iPSC lines) has 100% of targets
+#    with >=10 significant genes, 141 unseen, 170 measured-transfer controls,
+#    but only 5 Arc targets and a pluripotent context similar to arch1.
+#    SELECTED: Feng, on criterion 3. Requested download: 1.92 GB per-line LFC.
+#
+# 5. THE TIER-0 ZERO-EFFECT POLICY IS UNCHANGED. It changes only on new
+#    external evidence, and this phase produced none in either direction.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/external_validation_v1_freeze.txt
+615bf520be318ffeb2d9be0816e9d2b0401ebfe2125f78a9372a146272b5cabd  reports/external_unseen_perturbation_validation_v1.md
+6b76c2bff38c76ba566fb5f07bec7c7c048d0696ba1215276a23ab863c6d689b  src/virtual_cell/modelling/external_benchmark.py
+3e3e20bbd5bf30b38b6dffb8c58bf16e60a2fc746f2a4ebfe35e09e551a76ea3  tests/test_external_benchmark.py
+8d1d2736c202964a83ea10142a24304114799f9a1e8cfe2cb501bee58f6b4048  scripts/run_external_validation.py
+99ec5b383dd82de0e006a0eed8c976f1e82913752bca3c222a8957d1ced3b770  data/provenance/external_candidates.md
+363c95e4c850568cbe1dc51cdf41c5bd98dcd1eb6bfd07d881e1b74ee34a036a  data/provenance/scperteval/unseen_perturbation_v1_freeze.txt
+1084fe841e9898da805b606257298cd639d8040c105ead98b900b9ea3fc739ec  outputs/external_validation_v1/confidence_comparison.csv
+717ebe992de59330c6d62c73fadf612a313eb54ec633e2ece66d73a0e3d892c3  outputs/external_validation_v1/external_comparison.csv
+6a09df4af224daca83194b69152db4d09c1904e3c55eb949f366298ed6cb3b7e  outputs/external_validation_v1/kaden_confidence.csv
+082a6c5a2e2b72d7955009f1b76fc13e143ff73c2792576cc31defc4346a3d1f  outputs/external_validation_v1/kaden_main_effect.csv
+38ac7ebd6c8b89656971e36f83a9630d4c071b82c764dbac2a3dc1ee8bdac88a  outputs/external_validation_v1/kaden_seen.csv
+53985b8b7ba9e4415c907623e73c1c4d1cc5eae19f8c4192bf6284f607b8998f  outputs/external_validation_v1/kaden_unseen.csv
+fb9800b00c2d87f2928502a5a6c1d55573b202d02d57fff6e641f0cd53fbb7b9  outputs/external_validation_v1/reliability_arch1_measured.csv
+339c908474186417344d608c11dfa3c12a81ee69c50249aa6245c14aa4f17207  outputs/external_validation_v1/reliability_arch1_unseen.csv
+d49974ed9efb7aab839f98b505422227c0cec75fd69cbe0ba0845f320a4fdd63  outputs/external_validation_v1/reliability_kaden25rpe1_measured.csv
+971ddd7dad2f5c09579b464f571749603da82d69b60e2bd264c1631466187eba  outputs/external_validation_v1/reliability_kaden25rpe1_unseen.csv
+f091667aed69244635f2cc42cb4b0819f2d0c50b3514c5d77b6aa885421fa1a9  outputs/external_validation_v1/target_reliability.csv
+359ac5bcb50c193893a0329c349971c7f549d656227e8942059b5038b8be25ee  outputs/external_validation_v1/summary.json
