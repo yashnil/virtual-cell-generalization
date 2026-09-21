@@ -1,0 +1,65 @@
+# FENG MULTI-CONTEXT EXTERNAL VALIDATION V1 — FROZEN 2026-09-21
+#
+# BINDING CONCLUSIONS (do not modify):
+#
+# 1. Feng CONFIRMS and STRENGTHENS the arch1 external failure. Across 19 iPSC
+#    lines, the frozen unseen-perturbation predictor scores r=+0.007 (median
+#    per line) and +0.018 pooled -- zero in every line.
+#
+# 2. The POSITIVE CONTROL IS ALIVE, unlike Kaden. Direct measured transfer on
+#    the same lines scores r=+0.128 per line and +0.320 pooled, POSITIVE IN
+#    19/19 LINES and larger than the unseen arm in 19/19.
+#
+# 3. The arm gap is NOT a target-set artefact. Matched on the dataset's own
+#    per-target signal count, measured transfer rises +0.084 -> +0.452 across
+#    signal quartiles while prior prediction stays flat at +0.01 to +0.03.
+#    Better measurement helps direct transfer and does nothing for prior
+#    interpolation. PREDECLARED INTERPRETATION 2.
+#
+# 4. CONTEXT-DISTANCE DEPENDENCE REMAINS UNTESTED. All 19 lines sit within
+#    0.019 of each other in basal similarity to the training contexts, so the
+#    test is impossible here (Spearman +0.009, CI [-0.49,+0.51]). Between-line
+#    variation is explained by MEASUREMENT RELIABILITY instead (r=+0.956 vs the
+#    measured-transfer control) -- Interpretation 4 for the between-line
+#    comparison only. It cannot explain the between-ARM gap, because both arms
+#    are scored on the same lines.
+#
+# 5. NEIGHBOUR AGREEMENT DID NOT TRANSFER. arch1 gave +0.314; Feng gives -0.057
+#    per line and -0.064 pooled. It is downgraded to DIAGNOSTIC ONLY and must
+#    not gate or weight anything.
+#
+# 6. THE TIER-0 ZERO-EFFECT POLICY IS UNCHANGED. Feng is external evidence
+#    against prior-based Tier-0 beta, in all 19 lines and pooled.
+#
+# 7. Per-line data is severely underpowered (median 74 cells per (line,target),
+#    8,241 control cells total, min 86 per line). No TRUE split-half
+#    reliability exists in this file; the cross-line lower bound (0.0001-0.0022)
+#    constrains nothing and is NOT a reliability estimate.
+#
+# The protocol is provably the frozen one: the delta-matrix scoring path
+# reproduces the frozen arch1 result to 9.021e-17 before any Feng line is
+# scored.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/feng_multicontext_v1_freeze.txt
+29d1b9fde8aa78b4f75e3fd2d0f939f97c827fe6ae23c46b9733d6690a68873d  reports/feng_multicontext_external_validation_v1.md
+7b88f6b5d7214b6d2914dae634a30250fc0d9a739ca19c625a206b411927281c  src/virtual_cell/modelling/multicontext.py
+0a21bd693291c5c8c18cd8d6e18c6dfecff31cafc26825c3c3630f657463239f  tests/test_multicontext.py
+c2aa7f13f598b958587c32eeec55866e4108c56c59cd333d4f8498b75336d201  scripts/run_feng_multicontext.py
+010adae0bd569a11ed7c0bd5df2eb23bc41d8f31224a2f5f0347ba66530deed3  data/provenance/feng/feng.md
+54f8e08333e2af39314ad9bd5ffc7961ce82685860b2899a191cd7fc011336ae  data/provenance/feng/feng_sha256.txt
+75cffa19f854fc918a20bc076e5b25bf3db166aa7d46c25defe70a5d385c1493  data/provenance/scperteval/external_validation_v1_freeze.txt
+abd86a65e799b98dbe021d386234993979cff6945eedeeb75931b6ab983da5e6  outputs/feng_multicontext_v1/arm_signal_match.csv
+acd394c99777489fd78ea72387dd835ee1a550e83577b6045987d26f036e8492  outputs/feng_multicontext_v1/cell_lines.csv
+8a4a1a2e8d896903b9662c2935c134fa5a36842943e03d444919e4618df413ab  outputs/feng_multicontext_v1/confidence_per_line.csv
+8c3797ae115eb6c4b0249a244557c2647883233d6497387f85d5438616894a2c  outputs/feng_multicontext_v1/context_distance.csv
+9280aede7be227bc43cc6d101739bbfc91db6379bdfc66cad80697adae7a34c1  outputs/feng_multicontext_v1/cross_line_consistency.csv
+7c91361268977d7def9a9d8c6794615495d8364b383d8549cb4861322bb52b64  outputs/feng_multicontext_v1/distance_tests.csv
+f1ed19c0b5e0677dfbad0e1c38eee7272560ce2b68f4bfc37b34ce28ce5806de  outputs/feng_multicontext_v1/per_line.csv
+8bdd66145176c6dbaad11e415392887cac96be80bf37b0ea10450b6d8b4c0e02  outputs/feng_multicontext_v1/per_line_merged.csv
+dbf3dda22d45b6400396f3d8013bd4ac4e29b27edb4f8548849d755dbd43b473  outputs/feng_multicontext_v1/per_perturbation.csv
+36df118c26ab1af32f6cbc4b8b2e9363d15ec84d3222dc6968e1eba46d44d8c3  outputs/feng_multicontext_v1/pooled_measured.csv
+a549f217c4a5edbb739bde1abbc67db1e2c3425587eaa537b05b943cd141d842  outputs/feng_multicontext_v1/pooled_per_perturbation.csv
+5fb9c19abe03e6fffcd477cfb4b8e1f9567a13b6f4e163c5f605bb91271d8986  outputs/feng_multicontext_v1/pooled_unseen.csv
+bfc9916498e3a8c9b95af00d96a72d17c373ea24670da459a7496bd721d294e5  outputs/feng_multicontext_v1/reliability.csv
+5dc56f2979c8d9b56f62ee7ff4bf3a704019cb56b8f184a49cde587de49c0f08  outputs/feng_multicontext_v1/schema.json
+d8f3de6e9d7779e83d717fb06a6eacfd2247412e5371a463060eb683333b5634  outputs/feng_multicontext_v1/summary.json

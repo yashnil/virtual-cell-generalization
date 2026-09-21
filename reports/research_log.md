@@ -1896,3 +1896,107 @@ All 19 freeze manifests verified.
 
 Stop for review. One decision is the user's: approve the **1.92 GB** download of
 Feng `TargetedScreen_LFC_byGene-perLine.tsv.gz`. Nothing further was downloaded.
+
+---
+
+## 2026-09-21 — Feng multi-context external validation v1
+
+Second external benchmark: 444 CRISPRi targets across **19 iPSC lines**, one
+study, one protocol. No model fitted, no constant changed.
+
+Report: `reports/feng_multicontext_external_validation_v1.md`
+New: `virtual_cell.modelling.multicontext` (delta-matrix scoring path)
+Data: `TargetedScreen_LFC_byGene-perLine.tsv.gz`, 1,919,661,029 bytes, upstream
+md5 verified. Count matrix deliberately NOT downloaded.
+
+### [Method] Protocol equivalence proven before scoring
+
+Feng ships log fold changes, not cells, so the frozen cell-level entry point
+does not apply. The new path **imports** the frozen constants rather than
+redefining them (a test asserts no local copy exists), and the script pushes
+arch1's pseudobulk through it first: **max difference 9.021e-17**.
+
+### [Negative, and this time informative] Feng confirms the arch1 failure
+
+| | unseen (STRING k-NN) | measured transfer |
+|---|---|---|
+| median over 19 lines | **+0.0073** | **+0.1284** |
+| pooled | **+0.0179** | **+0.3201** |
+| lines positive | — | **19/19** |
+
+Unseen prediction is zero in every line; the best is +0.011. **The positive
+control is alive** — unlike Kaden, where it was dead and the benchmark
+uninformative. Measured transfer beats the unseen arm in 19/19 lines.
+
+### [Know] The arm gap is not a target-set artefact
+
+The measured arm is our essential-gene core, the unseen arm is transcription
+factors, so effect strength is a confound. Matched on the dataset's own
+per-target signal count:
+
+| signal quartile | measured | unseen |
+|---|---|---|
+| 16–53 | +0.084 | +0.031 |
+| 53–78 | +0.148 | +0.014 |
+| 78–188 | +0.335 | −0.018 |
+| 188–3363 | **+0.452** | +0.031 |
+
+**Direct transfer rises fivefold as measurement improves; prior prediction is
+flat.** That is the cleanest dissociation available: the two strategies are
+qualitatively different, not quantitatively. **Predeclared Interpretation 2.**
+
+### [Limitation] Context-distance dependence is STILL untested
+
+`wt_expr` turned out to be the per-line unperturbed profile (exactly constant
+within (line, gene)), so basal distance was computable after all — but all 19
+lines sit within **0.019** of each other in similarity to the training contexts
+(0.876–0.895). As contexts they are nearly identical.
+
+Spearman(basal similarity, unseen r) = +0.009 [−0.49, +0.51]. Nothing to see,
+and nothing could have been.
+
+What *does* explain between-line variation is **reliability**:
+Spearman(reliability floor, measured r) = **+0.956 [0.83, 0.98]** —
+Interpretation 4, for the between-line comparison only. It cannot explain the
+between-arm gap, since both arms share the same lines.
+
+### [Negative] Neighbour agreement did not transfer
+
+arch1 +0.314 → Feng **−0.057** per line, **−0.064** pooled. Downgraded to
+diagnostic only; it must not gate or weight anything. Caveat: it is being asked
+to predict an accuracy that is itself ~0.01 here.
+
+### [Know] Per-line power is the binding constraint
+
+Median **74 cells per (line, target)**; only 8,241 non-targeting control cells
+total (0.7%), median 488/line, **minimum 86**. Median significant genes per
+target per line: 0–9 of 5,213, against 189 of 6,520 in the publisher's pooled
+table. Two lines (`tolg_4`, `fiaj_3`) have essentially no signal; reported and
+flagged, not dropped.
+
+No true split-half reliability exists in this file. The cross-line lower bound
+(`rho_i·rho_j ≥ r_ij²`) gives 0.0001–0.0022 — reported for completeness, useless
+as a constraint, and explicitly not a reliability estimate.
+
+### [Unchanged] Arc Tier-0 policy
+
+Zero perturbation-specific beta. Feng is external evidence against prior-based
+Tier-0 beta in all 19 lines and pooled.
+
+### Commands run
+
+```
+uv run python scripts/run_feng_multicontext.py
+uv run pytest -q   # 423 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+All 20 freeze manifests verified.
+
+### Next step
+
+Stop for review. The most valuable remaining experiment is the one none of the
+three external attempts could run: a dataset with **several contexts at
+genuinely different distances** from the training set, each with per-target
+reliability above ~0.3. Until that exists, Interpretation 1 (viability
+conditional on context proximity) is neither supported nor excluded.

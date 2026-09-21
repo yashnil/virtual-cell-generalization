@@ -1,0 +1,2 @@
+# Feng targeted screen, per-line LFC — acquired 2026-09-21
+4aa4b3565bfcd2031e111e729d63b02e831adecffacf235acf33bda442440660  data/raw/feng/TargetedScreen_LFC_byGene-perLine.tsv.gz
