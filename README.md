@@ -24,21 +24,30 @@ reproducible variance, the conserved effect transfers to unseen lines, and
 the interaction could not be predicted zero-shot from basal expression, gene
 priors, or source-context responses by any model they tested.
 
-This project therefore asks three questions, in order:
+This project asked three questions, in order. **All three now have answers**,
+and they are the reason the model is as small as it is:
 
-- **A.** How much context-specific response is identifiable at all under truly
-  zero-shot context shift?
-- **B.** Can richer context-conditioned biological priors recover any
-  predictable portion of the interaction beyond existing approaches? This is
-  treated as a high-risk hypothesis to test, not an expected result.
-- **C.** When the interaction cannot be predicted, can we identify
-  perturbation/context pairs whose conserved effect is transferable enough to
-  act on, and flag the rest for experiment?
+- **A.** *How much context-specific response is identifiable at all under truly
+  zero-shot context shift?* — **Answered.** The interaction is real (21% of
+  response energy) but about half measurement noise, and is recoverable
+  zero-shot only where a genuinely similar partner context exists.
+- **B.** *Can richer context-conditioned biological priors recover any
+  predictable portion of the interaction?* — **Answered: no.** Pathway-level
+  gamma modelling was carried to a clean beta-free target, improved gamma
+  prediction sharply, improved *response* prediction in no context, and was
+  **terminated** under a predeclared stopping rule.
+- **C.** *Can we identify which conserved effects are transferable enough to act
+  on?* — **Answered, and the winner is the simplest statistic.** Raw source
+  agreement predicts transfer quality in all four held-out contexts, beating
+  every fitted alternative — but it **did not replicate externally** and is now
+  **diagnostic only**.
 
-A related direction is predicting whether a perturbation is likely conserved
-or strongly context-dependent in a new context, which is useful even if the
-interaction itself stays unpredictable. The novelty claim is provisional and
-will not be frozen until the decomposition is reproduced on our own splits.
+A fourth question arrived with the Arc panel, where 214 of 300 targets are
+perturbed nowhere in public data: *can a perturbation's effect be predicted from
+priors alone, with no measurement of that knockdown anywhere?* **Answered: no**,
+on two independent external datasets. See
+[`reports/arc_count_space_baseline_v1.md`](reports/arc_count_space_baseline_v1.md)
+for what the programme was ultimately able to build, and what still blocks it.
 
 ## The Arc 2026 task in one paragraph
 
@@ -53,11 +62,14 @@ leaderboard; three different contexts (D/E/F), released October 22, 2026, are
 used for the final ranking. Final submissions are due November 5, 2026, 23:59
 UTC. Scoring uses six metrics normalised so that Arc's official mean-response
 baseline scores 0 and an experimental replicate anchor scores 1. A
-perturbation-specific conserved-effect model is not that baseline and can
-score above 0. Sources are cited in
+perturbation-specific conserved-effect model is not that baseline and can score
+above 0 — but the zero is the **context mean perturbation response**, not the
+control, and a control-emitting submission scores **−0.311**. That number is the
+one to beat, and it is why estimating the context main effect matters as much as
+predicting individual perturbations. Sources are cited in
 `reports/literature_notes.md`.
 
-## Current status (as of 2026-09-21)
+## Current status (as of 2026-09-22)
 
 The research programme is **frozen** and the Arc track has produced its first
 **validated dry-run bundle** — 360,000 cells accepted by `vcc prep --dry-run`,
@@ -69,6 +81,15 @@ prior-derived prediction of unseen perturbations **failed externally** on two
 independent datasets and is not to be reopened. The current model is the
 smallest one that evidence supports: `delta_hat = m_hat + w[tier] * beta_hat`,
 with `beta_hat = 0` exactly wherever no direct perturbation evidence exists.
+
+**The single blocker for a real submission** is that `m_hat` is not estimable
+from the public data that covers Arc's panel: the only two datasets perturbing
+Arc targets have mean perturbation responses that are essentially uncorrelated
+(cosine 0.089, and **0.030** on the seven targets both measure), so the frozen
+estimator correctly shrinks toward zero and 214 of 300 targets end up close to
+control-emitting. A better estimator is not the fix. Details and the ordered
+list of what remains: [section L of the count-space
+report](reports/arc_count_space_baseline_v1.md).
 
 Implemented:
 
@@ -103,6 +124,18 @@ Implemented:
 - `virtual_cell.analysis.falsification`: matched null representations
   (gene-label permutation, size-matched resampling, random projection) and
   vectorised recoverability.
+- `virtual_cell.priors.catalogue` and `virtual_cell.priors.features`: external
+  biological priors (STRING, DepMap, MSigDB, basal expression) as feature
+  blocks, with a leakage audit on every block.
+- `virtual_cell.modelling.unseen_perturbation`: the two-axis held-out design
+  (perturbation, context, and both together) and the low-capacity estimators
+  for perturbations measured nowhere.
+- `virtual_cell.modelling.external_benchmark` and
+  `virtual_cell.modelling.multicontext`: scoring a frozen predictor on external
+  datasets, including the delta-matrix path used for Feng's 19 cell lines.
+- `virtual_cell.modelling.context_main_effect`: the distinction between the
+  **oracle** context main effect `m_c` (an evaluation target) and the
+  **feasible** estimators that read only target controls and source responses.
 - `virtual_cell.modelling.pathway_residual`: nested-LOCO pathway residual model
   — scale-calibrated baseline, low-capacity families, shrinkage selection.
 - `virtual_cell.modelling.pathway_gamma_v2`: the v2 clean (beta-free) gamma
@@ -117,6 +150,13 @@ Implemented:
 - `virtual_cell.data.counts`: exact recovery of raw integer counts from a
   `log1p(CP10K)` matrix, with the residual scale ambiguity stated and tested.
   This is what makes a public count-space benchmark possible at all.
+- `virtual_cell.arc.panel`: maps a response onto the 18,533-gene panel with
+  every gene assigned an explicit support category, so "predicted unchanged"
+  and "never measured" stay distinguishable.
+- `virtual_cell.arc.generate`: three count generators — control resampling,
+  control transport, and a negative-binomial count model.
+- `virtual_cell.arc.metrics`: a local reimplementation of the six scored
+  `vcc2026` metrics, so a candidate can be measured before it is submitted.
 - `virtual_cell.arc.bundle`: pseudobulk response to multiplicative effect, the
   unsupported-gene rule, a streaming writer for a 360,000-cell submission, and a
   local pre-submission inspection.
@@ -130,9 +170,14 @@ Implemented:
   `scripts/plot_transferability_foundations.py`,
   `scripts/run_pathway_falsification.py`,
   `scripts/plot_pathway_falsification.py`,
+  `scripts/run_pathway_residual_model.py`,
+  `scripts/run_pathway_residual_model_v2.py`,
+  `scripts/plot_pathway_residual_model.py`,
+  `scripts/run_transferability_confidence.py`,
+  `scripts/plot_transferability_confidence.py`,
   `scripts/run_unseen_perturbation.py`, `scripts/run_external_validation.py`,
   `scripts/run_arch1_external.py`, `scripts/run_feng_multicontext.py`,
-  `scripts/run_arc_bridge.py`.
+  `scripts/run_arc_bridge.py`, `scripts/audit_public_datasets.py`.
 - `scripts/run_arc_count_space_baseline.py`, `scripts/run_count_generator_benchmark.py`,
   `scripts/run_arc_dry_run.py`: the Arc count-space phase — main-effect and
   shrinkage selection on public folds, the count generator benchmark, and the
@@ -143,19 +188,32 @@ Implemented:
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 491 tests — the data assumptions above, 29 pinning invariants of
-  the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
-  covering the scPertEval bundle and pseudobulk, 20 pinning the robustness
-  variants, 27 pinning the LOCO leakage algebra and reliability corrections, and
-  34 pinning the template/scale estimators, pathway aggregation and candidate
-  transferability targets, and 28 pinning the null constructions used for
-  representation falsification, and 31 pinning nested LOCO, the residual
-  algebra and outer-target isolation, and 17 pinning the v2 clean-target algebra
-  and 33 pinning the reliability-aware targets, selective-prediction metrics and
-  outer-target isolation, and 15 pinning the count recovery and its ambiguity,
-  26 pinning the tiered mean-response algebra and its leakage contract, and 27
-  pinning the fold-change translation, the unsupported-gene rule and the
-  submission writer (data-gated tests skip when data are absent).
+- `tests/`: **491 tests**, all passing. Data-gated tests skip when the datasets
+  they need are absent.
+
+  | area | file | tests |
+  |---|---|---|
+  | official Arc control bundle | `test_arc2026_controls.py` | 29 |
+  | Arc bridge: panel, generators, metrics | `test_arc_bridge.py` | 42 |
+  | submission assembly and the unsupported-gene rule | `test_bundle.py` | 27 |
+  | count recovery and its scale ambiguity | `test_counts.py` | 15 |
+  | response decomposition mathematics | `test_decomposition.py` | 41 |
+  | external-dataset scoring | `test_external_benchmark.py` | 6 |
+  | matched nulls for representation falsification | `test_falsification.py` | 28 |
+  | template/scale estimators, pathway aggregation | `test_foundations.py` | 34 |
+  | `.h5ad` loading and integrity | `test_io.py` | 16 |
+  | LOCO leakage algebra, reliability corrections | `test_loco.py` | 27 |
+  | tiered mean-response model and its leakage contract | `test_mean_response.py` | 26 |
+  | multi-context delta-matrix scoring path | `test_multicontext.py` | 12 |
+  | v2 clean-target algebra | `test_pathway_gamma_v2.py` | 17 |
+  | nested LOCO, residual algebra, outer-target isolation | `test_pathway_residual.py` | 31 |
+  | normalisation and pseudobulk | `test_pseudobulk.py` | 5 |
+  | preprocessing-sensitivity variants | `test_robustness.py` | 20 |
+  | scPertEval bundle and streaming pseudobulk | `test_scperteval.py` | 23 |
+  | per-context summary statistics | `test_summary.py` | 6 |
+  | synthetic fixtures | `test_synthetic.py` | 4 |
+  | reliability-aware targets, selective prediction | `test_transferability.py` | 33 |
+  | two-axis held-out design and priors | `test_unseen_perturbation.py` | 49 |
 
 ### Official validation controls, audited 2026-09-18
 
@@ -172,8 +230,13 @@ All 44 invariants passed. Full report:
 Control cells only (`target_gene == 'non-targeting'`), 46 shared non-targeting
 guides x 400 cells per context, identical gene order across contexts matching
 `gene_names.csv` exactly, raw integer counts stored as float32 CSR. Basal
-pseudobulk Pearson: A-B 0.688, A-C 0.602, B-C 0.732 — the three contexts are
-far apart at baseline and separate completely under PCA.
+pseudobulk Pearson (per-gene mean of `log1p(1e4 * count / library)`, the
+convention used throughout this project): A-B 0.688, A-C 0.602, B-C 0.732 — the
+three contexts are far apart at baseline and separate completely under PCA.
+*(`reports/arc2026_submission_requirements.md` quotes 0.78 / 0.75 / 0.84 for the
+same pairs; that is `log1p(CPM)` of the pooled profile, a different quantity.
+The two are not comparable and only the second should be set against the four
+public contexts' 0.89-0.93.)*
 
 Two findings that constrain later work: the 18,533-gene panel excludes all
 ribosomal protein genes and mitochondrial rRNA, so absolute expression is not
@@ -192,7 +255,7 @@ response space is absent from the repository entirely. Details and the full
 frozen specification of their method:
 [`reports/molina_zhang_reproduction_spec.md`](reports/molina_zhang_reproduction_spec.md).
 
-**Independent four-context re-derivation: READY.** Standardized public data for
+**Independent four-context re-derivation: DONE, gate passed.** Standardized public data for
 the same four cell lines is available from
 [scPertEval](https://github.com/Virtual-Cell-Research-Community/scPertEval)
 @ `4685f11` — K562, RPE1, HepG2 and Jurkat as log-normalised AnnData with fully
@@ -261,7 +324,9 @@ survives joint confound control at +0.14 to +0.55 per fold.
 
 Recommended next direction, chosen on evidence: **pathway-level gamma, combined
 with scale calibration and source-agreement confidence.** Template recovery from
-basal expression is ruled out.
+basal expression is ruled out. *(This recommendation was followed and the gamma
+half of it was then terminated — see the next two sections. The scale
+calibration survived and is the shrinkage scalar the Arc model uses.)*
 
 ### Representation falsification
 
@@ -322,6 +387,15 @@ system needs both scores and must not use one for the other's job.
 **Framing:** the defensible claim is not "we predict context-specific responses"
 but *"we predict conserved responses, and can say in advance how much to trust
 each one."*
+
+Two later qualifications, both load-bearing. **Source agreement** — agreement
+among *source-context responses* for a perturbation measured in all of them —
+is the statistic validated here, and it is **not** the STRING-neighbour
+agreement that later failed externally; the two are different quantities and
+only the second was refuted. But the trust half of the framing is **not yet
+operational on Arc**: Tier-2 targets have only two source contexts and Tier-1
+has one, so there is little agreement left to measure. The current Arc model
+carries **no confidence term**.
 
 Our decomposition (`delta = mu + alpha + beta + gamma`, projective template
 removal, split-half noise correction) is implemented and verified by 41
@@ -408,17 +482,24 @@ README.md
 pyproject.toml           uv project; packages live under src/
 scripts/                 reproducible entry points (data generation, exploration)
 src/virtual_cell/        research package
-  data/                  io, summary statistics, synthetic data
+  data/                  io, summary statistics, synthetic data, scPertEval and
+                         Arc bundles, count recovery from log-normalised data
   preprocessing/         normalisation and pseudobulk
-  arc/                   Arc 2026 bridge: panel mapping, count generators, local scorer
+  decomposition/         delta = mu + alpha + beta + gamma, with noise correction
+  analysis/              LOCO folds, robustness, foundations, matched nulls
+  modelling/             the Arc model, context main effects, and the terminated
+                         pathway/unseen-perturbation lines kept for the record
+  arc/                   Arc 2026 bridge: panel mapping, count generators, local
+                         scorer, submission assembly
   priors/                biological priors for unseen perturbations, with leakage audit
-  models/ evaluation/ visualization/   placeholders for later phases
-tests/                   pytest suite for data assumptions
+  models/ evaluation/ visualization/   empty placeholders; no deep model exists
+tests/                   pytest suite (491 tests)
 reports/                 literature notes, research log, data audits
 data/raw, data/processed, data/external   git-ignored datasets
 data/provenance/         source, checksums and manifests for downloaded data
 data/splits/             frozen, committed experimental designs
-outputs/                 git-ignored exploration outputs and figures
+outputs/                 git-ignored run outputs, figures, and the dry-run bundle
+dist/                    git-ignored build artefacts
 ```
 
 ## Research principles
