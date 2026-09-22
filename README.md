@@ -57,15 +57,18 @@ perturbation-specific conserved-effect model is not that baseline and can
 score above 0. Sources are cited in
 `reports/literature_notes.md`.
 
-## Current status (as of 2026-09-18)
+## Current status (as of 2026-09-21)
 
-Phase 1 (understand the problem and set up infrastructure). No models have been
-trained. The official Arc 2026 **validation control bundle has been downloaded
-and audited**. An exact Molina & Zhang reproduction is **blocked and closed** —
-their released processed data does not exist publicly — and has been replaced by
-an **independent four-context re-derivation** on standardized public scPertEval
-data. The canonical v1 decomposition **has now been run**; the gate is not yet
-passed (the preprocessing-sensitivity criteria remain untested).
+The research programme is **frozen** and the Arc track has produced its first
+**validated dry-run bundle** — 360,000 cells accepted by `vcc prep --dry-run`,
+not submitted. An exact Molina & Zhang reproduction is **blocked and closed**
+(their released processed data does not exist publicly) and was replaced by an
+**independent four-context re-derivation** on standardized public scPertEval
+data, which passed its gate. Pathway/gamma modelling is **terminated**;
+prior-derived prediction of unseen perturbations **failed externally** on two
+independent datasets and is not to be reopened. The current model is the
+smallest one that evidence supports: `delta_hat = m_hat + w[tier] * beta_hat`,
+with `beta_hat = 0` exactly wherever no direct perturbation evidence exists.
 
 Implemented:
 
@@ -107,6 +110,16 @@ Implemented:
 - `virtual_cell.modelling.transferability`: reliability-aware confidence targets
   (`<h1,h2>`, `<h1-B,h2-B>`, `D`), the derived stability rule, selective
   prediction and experiment-prioritisation metrics.
+- `virtual_cell.modelling.mean_response`: **the Arc model** —
+  `delta_hat = m_hat + w[tier] * beta_hat`, the five feasible main-effect
+  estimators, centred source transfer, and nested tier-shrinkage selection with
+  Tier 0 pinned to exactly zero.
+- `virtual_cell.data.counts`: exact recovery of raw integer counts from a
+  `log1p(CP10K)` matrix, with the residual scale ambiguity stated and tested.
+  This is what makes a public count-space benchmark possible at all.
+- `virtual_cell.arc.bundle`: pseudobulk response to multiplicative effect, the
+  unsupported-gene rule, a streaming writer for a 360,000-cell submission, and a
+  local pre-submission inspection.
 - `scripts/download_scperteval.sh`, `scripts/scperteval_provenance.py`,
   `scripts/build_four_context_decomposition.py`,
   `scripts/run_four_context_sensitivity.py`,
@@ -116,14 +129,21 @@ Implemented:
   `scripts/run_transferability_foundations.py`,
   `scripts/plot_transferability_foundations.py`,
   `scripts/run_pathway_falsification.py`,
-  `scripts/plot_pathway_falsification.py`.
+  `scripts/plot_pathway_falsification.py`,
+  `scripts/run_unseen_perturbation.py`, `scripts/run_external_validation.py`,
+  `scripts/run_arch1_external.py`, `scripts/run_feng_multicontext.py`,
+  `scripts/run_arc_bridge.py`.
+- `scripts/run_arc_count_space_baseline.py`, `scripts/run_count_generator_benchmark.py`,
+  `scripts/run_arc_dry_run.py`: the Arc count-space phase — main-effect and
+  shrinkage selection on public folds, the count generator benchmark, and the
+  A/B/C dry-run bundle.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: 314 tests — the data assumptions above, 29 pinning invariants of
+- `tests/`: 491 tests — the data assumptions above, 29 pinning invariants of
   the official Arc bundle, 41 pinning the mathematics of the decomposition, 23
   covering the scPertEval bundle and pseudobulk, 20 pinning the robustness
   variants, 27 pinning the LOCO leakage algebra and reliability corrections, and
@@ -132,7 +152,10 @@ Implemented:
   representation falsification, and 31 pinning nested LOCO, the residual
   algebra and outer-target isolation, and 17 pinning the v2 clean-target algebra
   and 33 pinning the reliability-aware targets, selective-prediction metrics and
-  outer-target isolation (data-gated tests skip when data are absent).
+  outer-target isolation, and 15 pinning the count recovery and its ambiguity,
+  26 pinning the tiered mean-response algebra and its leakage contract, and 27
+  pinning the fold-change translation, the unsupported-gene rule and the
+  submission writer (data-gated tests skip when data are absent).
 
 ### Official validation controls, audited 2026-09-18
 
@@ -307,11 +330,50 @@ balanced-design orthogonality, planted-component recovery, permutation
 invariance, split-half behaviour, frozen sets, malformed-input rejection, and
 verbatim equivalence with the reference algebra.
 
-Not yet implemented: public perturbation dataset download (Replogle 2022,
-Nadig 2025), gene intersection across datasets, differential expression,
-leave-one-context-out splits, baselines, the response decomposition, models,
-and the `.vcc` submission pipeline. See the research log for the ordered next
-steps.
+### Unseen perturbations, and two external failures
+
+[`reports/unseen_perturbation_generalization_v1.md`](reports/unseen_perturbation_generalization_v1.md),
+[`reports/external_unseen_perturbation_validation_v1.md`](reports/external_unseen_perturbation_validation_v1.md),
+[`reports/feng_multicontext_external_validation_v1.md`](reports/feng_multicontext_external_validation_v1.md).
+214 of Arc's 300 targets are perturbed nowhere in public data, so the question
+became whether a perturbation's effect can be predicted from priors alone. It
+can, internally — and it **does not replicate externally**. On arch1 and on all
+**19 Feng iPSC lines** the frozen predictor scores `r ~ 0`, while direct
+measured transfer on the *same* lines scores `+0.128` per line and **`+0.320`
+pooled, positive in 19 of 19**. Matched on signal strength, measured transfer
+rises fivefold across quartiles while prior prediction stays flat. STRING
+neighbour agreement did not replicate either and is **diagnostic only**.
+**Binding: do not build another unseen-perturbation predictor.**
+
+### Arc count-space baseline — a validated dry-run bundle
+
+[`reports/arc_count_space_baseline_v1.md`](reports/arc_count_space_baseline_v1.md).
+The frozen findings assembled into `delta_hat = m_hat + w[tier] * beta_hat` and
+carried all the way to raw counts. Every free parameter chosen on public
+held-out contexts: main effect `M3b_basal_shrunk`, Tier-2 shrinkage **0.50**,
+Tier-1 **0.25** (unanimous over four folds, nested selection matching the outer
+oracle in 6 of 8 cells), Tier 0 pinned at zero.
+
+scPertEval's `log1p(CP10K)` turns out to be **exactly invertible** back to
+integer counts (round-trip error 3.3e-07), which made a public *count-space*
+benchmark possible for the first time. Scored against real held-out K562 cells
+with the six `vcc2026` metrics, **control transport wins**: `pds_cosine`
+0.492 → **0.882**, direction reach 0.105 → **0.404**. The prior detected-gene
+defect reproduces at **−22.2%** without composition smoothing. **`G2` and more
+capacity lose**, so a deep generative model is not justified.
+
+Two results temper it. On a realistically **mixed** Arc panel `pds_cosine` is
+**0.535**, not 0.725, because 214 Tier-0 targets are indistinguishable from one
+another. And **`m_hat` is not estimable from Arc's actual sources**: the only
+two public datasets perturbing Arc targets have mean responses with cosine
+0.089, **−0.002** matched on Arc targets, and **0.030** on the 7 targets both
+measure — against 0.60–0.81 among the research contexts. The estimator
+correctly shrinks to 0.119 and returns almost nothing.
+
+A full bundle was generated and validated: **360,000 cells x 18,533 genes,
+2.058e9 nonzeros**, all thirteen local checks passing and `vcc prep --dry-run`
+accepting it (exit 0, `verified_targets: true`, `dropped: []`). **Nothing was
+submitted.**
 
 ## Setup
 
@@ -324,6 +386,14 @@ uv run python scripts/make_synthetic_controls.py
 uv run python scripts/explore_synthetic_contexts.py
 uv run pytest
 uv run ruff check . && uv run ruff format --check .
+```
+
+The Arc track, in order (each needs the data it names):
+
+```bash
+uv run python scripts/run_arc_count_space_baseline.py    # m_hat and shrinkage, public folds
+uv run python scripts/run_count_generator_benchmark.py   # count generators vs real cells
+uv run python scripts/run_arc_dry_run.py                 # 360,000-cell dry-run bundle
 ```
 
 Arc credentials are not needed for anything in the repository today. When they

@@ -1,0 +1,117 @@
+# ARC COUNT-SPACE BASELINE V1 — FROZEN 2026-09-21
+#
+# The phase that turned the frozen research findings into a validated
+# submission object. Every parameter was selected on PUBLIC held-out contexts
+# before the Arc bundle was built. These artifacts are not revisable.
+#
+# BINDING CONCLUSIONS (do not modify):
+#
+# 1. THE MODEL IS FROZEN:
+#        delta_hat[c,p] = m_hat[c] + w[tier(p)] * beta_hat[p]
+#    with m_hat = M3b_basal_shrunk, w[2] = 0.50, w[1] = 0.25, w[0] = 0 EXACTLY.
+#    beta_hat comes from DIRECT measurements only, centred within each source
+#    before averaging. No STRING, DepMap, pathway, gamma or embedding term.
+#
+# 2. THE SHRINKAGE SELECTION WAS UNANIMOUS AND NESTED. All four public folds
+#    independently chose 0.50 / 0.25; nested inner selection matched the outer
+#    oracle in 6 of 8 fold x tier cells (K562 tier 2 costs 2.5%, RPE1 tier 1
+#    costs 0.25%). TIERS REQUIRE DIFFERENT WEIGHTS: one global weight is NOT
+#    adequate.
+#
+# 3. THE SCALAR IS WHAT MAKES m_hat WORK, NOT THE BASAL WEIGHTING. Unshrunk
+#    source pooling explains -1.599 of the energy on K562 -- worse than
+#    predicting nothing. The leave-one-source-out scalar moves the four-fold
+#    mean from -0.091 to +0.356. Basal weighting adds +0.013, independently
+#    confirming that basal expression does not encode the response template.
+#
+# 4. scPertEval's log1p(CP10K) IS EXACTLY INVERTIBLE to the integer counts it
+#    was built from (round-trip error 3.3e-07, zero rows needing rescaling).
+#    The inversion is determined only UP TO A PER-CELL INTEGER FACTOR; the
+#    minimal solution is returned and the singleton assumption is STATED, NOT
+#    PROVED. This is what makes a public count-space benchmark possible.
+#
+# 5. CONTROL TRANSPORT (G1, smoothing=0.5) IS THE GENERATOR. Scored against
+#    real held-out K562 cells: pds_cosine 0.492 -> 0.882, direction reach
+#    0.105 -> 0.404, lfc_nmae 0.987 -> 0.829. It realises the intended mean
+#    response at slope 0.935 (r = 0.781), holds genes detected to -3.5% and
+#    within-perturbation heterogeneity to 32.06 against the real 31.93.
+#
+# 6. THE PRIOR DETECTED-GENE DEFECT REPRODUCES AND IS WORSE THAN RECORDED:
+#    -22.2% at smoothing=0, not ~17%. NO GENERATOR DENSIFIES THE
+#    TRANSCRIPTOME; the failure mode in this family is detection COLLAPSE.
+#
+# 7. THE EXPRESSION-ERROR MEMBER IS NOT BEATEN. Every generator scores above
+#    1.0 with the sampling correction fully credited (rho = 1.0), and G1
+#    (1.062) is WORSE than control resampling (1.036). THE SAME MODEL IS A
+#    GOOD DISCRIMINATOR AND A BAD REGRESSOR; no single summary of it is honest.
+#
+# 8. ON A MIXED ARC PANEL pds_cosine IS 0.535, NOT 0.725. Two thirds of the
+#    discrimination disappears once 214 of 300 targets are Tier 0 and therefore
+#    identical to one another. The per-tier number describes a field Arc will
+#    never present.
+#
+# 9. m_hat IS NOT ESTIMABLE FROM ARC'S ACTUAL SOURCES, AND THIS IS THE
+#    PRIMARY OPEN PROBLEM. The two public datasets that perturb Arc targets
+#    have mean perturbation responses with cosine 0.089 on their own panels,
+#    -0.002 matched on Arc targets, and 0.030 on the 7 targets BOTH measure --
+#    against 0.60-0.81 among the four research contexts. Matching the
+#    perturbation sets does NOT restore agreement, so this is not a panel
+#    composition artefact. The frozen estimator correctly shrinks to 0.119 and
+#    returns ||m_hat|| = 0.071. 214 of 300 targets are effectively
+#    control-emitting, which the frozen accounting puts at -0.311.
+#
+# 10. NO EVIDENCE JUSTIFIES A DEEP GENERATIVE MODEL. The generator already
+#     transports the prediction faithfully; the PREDICTION is what is weak, and
+#     G2 -- the one arm with more capacity -- is worse on every member that
+#     reads cell-level structure. Do not build a VAE, diffusion, flow-matching
+#     or transformer generator on this evidence.
+#
+# 11. A VALID 360,000-CELL BUNDLE CAN NOW BE GENERATED. 360,000 x 18,533,
+#     2,057,973,608 nonzeros, 13/13 local checks passing, accepted by
+#     `vcc prep --dry-run` (exit 0, verified_targets: true, dropped: []).
+#     nnz sits at 96% of the 2^31 int32 indexing boundary.
+#
+# 12. NO SUBMISSION WAS MADE AND NOTHING WAS UPLOADED TO ARC.
+#
+# The Tier-0 zero-beta policy is UNCHANGED and prior-based Tier-0 prediction
+# was NOT reopened.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/arc_count_space_v1_freeze.txt
+6f83e21b316984137b25f4558b48fd052994207640c85397b30cd92aee40f14b  reports/arc_count_space_baseline_v1.md
+1987165b5ff28e97c2c0e0f8d6d686c896a457c7ee7d841ac4659025f1e16495  src/virtual_cell/data/counts.py
+14ef639912b69a043da2799517d96edea8b364f83afea1b3cb8388151b5bc9db  src/virtual_cell/modelling/mean_response.py
+d7b13110251f03fb0f19037b633600ccc9917c0c0bf34994f294d4d937cd54ea  src/virtual_cell/arc/bundle.py
+09c8bd81423dd3d0cdcb479ae31dea09ba22576d730dad33726094ac4258b6c6  tests/test_counts.py
+e6d4c86455f61bad0d1ea67baabd7788ab89e9bd3adddc28b3b36739e19dbf69  tests/test_mean_response.py
+89a528f51097b9040ebc784418319eee4c4360d252aa53fc30e1439dd329c8e7  tests/test_bundle.py
+8cbbb6687e92805b8e769cad28931acc8af4dc2f671e5282f7393a79ee4ca9aa  scripts/run_arc_count_space_baseline.py
+d40d07619ba2201e46a71ea750c733e064c5354db67b5354ecc5dda2753f5942  scripts/run_count_generator_benchmark.py
+a7129f9981f24b455db0867a72c4e7648b98330630c28c190a0d07a43a9acd9a  scripts/run_arc_dry_run.py
+2280f40b2ce874eef335dab169216d7aad476a887dd49b04845a5a5c4b3ed6f4  data/splits/arc_target_support_v1.csv
+283c200262a2ffe62b6b666b4b09a7e1b09491a1251d7ae6781949a0eab2e781  data/provenance/scperteval/feng_multicontext_v1_freeze.txt
+a26e609c550419ac4340d7d4e818da00f5a476cf7450488651fd18f2e6da6712  outputs/arc_count_space_v1/arc_target_support_recomputed.csv
+32aad30610af94a7dce8fe1632a741b7486e1d7e2f96a24211f078c506e7c715  outputs/arc_count_space_v1/arc_tier_weighted_summary.csv
+98d4e2521e0a81fbe133c003d677109e29c39692f032eb3d05f8711cbeb53995  outputs/arc_count_space_v1/complete_pseudobulk_by_tier.csv
+31cb84bc4d34e97728cc126e32d5dc9fe063fe8a82a555da9fc1ce9a78b2e351  outputs/arc_count_space_v1/complete_pseudobulk_per_perturbation.csv
+368a7cbffd9670a383e864ab642c41fec5308269b257d885ead6d58ede78dd80  outputs/arc_count_space_v1/count_recovery_diagnostics.csv
+c54ecb7b8688df342bef3714960203d2412b8d23de93545776c92c817b09f07c  outputs/arc_count_space_v1/freeze_verification_after.csv
+c54ecb7b8688df342bef3714960203d2412b8d23de93545776c92c817b09f07c  outputs/arc_count_space_v1/freeze_verification_before.csv
+d3342829f88d2f52e1729326e85740e6ab5912f9bbaaeb8fe7e71ba704534e98  outputs/arc_count_space_v1/g1_per_perturbation.csv
+3b99439f38244634fe972ce208608a4850f3305e9eb81f0e19be74a6f2df72fa  outputs/arc_count_space_v1/generator_mean_response_fidelity.csv
+55b64cc52782d033264c7d9676333cefa59b3b9050418538ee0de0bb14fcd48d  outputs/arc_count_space_v1/generator_scores_raw.csv
+62dff256c3139908944bdaecbe6216d8689c68c9e5d622ccff4eb0867e5d5148  outputs/arc_count_space_v1/generator_scores_vs_control.csv
+d7f2794fd8a352ce69a4a641e09098e4e3fc35cf69945fccec141f8fbf761484  outputs/arc_count_space_v1/generator_structure.csv
+7a988290a61d9b813fcdbd8049231145e6fd5a6523e1732b17d21968bb6ee689  outputs/arc_count_space_v1/main_effect_as_prediction.csv
+76f8b407db5f79fe33ff830adb48ca66fce7b553882b21068d69fa94d992af7a  outputs/arc_count_space_v1/main_effect_vs_oracle.csv
+2a083e6b12d75dd681266a0b9c93f9d496e080ca5d43903fb0d12d091859836f  outputs/arc_count_space_v1/mixed_panel_draws.csv
+fcb91b9848cc26cc04df3bebd34e3d85509a517d825a7494ad73c50e095aab5d  outputs/arc_count_space_v1/shrinkage_inner_grid.csv
+9f4e468c1287cdc26433791df95856f80ca5de0327adcbd63b2afdf0d2f87ac2  outputs/arc_count_space_v1/shrinkage_outer_grid.csv
+ef4c623686ee3c7c4e214b822eb34f23642c558b61698a01de792bef3d2a0bc0  outputs/arc_count_space_v1/generator_summary.json
+cc67e9e287201c957f2909752ed4443f09cb4021563c035531df8cde96e6d196  outputs/arc_count_space_v1/main_effect_choice.json
+cb277f6f7a5485cf69af0c1d90645f8f13fb89f20480dd8e7774ebd8eabf0d4d  outputs/arc_count_space_v1/shrinkage_choice.json
+561d94ebcac2a9362f4c8cf9ea47425b2d8486b1585420679145d527baeb7b0a  outputs/arc_count_space_v1/summary.json
+8a1ecc6a88f795176b394517c6a19078b81c55f3bcc0d899437b7a77211528e4  outputs/arc_dry_run_v1/main_effect_diagnostic.csv
+7c88b8601edc5ee568bf0dbdc27d184184e05b6211a7c6563ce24b1cef123728  outputs/arc_dry_run_v1/per_context.csv
+65a3d927250203126452af0bf680a30ae6745c0495c2042db4376e1f86a0c494  outputs/arc_dry_run_v1/summary.json
+2e34e10725f7174bcbe60df84c0f9dd82e403a713af077f89e07ec017a5a8909  outputs/arc_dry_run_v1/vcc_prep_dry_run.json
+90936fe0d76e504fc7b59e4eb93916aae3f3711b0145e2c0c0a90e29f1900ceb  outputs/arc_dry_run_v1/response_genes.txt

@@ -2000,3 +2000,112 @@ three external attempts could run: a dataset with **several contexts at
 genuinely different distances** from the training set, each with per-target
 reliability above ~0.3. Until that exists, Interpretation 1 (viability
 conditional on context proximity) is neither supported nor excluded.
+
+---
+
+## 2026-09-21 — Arc count-space baseline (phase frozen)
+
+Report: [`reports/arc_count_space_baseline_v1.md`](arc_count_space_baseline_v1.md).
+Freeze: `data/provenance/scperteval/arc_count_space_v1_freeze.txt`.
+
+The phase that turned the frozen research programme into a submission object.
+All 14 prior freeze manifests verified before and after (220 files, 0 failures);
+the tier policy was re-derived from provenance with **0 mismatches**; no
+prior-based Tier-0 prediction was reopened.
+
+### The model, frozen
+
+`delta_hat[c,p] = m_hat[c] + w[tier(p)] * beta_hat[p]`, with `beta_hat` centred
+within each source before averaging and `beta_hat = 0` exactly at Tier 0.
+
+- **`m_hat` = `M3b_basal_shrunk`.** The scalar is the whole result: unshrunk
+  pooling explains **−1.599** of the energy on K562, worse than predicting
+  nothing; the leave-one-source-out scalar takes the four-fold mean from −0.091
+  to **+0.356**. Basal weighting adds +0.013 — independent confirmation that
+  basal expression does not encode the response template.
+- **Shrinkage: Tier 2 = 0.50, Tier 1 = 0.25**, chosen by nested inner
+  validation, **unanimous in all four folds**, matching the outer oracle in 6 of
+  8 fold × tier cells (the two exceptions cost 2.5% and 0.25%). **One global
+  weight is not adequate.**
+- Complete predictor is monotone in tier on MSE, energy and `pds_cosine`
+  (0.500 → 0.626 → 0.725). RPE1 inverts the per-perturbation Pearson ordering
+  while MSE and `pds_cosine` keep it — a reminder that a single correlation
+  misreads this model.
+
+### A public count-space benchmark now exists
+
+scPertEval ships `log1p(CP10K)` and no counts, which appeared to rule out ever
+scoring a generator on public data. **The normalisation is exactly invertible**
+(round-trip error 3.3e-07, zero rows needing rescaling, recovered depths
+13,364 median). The inversion is determined only up to a per-cell integer
+factor; the minimal solution is returned and the singleton assumption is stated,
+not proved, with two tests pinning the ambiguity.
+
+### Generators, scored against real held-out cells
+
+`G1` control transport at `smoothing = 0.5` wins on five of six members:
+`pds_cosine` 0.492 → **0.882**, direction reach 0.105 → **0.404**, `lfc_nmae`
+0.987 → **0.829**. It realises the intended mean response at **slope 0.935**
+(r = 0.781), holds genes detected to −3.5% and heterogeneity to 32.06 against
+the real 31.93.
+
+- **The prior detected-gene defect reproduces and is worse than recorded:
+  −22.2% at `smoothing = 0`, not ~17%.** No generator densifies; the failure
+  mode is detection collapse.
+- **`G2` loses** (expr_mse 1.771, under-dispersed cells at 29.06) — more
+  capacity spent modelling genes independently makes things worse.
+- **The expression-error member is not beaten by anyone.** Every generator is
+  above 1.0 with the sampling correction fully credited, and `G1` (1.062) is
+  worse than control resampling (1.036). The same model is a good discriminator
+  and a bad regressor.
+
+### Two results that set expectations
+
+**On a mixed Arc panel `pds_cosine` is 0.535, not 0.725.** Two thirds of the
+discrimination vanishes once 214 of 300 targets are Tier 0 and identical to one
+another. The per-tier number describes a field Arc will never present.
+
+**`m_hat` is not estimable from Arc's actual sources — the primary open
+problem.** The only two public datasets that perturb Arc targets have mean
+perturbation responses with cosine **0.089** on their own panels, **−0.002**
+matched on Arc targets, and **0.030** on the 7 targets *both* measure, against
+0.60–0.81 among the four research contexts. Matching the perturbation sets does
+not restore agreement, so this is not a panel-composition artefact. The frozen
+estimator correctly shrinks to 0.119 and returns `‖m_hat‖ = 0.071`. **214 of 300
+targets are effectively control-emitting**, which the frozen accounting puts at
+−0.311.
+
+### Dry-run bundle
+
+360,000 cells × 18,533 genes, **2,057,973,608 nonzeros**, 15.4 GiB, 13/13 local
+checks passing, accepted by `vcc prep --dry-run` (exit 0, `verified_targets:
+true`, `dropped: []`, `notes: []`). nnz sits at **96% of the 2^31** int32
+indexing boundary. **Nothing was uploaded and no submission was made.**
+
+### [Answered, negative] Is a deeper generative model justified?
+
+**No.** The generator already transports the prediction faithfully; the
+prediction is what is weak, and the one arm with more capacity is worse on every
+member that reads cell-level structure. Do not build a VAE, diffusion,
+flow-matching or transformer generator on this evidence.
+
+### Commands run
+
+```
+uv run python scripts/run_arc_count_space_baseline.py
+uv run python scripts/run_count_generator_benchmark.py
+uv run python scripts/run_arc_dry_run.py
+uv run pytest -q   # 491 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+All 15 freeze manifests verified (258 files, 0 failures).
+
+### Next step
+
+Stop for review. The ordered blockers are in section L of the report; the first
+one dominates. **A better `m_hat` estimator is not the answer** — the estimator
+is already correct and is returning ~0 for the right reason. What is needed is
+either more public contexts that perturb Arc targets, or an explanation for why
+`arch1` and `kaden25rpe1` disagree about the mean perturbation response when the
+four research contexts agree at 0.60–0.81.
