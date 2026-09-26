@@ -94,6 +94,13 @@ control-emitting. A better estimator is not the fix. Details and the ordered
 list of what remains: [section L of the count-space
 report](reports/arc_count_space_baseline_v1.md).
 
+**Submission candidate v1 (2026-09-25):** the frozen dry run is packaged as
+`outputs/arc_submission_v1/virtual_cell_generalization_val_v1.vcc` (SHA-256
+`16a5b17c…390910`), audited and frozen, and **not submitted**. See
+[`reports/arc_submission_v1_manifest.md`](reports/arc_submission_v1_manifest.md) and the
+pre-result expectations in
+[`reports/arc_submission_v1_expectations.md`](reports/arc_submission_v1_expectations.md).
+
 **New (2026-09-25): that disagreement is not measurement noise.** A predeclared
 split-half diagnostic ([`reports/kaden_source_reliability_diagnostic_v1.md`](reports/kaden_source_reliability_diagnostic_v1.md))
 found Kaden's individual responses weak (median reliability 0.17 against

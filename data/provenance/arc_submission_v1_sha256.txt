@@ -1,0 +1,3 @@
+# Arc submission candidate v1 — large-file digests (verify: shasum -a 256 -c)
+e2aa9acd58eb0060586140849a3389e38b09ebaa0bc30c510e78a87914dfcadb  outputs/arc_dry_run_v1/arc_dry_run_v1.h5ad
+16a5b17c429582d2c93dc94356cf350d815eb62f8881097aad6441f5a0390910  outputs/arc_submission_v1/virtual_cell_generalization_val_v1.vcc

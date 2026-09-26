@@ -32,6 +32,23 @@ Result story and suitability: [`README.md`](README.md).
 """
 
 
+FIG10 = """
+## 10_arc_submission_scorecard (not generated: no real score exists)
+
+- figure: `reports/figures/10_arc_submission_scorecard.png`, `.svg`, **generated only
+  after a real Arc score exists**
+- figure script: `scripts/figures/plot_arc_submission_scorecard.py`
+- input: `data/figure_sources/arc_submission_v1_scorecard.json`, filled by hand **only**
+  from `vcc status <entry> --json` after scoring; schema
+  `data/figure_sources/arc_submission_v1_scorecard.schema.json` (overall, six members,
+  partition, panel, anchor set)
+- reference marks: 0 (baseline) and 1 (replicate), plus the per-member control-emitting
+  score read from the frozen `outputs/arc_bridge_v1/score_accounting.csv`
+- without the input file the script draws nothing and exits 0; `load_scorecard` rejects
+  missing fields and non-finite values, so no placeholder bar can be drawn
+"""
+
+
 def main() -> None:
     lines = [HEADER]
     for name in EXTRACTORS:
@@ -60,6 +77,7 @@ def main() -> None:
             lines.append(f"  - `{s['path']}` — sha256 `{s['sha256'][:16]}…` — pinned by {fr}")
         if p.get("notes"):
             lines.append(f"- notes: {p['notes']}")
+    lines.append(FIG10)
     (common.FIGURES_DIR / "FIGURE_MANIFEST.md").write_text("\n".join(lines) + "\n")
     print(f"  wrote {common.FIGURES_DIR / 'FIGURE_MANIFEST.md'}")
 

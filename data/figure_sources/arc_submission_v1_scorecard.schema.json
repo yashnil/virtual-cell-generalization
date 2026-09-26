@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arc submission v1 scorecard (normalized official scores)",
+  "description": "Fill ONLY from `vcc status <entry> --json` after real scoring. Scores are the official normalized values (0 = mean-response baseline, 1 = replicate anchor).",
+  "type": "object",
+  "required": [
+    "overall",
+    "pds",
+    "expression_accuracy",
+    "de_lfc_accuracy",
+    "de_direction_fidelity",
+    "de_direction_reach",
+    "de_significance_overlap",
+    "partition",
+    "panel",
+    "anchor_set"
+  ],
+  "properties": {
+    "overall": {
+      "type": "number"
+    },
+    "pds": {
+      "type": "number"
+    },
+    "expression_accuracy": {
+      "type": "number"
+    },
+    "de_lfc_accuracy": {
+      "type": "number"
+    },
+    "de_direction_fidelity": {
+      "type": "number"
+    },
+    "de_direction_reach": {
+      "type": "number"
+    },
+    "de_significance_overlap": {
+      "type": "number"
+    },
+    "partition": {
+      "type": "string"
+    },
+    "panel": {
+      "type": "string"
+    },
+    "anchor_set": {
+      "type": "string"
+    },
+    "entry_id": {
+      "type": "string"
+    },
+    "model_name": {
+      "type": "string"
+    },
+    "scored_utc": {
+      "type": "string"
+    },
+    "vcc_package_sha256": {
+      "type": "string"
+    },
+    "raw_status_json": {
+      "type": "object"
+    }
+  }
+}

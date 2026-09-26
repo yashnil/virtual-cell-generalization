@@ -2204,3 +2204,36 @@ uv run ruff check . ; uv run ruff format --check . ; uv build
 ### Next step
 
 Stop for review. Arc v2 was not built.
+
+---
+
+## 2026-09-25 (later) — Arc submission candidate v1: final freeze and pre-submission audit
+
+No model change. The visualization + Kaden phase was committed first
+(`a4e9a27`) and pushed. Then the frozen dry-run prediction was locked as
+submission candidate v1 without regeneration.
+
+- **CLI** (live, vcc 0.2.0): 18,533 genes; 400 cells per perturbation;
+  contexts A/B/C; ≤ 400,000 cells; nnz ≤ 4.75e9; ≤ 1,000,000 counts per cell;
+  raw counts required; controls rejected. All match the frozen assumptions.
+  **`vcc whoami`: not logged in**, so partition, daily allowance and any active
+  submission could not be confirmed.
+- **Candidate** `outputs/arc_dry_run_v1/arc_dry_run_v1.h5ad`, SHA-256
+  `e2aa9acd…dfcadb`, unchanged since 2026-09-21. Audit
+  (`scripts/audit_arc_submission_candidate.py`):
+  - 12 hard checks and the 13 frozen local checks pass;
+  - `vcc prep --dry-run` report identical to the frozen one;
+  - nnz 2.058e9 = 43% of the CLI cap.
+- **Package** `outputs/arc_submission_v1/virtual_cell_generalization_val_v1.vcc`,
+  SHA-256 `16a5b17c…390910`, 3.28 GB.
+- **Records:** `reports/arc_submission_v1_manifest.md` and
+  `outputs/arc_submission_v1/submission_manifest.json`; freeze
+  `arc_submission_v1_freeze.txt`; large-file digests in
+  `data/provenance/arc_submission_v1_sha256.txt`.
+- **Pre-result expectations and interpretation rules** fixed in
+  `reports/arc_submission_v1_expectations.md`. Main structural risk, stated
+  in advance: DE direction fidelity is a yield member on which emitting
+  controls scores −1.71, and 214/300 targets are near control-emitting.
+- The scorecard figure (`10_arc_submission_scorecard`) has a schema and a
+  script but is drawn only from a real `vcc status --json` result.
+- Tests: 566 passed. **Not submitted.**

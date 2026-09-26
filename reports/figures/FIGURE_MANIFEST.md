@@ -143,3 +143,18 @@ Result story and suitability: [`README.md`](README.md).
   - `outputs/arc_count_space_v1/generator_structure.csv` — sha256 `d7f2794fd8a352ce…` — pinned by `arc_count_space_v1_freeze.txt`
   - `outputs/arc_count_space_v1/generator_mean_response_fidelity.csv` — sha256 `3b99439f38244634…` — pinned by `arc_count_space_v1_freeze.txt`
 - notes: Only summary statistics were frozen (quantiles, sparsity, heterogeneity, fitted slope and r of realised vs intended pseudobulk response over 50 perturbations). Per-gene and per-cell values were not retained; the figure shows the frozen summaries rather than regenerating cells.
+
+## 10_arc_submission_scorecard (not generated: no real score exists)
+
+- figure: `reports/figures/10_arc_submission_scorecard.png`, `.svg`, **generated only
+  after a real Arc score exists**
+- figure script: `scripts/figures/plot_arc_submission_scorecard.py`
+- input: `data/figure_sources/arc_submission_v1_scorecard.json`, filled by hand **only**
+  from `vcc status <entry> --json` after scoring; schema
+  `data/figure_sources/arc_submission_v1_scorecard.schema.json` (overall, six members,
+  partition, panel, anchor set)
+- reference marks: 0 (baseline) and 1 (replicate), plus the per-member control-emitting
+  score read from the frozen `outputs/arc_bridge_v1/score_accounting.csv`
+- without the input file the script draws nothing and exits 0; `load_scorecard` rejects
+  missing fields and non-finite values, so no placeholder bar can be drawn
+

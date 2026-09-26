@@ -1,0 +1,58 @@
+# ARC SUBMISSION CANDIDATE V1 — FROZEN 2026-09-25
+#
+# The first real validation submission candidate, packaged from the frozen
+# Arc count-space baseline v1 without regenerating anything. NOT SUBMITTED.
+#
+# BINDING RECORD (do not modify):
+#
+# 1. MODEL arc_count_space_baseline_v1, unchanged from
+#    arc_count_space_v1_freeze.txt:
+#        delta_hat[c,p] = m_hat[c] + w[tier(p)] * beta_hat[p]
+#    m_hat = M3b_basal_shrunk (fitted scalar 0.11890236823138407, sources
+#    arch1 + kaden25rpe1); w = 0.50 / 0.25 / 0; tiers 7 / 79 / 214;
+#    generator G1 control transport, smoothing 0.5, seed 20260921.
+#
+# 2. SOURCE PREDICTION outputs/arc_dry_run_v1/arc_dry_run_v1.h5ad
+#    SHA-256 e2aa9acd58eb0060586140849a3389e38b09ebaa0bc30c510e78a87914dfcadb
+#    360,000 x 18,533, nnz 2,057,973,608 (43.3% of the 4.75e9 CLI cap).
+#
+# 3. VCC PACKAGE outputs/arc_submission_v1/virtual_cell_generalization_val_v1.vcc
+#    SHA-256 16a5b17c429582d2c93dc94356cf350d815eb62f8881097aad6441f5a0390910
+#    3,283,824,640 bytes, vcc 0.2.0. Both large files are pinned by
+#    data/provenance/arc_submission_v1_sha256.txt (shasum -a 256 -c).
+#
+# 4. Validation: 12 hard checks + 13 frozen local checks pass; vcc prep
+#    --dry-run report identical to the frozen dry run; 566 tests pass.
+#
+# 5. Pre-result expectations and interpretation rules are fixed in
+#    reports/arc_submission_v1_expectations.md BEFORE any hidden score.
+#
+# Verify: shasum -a 256 -c data/provenance/scperteval/arc_submission_v1_freeze.txt
+#         shasum -a 256 -c data/provenance/arc_submission_v1_sha256.txt
+ba1299b70f996d9d5e5625c7a8bb2772523020a05297fc07b0077690fef80418  reports/arc_submission_v1_manifest.md
+cfe3ae02335f8dd6e399fc285599b51a1cae211cb7b8d29e8b8422f7c3e22a23  reports/arc_submission_v1_expectations.md
+4f1b21150815fd2d5d573cb477b54b90a8ed27149e10f3207d613e83d307fd73  outputs/arc_submission_v1/submission_manifest.json
+a1f4d20ec3a5366566747c4484b395b726726b1ed8722352ab98019bdd8ea133  outputs/arc_submission_v1/model_config.json
+05c37306483af3ac0d38f4856c4f2fedcb30dd896d0daace2077882ffec4e340  outputs/arc_submission_v1/candidate_audit.json
+ff97b40882e9e19cc690bfa027d70666698be76c6e9eecddd9e9a94606f637b7  outputs/arc_submission_v1/vcc_prep_package.json
+2e34e10725f7174bcbe60df84c0f9dd82e403a713af077f89e07ec017a5a8909  outputs/arc_submission_v1/vcc_prep_dry_run_recheck.json
+4c58ab8dbd1cfce3357fa39430375437af1c311a834052139d166d8a62c96eb0  outputs/arc_submission_v1/validation.json
+e691ae50bb4dcbea83d006fb7d63c0c127856ed4f3c6e90d14c535d83f5a6150  data/provenance/arc_submission_v1_sha256.txt
+6eedb99775960bd2def9399c45ba0f033e04a3482b99199e4f5a12e74d6ae42a  scripts/audit_arc_submission_candidate.py
+f3ed26d8c12fa202e94bf75c1ccd5cd3f9b37590360357e03230aee729d2963c  scripts/build_arc_submission_manifest.py
+4563e944eac574273634fe1c71731d2c547f7cbf502b552c09d1a24dba12491a  scripts/figures/plot_arc_submission_scorecard.py
+b81533cd264929be568914dacabdbb5d1ed55d36687ccf6e718638da9851d939  src/virtual_cell/visualization/scorecard.py
+cea5daef30347a3cc7c0a3481fd2c230bf5ad4807898e70de5efa1490658bd06  data/figure_sources/arc_submission_v1_scorecard.schema.json
+481b1895fdce63feb0fad4596b90fb82ae0674575572b164af4d18487ae116af  tests/test_arc_submission.py
+a7129f9981f24b455db0867a72c4e7648b98330630c28c190a0d07a43a9acd9a  scripts/run_arc_dry_run.py
+14ef639912b69a043da2799517d96edea8b364f83afea1b3cb8388151b5bc9db  src/virtual_cell/modelling/mean_response.py
+b2aeae01f2f14c814f0bf223a6045d1ac5de8facaf60b41a9466b1443e475d62  src/virtual_cell/modelling/context_main_effect.py
+3d9a0ad4ecb0e2ca2ce3c3ec9c8689fb93a9b7655190d1b5df901bbbc89876b4  src/virtual_cell/arc/panel.py
+0c80e8dcf5f8eb60d9a38e4b84ec609800582a43ef91f938d5bf30cffe78101f  src/virtual_cell/arc/generate.py
+d7b13110251f03fb0f19037b633600ccc9917c0c0bf34994f294d4d937cd54ea  src/virtual_cell/arc/bundle.py
+2280f40b2ce874eef335dab169216d7aad476a887dd49b04845a5a5c4b3ed6f4  data/splits/arc_target_support_v1.csv
+65a3d927250203126452af0bf680a30ae6745c0495c2042db4376e1f86a0c494  outputs/arc_dry_run_v1/summary.json
+2e34e10725f7174bcbe60df84c0f9dd82e403a713af077f89e07ec017a5a8909  outputs/arc_dry_run_v1/vcc_prep_dry_run.json
+5741ded8653d977e26d407e38350b0973f9287ac858fcb7d516e886ec5d86302  data/figure_sources/fig6_arc_target_support.csv
+a67684bc64621329965dbc887a7a29fe31d697046f62067a4ae17c2886831831  data/figure_sources/fig8_count_generator_benchmark.csv
+22f7beaab8ac8757baf65888fd4dd0afeda6402d388960b921f8a2da57d13b89  data/figure_sources/fig9_transport_fidelity.csv

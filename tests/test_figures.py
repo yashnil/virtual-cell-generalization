@@ -152,7 +152,9 @@ def test_dry_run_bundle_was_not_regenerated():
 
 def test_every_freeze_manifest_still_verifies():
     manifests = sorted((ROOT / "data/provenance/scperteval").glob("*_freeze.txt"))
-    assert len(manifests) == 15
+    names = {m.name for m in manifests}
+    assert len(manifests) >= 15
+    assert "arc_count_space_v1_freeze.txt" in names
     checked = 0
     for m in manifests:
         for line in m.read_text().splitlines():
