@@ -1,0 +1,13 @@
+{"status": "start", "free_bytes": 1239877017600, "planned_bytes": 251038458975, "jobs": ["k562", "cd4", "gencode47", "h1-train", "h1-targets", "h1-genes", "h1-validation", "h1-test", "xatlas_HCT116", "xatlas_HEK293T"], "time": "2026-09-25T21:11:53-0700"}
+{"source": "h1-genes", "status": "downloaded_verified", "bytes": 116023, "sha256": "e29ff3512b4c2440759bfb2a34577049b2f49df786b3e19c2a91b565de47b38e", "time": "2026-09-25T21:11:53-0700"}
+{"source": "h1-targets", "status": "downloaded_verified", "bytes": 2824, "sha256": "633d202be221418bdbac16efd8cb169666de0ef6469a4e9bfdfb64666ea81a89", "time": "2026-09-25T21:11:53-0700"}
+{"source": "gencode47", "status": "downloaded_verified", "bytes": 58953903, "sha256": "df11938c66d2b39f8ebbdb5f1720919321f9cf9d58f02b019753f6a24ca3db24", "time": "2026-09-25T21:16:31-0700"}
+{"source": "h1-validation", "status": "downloaded_verified", "bytes": 6928967541, "sha256": "376f0bab27d9f22e00dfd888668d3602006d035edc182721c378f4802c77bfe1", "time": "2026-09-25T22:11:00-0700"}
+{"source": "h1-test", "status": "downloaded_verified", "bytes": 11950739168, "sha256": "ba5ce66729e4c8e50b6f147c7d73d3f9f28f76c91fa43ff33e3f6bc2ed831f03", "time": "2026-09-25T22:50:08-0700"}
+{"source": "h1-train", "status": "downloaded_verified", "bytes": 15482497461, "sha256": "a09977104fefb622368ca74b50c9d3c1e891733e6c83db07acfca49b0219c02b", "time": "2026-09-25T23:02:53-0700"}
+{"source": "cd4", "status": "downloaded_verified", "bytes": 16786240107, "sha256": "c355f535ff32cf7ba1edc49cf9c6039fe84f2c9ebe4d005515cba75790cfbb62", "time": "2026-09-25T23:16:22-0700"}
+{"source": "xatlas_HCT116", "status": "downloaded_hf_verified", "revision": "598aa5442a4ee9a8f1a383a843ab5ce142904d04", "bytes": 50544250046, "time": "2026-09-26T00:34:27-0700"}
+{"source": "xatlas_HEK293T", "status": "downloaded_hf_verified", "revision": "598aa5442a4ee9a8f1a383a843ab5ce142904d04", "bytes": 82965837799, "time": "2026-09-26T02:13:11-0700"}
+{"status": "start", "free_bytes": 1037944328192, "planned_bytes": 199830941948, "jobs": ["k562"], "time": "2026-09-26T02:20:16-0700"}
+{"source": "k562", "status": "downloaded_verified", "bytes": 65830941948, "sha256": "b697ef7fedcec2972ec334608f86f2a29cb25e70c81b6725195f4cda60a9de2c", "time": "2026-09-26T03:44:26-0700"}
+{"status": "done", "failed": [], "time": "2026-09-26T03:44:26-0700"}

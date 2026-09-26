@@ -2237,3 +2237,37 @@ submission candidate v1 without regeneration.
 - The scorecard figure (`10_arc_submission_scorecard`) has a schema and a
   script but is drawn only from a real `vcc status --json` result.
 - Tests: 566 passed. **Not submitted.**
+
+## 2026-09-26 — First official score; competitive baseline expansion v2 (competition track)
+
+Research conclusions unchanged. No submission in this phase.
+
+- **Official v1 result** (`zYdT8klGWw8UXg3r8KJx`, val / vcc2026-val-1, rank 882):
+  - Overall **−0.062**; PDS +0.022; FID **−0.349** (raw 0.407); every other member within ±0.04;
+  - frozen in `reports/arc_submission_v1_result.md`;
+  - every member landed in its predeclared band.
+- **Postmortem.**
+  - FID/6 is 94 % of the deficit; with FID at 0 the Overall is −0.004.
+  - The raw FID equals a half-depth replicate's (spec: 0.41–0.46).
+  - PDS ceiling of the 86-supported architecture: 0.30–0.34 scaled. Scalar calibration
+    cannot move PDS.
+  - Public anatomy over 4 LOCO folds: signs are right (precision 0.62–0.68), yield is low
+    (Tier-0 n_pred/n_real 0.18).
+- **Coverage.** Direct evidence in 0 / 1 / 2 / 3+ contexts went from 214 / 79 / 7 / 0 to
+  **0 / 1 / 18 / 281**, via genome-wide K562 GWPS, X-Atlas/Orion HCT116 and HEK293T,
+  and CD4. Full VCC 2025 adds 12 targets over `arch1`.
+  - FAQ (verbatim): **the final round uses a different panel**, so genome-wide sources
+    are what transfers.
+- **C0 (AtlasShift @ d24ce4f, run unmodified)** is packaged and passes all checks plus
+  the dry run. **Not submitted.**
+  - H1 held out: PDS 0.827 (local scaled +0.655); DE members ≈ baseline.
+  - Promoter prior: +0.018 raw PDS.
+- **STATE:** the pretrained checkpoints cannot represent any of the 300 targets.
+- **Next (predeclared in the report):** C1 = C0 backbone reimplemented + agreement-based
+  per-target shrinkage, selected on leave-one-atlas-out public folds.
+- **Defects found.**
+  - The frozen harness uses the full-axis target index on DE tables. The impact is one
+    gene per perturbation; recorded, not edited.
+  - The downloader's curl-retry truncation was fixed.
+  - An accidental edit to the frozen scorecard script was reverted; the freeze verifies.
+- Report: `reports/competition_v2/competitive_baseline_expansion_v1.md`.

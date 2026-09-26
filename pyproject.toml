@@ -47,7 +47,7 @@ target-version = "py311"
 src = ["src", "tests", "scripts"]
 # reports/ holds verbatim quotations of third-party source; reformatting them
 # would break the "quoted exactly as published" guarantee those documents make.
-extend-exclude = ["data", "outputs", "notebooks", "reports"]
+extend-exclude = ["data", "outputs", "notebooks", "reports", "third_party"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "B", "UP"]

@@ -144,12 +144,14 @@ Result story and suitability: [`README.md`](README.md).
   - `outputs/arc_count_space_v1/generator_mean_response_fidelity.csv` — sha256 `3b99439f38244634…` — pinned by `arc_count_space_v1_freeze.txt`
 - notes: Only summary statistics were frozen (quantiles, sparsity, heterogeneity, fitted slope and r of realised vs intended pseudobulk response over 50 perturbations). Per-gene and per-cell values were not retained; the figure shows the frozen summaries rather than regenerating cells.
 
-## 10_arc_submission_scorecard (not generated: no real score exists)
+## 10_arc_submission_scorecard
 
-- figure: `reports/figures/10_arc_submission_scorecard.png`, `.svg`, **generated only
-  after a real Arc score exists**
+- figure: `reports/figures/10_arc_submission_scorecard.png`, `.svg`, drawn from the
+  **real official score** of entry `zYdT8klGWw8UXg3r8KJx` (val / vcc2026-val-1),
+  captured by `scripts/competition_v2/freeze_v1_result.py`; report
+  `reports/arc_submission_v1_result.md`
 - figure script: `scripts/figures/plot_arc_submission_scorecard.py`
-- input: `data/figure_sources/arc_submission_v1_scorecard.json`, filled by hand **only**
+- input: `data/figure_sources/arc_submission_v1_scorecard.json`, filled **only**
   from `vcc status <entry> --json` after scoring; schema
   `data/figure_sources/arc_submission_v1_scorecard.schema.json` (overall, six members,
   partition, panel, anchor set)
