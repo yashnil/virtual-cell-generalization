@@ -1,0 +1,31 @@
+generator,metric,metric_label,better,value
+G0_control_resample,pds_cosine,"perturbation discrimination
+(pds_cosine)",higher,0.4921516165
+G0_control_resample,de_wilcoxon_direction_fidelity_yield_raw,DE direction fidelity,higher,0.01572027329
+G0_control_resample,de_wilcoxon_direction_reach_raw,DE direction reach,higher,0.1048250988
+G0_control_resample,de_wilcoxon_sig_jaccard,"DE significance overlap
+(Jaccard)",higher,0.0533385177
+G0_control_resample,de_wilcoxon_lfc_nmae,"DE log-fold-change error
+(nMAE)",lower,0.987439977
+G0_control_resample,expr_mse_unbiased_capped_norm,"expression error
+(normalised MSE)",lower,1.035996826
+G1_transport,pds_cosine,"perturbation discrimination
+(pds_cosine)",higher,0.8819620959
+G1_transport,de_wilcoxon_direction_fidelity_yield_raw,DE direction fidelity,higher,0.5510453316
+G1_transport,de_wilcoxon_direction_reach_raw,DE direction reach,higher,0.4042333072
+G1_transport,de_wilcoxon_sig_jaccard,"DE significance overlap
+(Jaccard)",higher,0.1222524933
+G1_transport,de_wilcoxon_lfc_nmae,"DE log-fold-change error
+(nMAE)",lower,0.8286317218
+G1_transport,expr_mse_unbiased_capped_norm,"expression error
+(normalised MSE)",lower,1.062178199
+G2_count_model,pds_cosine,"perturbation discrimination
+(pds_cosine)",higher,0.7338350056
+G2_count_model,de_wilcoxon_direction_fidelity_yield_raw,DE direction fidelity,higher,0.5826046762
+G2_count_model,de_wilcoxon_direction_reach_raw,DE direction reach,higher,0.3474569806
+G2_count_model,de_wilcoxon_sig_jaccard,"DE significance overlap
+(Jaccard)",higher,0.1288180166
+G2_count_model,de_wilcoxon_lfc_nmae,"DE log-fold-change error
+(nMAE)",lower,0.9868880725
+G2_count_model,expr_mse_unbiased_capped_norm,"expression error
+(normalised MSE)",lower,1.770919818

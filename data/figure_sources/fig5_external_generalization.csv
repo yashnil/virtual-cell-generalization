@@ -1,0 +1,45 @@
+panel,stage,arm,pearson,lo,hi,n,interval
+A,internal: held-out perturbation,prior,0.508588435,0.4675842898,0.5464630104,253,min-max over 5 folds
+A,internal: held-out perturbation + context,prior,0.235039138,0.1889794282,0.3071943989,253,min-max over 5 folds x 4 held-out contexts
+A,arch1 (external),prior,0.05691059258,,,100,none stored
+A,arch1 (external),direct,0.3024430856,,,17,none stored
+A,Feng pooled (external),prior,0.01794533446,,,141,none stored
+A,Feng pooled (external),direct,0.3200862353,,,170,none stored
+B,eipl_1,prior,0.009962254963,,,141,per line
+B,eipl_1,direct,0.1464873105,,,170,per line
+B,eipl_3,prior,0.009894486504,,,141,per line
+B,eipl_3,direct,0.1332522237,,,170,per line
+B,fiaj_1,prior,0.007385297323,,,141,per line
+B,fiaj_1,direct,0.1701047053,,,169,per line
+B,fiaj_3,prior,0.002991158833,,,100,per line
+B,fiaj_3,direct,0.02468691955,,,99,per line
+B,iudw_1,prior,0.008994977448,,,141,per line
+B,iudw_1,direct,0.1450257805,,,170,per line
+B,iudw_4,prior,0.007355106826,,,141,per line
+B,iudw_4,direct,0.1008245924,,,170,per line
+B,jejf_2,prior,0.005732505843,,,141,per line
+B,jejf_2,direct,0.1246315592,,,170,per line
+B,jejf_3,prior,0.01124158109,,,141,per line
+B,jejf_3,direct,0.1757442312,,,169,per line
+B,kolf_2,prior,0.009538433438,,,141,per line
+B,kolf_2,direct,0.1543866875,,,168,per line
+B,kolf_3,prior,0.007280337265,,,141,per line
+B,kolf_3,direct,0.1310558608,,,170,per line
+B,oikd_2,prior,0.003557688018,,,137,per line
+B,oikd_2,direct,0.0458162364,,,167,per line
+B,oikd_5,prior,0.009833238058,,,141,per line
+B,oikd_5,direct,0.1792084007,,,170,per line
+B,paab_3,prior,0.008130598386,,,141,per line
+B,paab_3,direct,0.1255458345,,,170,per line
+B,paab_4,prior,0.003416996101,,,141,per line
+B,paab_4,direct,0.1257311995,,,170,per line
+B,pipw_4,prior,0.003913701622,,,141,per line
+B,pipw_4,direct,0.0984043274,,,170,per line
+B,pipw_5,prior,0.006377106663,,,132,per line
+B,pipw_5,direct,0.05261491058,,,141,per line
+B,tolg_4,prior,-0.0003319756953,,,137,per line
+B,tolg_4,direct,0.03126865529,,,167,per line
+B,tolg_6,prior,0.006062547853,,,141,per line
+B,tolg_6,direct,0.1283644206,,,170,per line
+B,zapk_3,prior,0.003313700006,,,141,per line
+B,zapk_3,direct,0.1614504626,,,170,per line

@@ -1,0 +1,42 @@
+{
+  "figure_source": "data/figure_sources/fig3_gamma_recovery.csv",
+  "source_files": [
+    {
+      "path": "outputs/pathway_falsification_v1/observed_representations.csv",
+      "sha256": "d9cd4ffe000423f78a9a58f93fa1b2cd485361380b6dc3b30607b73aafc7c9fe",
+      "freezes": [
+        "discovery_phase_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/pathway_falsification_v1/null_replicates.csv",
+      "sha256": "5233b4ecdea826ef6cea54f290f37e4688c19dffa3f37e8294bcd9f1f3f4d3aa",
+      "freezes": [
+        "discovery_phase_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/pathway_falsification_v1/null_comparison.csv",
+      "sha256": "03fbbece2dfc14281446d9fd73f64c42c2e0e8b5dd6637eccc1641301313dc3e",
+      "freezes": [
+        "discovery_phase_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/pathway_falsification_v1/reactome_comparison.csv",
+      "sha256": "067f2cfc5a8d0f6a0bd60e4f4a2bfeeab9d0790d71923821607bc219438817ab",
+      "freezes": [
+        "discovery_phase_freeze.txt"
+      ]
+    }
+  ],
+  "report": "reports/pathway_gamma_falsification_v1.md",
+  "extraction_script": "scripts/figures/extract_figure_sources.py",
+  "figure_script": "scripts/figures/plot_gamma_recovery.py",
+  "generated": "2026-09-25",
+  "git_head": {
+    "commit": "be59ea69ce9e6cf6af09165ca6f8b8fb0fbd61e8",
+    "dirty": true
+  },
+  "notes": "Median r(gamma_true, gamma_hat), raw and reliability-normalised. Null = 100 gene-label-permuted Hallmark representations (set sizes and overlaps preserved); Reactome tested against 20 permutations of its own sets."
+}

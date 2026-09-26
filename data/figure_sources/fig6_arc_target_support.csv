@@ -1,0 +1,5 @@
+tier,provenance,n_targets,percent_of_panel,panel_size
+2,both arch1 and Kaden,7,2.333333333,300
+1,arch1 only,6,2,300
+1,Kaden only,73,24.33333333,300
+0,no public perturbation,214,71.33333333,300

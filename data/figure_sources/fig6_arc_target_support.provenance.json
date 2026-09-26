@@ -1,0 +1,22 @@
+{
+  "figure_source": "data/figure_sources/fig6_arc_target_support.csv",
+  "source_files": [
+    {
+      "path": "data/splits/arc_target_support_v1.csv",
+      "sha256": "2280f40b2ce874eef335dab169216d7aad476a887dd49b04845a5a5c4b3ed6f4",
+      "freezes": [
+        "arc_count_space_v1_freeze.txt",
+        "unseen_perturbation_v1_freeze.txt"
+      ]
+    }
+  ],
+  "report": "reports/arc_count_space_baseline_v1.md",
+  "extraction_script": "scripts/figures/extract_figure_sources.py",
+  "figure_script": "scripts/figures/plot_arc_target_support.py",
+  "generated": "2026-09-25",
+  "git_head": {
+    "commit": "be59ea69ce9e6cf6af09165ca6f8b8fb0fbd61e8",
+    "dirty": true
+  },
+  "notes": "Frozen identifier-presence tiers: Tier 2 = perturbed in >= 2 public datasets, Tier 1 = exactly 1, Tier 0 = none."
+}

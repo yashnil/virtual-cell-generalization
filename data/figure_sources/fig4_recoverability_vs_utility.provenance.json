@@ -1,0 +1,35 @@
+{
+  "figure_source": "data/figure_sources/fig4_recoverability_vs_utility.csv",
+  "source_files": [
+    {
+      "path": "outputs/pathway_gamma_v2/hallmark_folds.csv",
+      "sha256": "e62c25db134dcbc0312906b918dd194f5370ba3635a62c430ca65288de0af552",
+      "freezes": [
+        "pathway_modelling_terminated_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/pathway_gamma_v2/residual_diagnostics.csv",
+      "sha256": "b7d20418e4d7009fc1d0a4f048246aa269a82fae0856d3510980a1b8669d5745",
+      "freezes": [
+        "pathway_modelling_terminated_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/pathway_falsification_v1/observed_representations.csv",
+      "sha256": "d9cd4ffe000423f78a9a58f93fa1b2cd485361380b6dc3b30607b73aafc7c9fe",
+      "freezes": [
+        "discovery_phase_freeze.txt"
+      ]
+    }
+  ],
+  "report": "reports/pathway_residual_model_v2_clean_gamma.md",
+  "extraction_script": "scripts/figures/extract_figure_sources.py",
+  "figure_script": "scripts/figures/plot_recoverability_vs_utility.py",
+  "generated": "2026-09-25",
+  "git_head": {
+    "commit": "be59ea69ce9e6cf6af09165ca6f8b8fb0fbd61e8",
+    "dirty": true
+  },
+  "notes": "x = correlation of the v2 learned correction with the true interaction (r(R_hat, gamma)); y = outer change in median per-perturbation response Pearson after adding the correction at the inner-selected lambda (bootstrap CI) and at lambda_theory = (3+s)/4."
+}

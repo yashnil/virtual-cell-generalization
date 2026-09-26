@@ -1,0 +1,12 @@
+view,component,percent,sd_over_splits,n_splits
+uncorrected,template,20.29026825,,50
+uncorrected,beta,37.21724124,,50
+uncorrected,gamma,42.49249051,,50
+noise-corrected,template,20.26748083,0.009922681698,50
+noise-corrected,beta,30.06762459,0.01572057682,50
+noise-corrected,gamma,21.04682975,0.03277207646,50
+noise-corrected,noise,28.61806483,0.04448161693,50
+reproducibility,mu,99.95512318,,50
+reproducibility,alpha,99.77364858,,50
+reproducibility,beta,80.78950396,,50
+reproducibility,gamma,49.53070413,,50

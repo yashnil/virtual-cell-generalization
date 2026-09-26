@@ -39,8 +39,11 @@ and they are the reason the model is as small as it is:
 - **C.** *Can we identify which conserved effects are transferable enough to act
   on?* — **Answered, and the winner is the simplest statistic.** Raw source
   agreement predicts transfer quality in all four held-out contexts, beating
-  every fitted alternative — but it **did not replicate externally** and is now
-  **diagnostic only**.
+  every fitted alternative. It has **not been tested externally**, and it is not
+  used on Arc, where supported targets have only one or two sources. *(An
+  earlier version of this line said it "did not replicate externally"; that was
+  **neighbour agreement**, a different statistic for never-perturbed genes. See
+  [`reports/repository_state_notes.md`](reports/repository_state_notes.md).)*
 
 A fourth question arrived with the Arc panel, where 214 of 300 targets are
 perturbed nowhere in public data: *can a perturbation's effect be predicted from
@@ -69,7 +72,7 @@ one to beat, and it is why estimating the context main effect matters as much as
 predicting individual perturbations. Sources are cited in
 `reports/literature_notes.md`.
 
-## Current status (as of 2026-09-22)
+## Current status (as of 2026-09-25)
 
 The research programme is **frozen** and the Arc track has produced its first
 **validated dry-run bundle** — 360,000 cells accepted by `vcc prep --dry-run`,
@@ -90,6 +93,52 @@ estimator correctly shrinks toward zero and 214 of 300 targets end up close to
 control-emitting. A better estimator is not the fix. Details and the ordered
 list of what remains: [section L of the count-space
 report](reports/arc_count_space_baseline_v1.md).
+
+**New (2026-09-25): that disagreement is not measurement noise.** A predeclared
+split-half diagnostic ([`reports/kaden_source_reliability_diagnostic_v1.md`](reports/kaden_source_reliability_diagnostic_v1.md))
+found Kaden's individual responses weak (median reliability 0.17 against
+arch1's 0.91) and its main effect moderately reliable (0.76). The two sources'
+main effects could have agreed up to a noise ceiling of 0.86; they agree at
+0.095. Kaden also disagrees with the same-cell-line Replogle RPE1 screen. The
+predeclared verdict is **CASE E, mixed / inconclusive**: the frozen model is
+unchanged, and no reliability-exclusion v2 follows from it. Terminology that
+had drifted between documents is pinned in
+[`reports/repository_state_notes.md`](reports/repository_state_notes.md).
+
+## Key figures
+
+The complete suite (nine figures, each reproducible from frozen artifacts, with
+provenance) is indexed in [`reports/figures/README.md`](reports/figures/README.md)
+and [`reports/figures/FIGURE_MANIFEST.md`](reports/figures/FIGURE_MANIFEST.md).
+
+**A conserved effect and a real but noisy interaction.** After noise
+correction the conserved effect β holds 30% of response energy and the
+interaction γ 21%, but γ is only half reproducible.
+
+![Response decomposition](reports/figures/fig1_decomposition.png)
+
+**Recovering the interaction did not make prediction better.** Pathway-level γ
+is genuinely recoverable in some contexts, but no correction improved the
+response prediction, and the theoretically correct weight made every context
+worse. This is why pathway modelling was terminated.
+
+![Recoverability vs utility](reports/figures/fig4_recoverability_vs_utility.png)
+
+**Priors collapse externally; measured perturbations keep transferring.**
+
+![Internal vs external generalization](reports/figures/fig5_external_generalization.png)
+
+**Most of the Arc panel has no direct public evidence,** and 73 of the 86
+supported targets rest on Kaden alone.
+
+![Arc target support](reports/figures/fig6_arc_target_support.png)
+
+**And the one source behind most of that support is weak and disagrees with
+everyone.** Kaden's disagreement with arch1 sits far below the noise ceiling.
+
+![Kaden source reliability](reports/figures/fig7_source_reliability.png)
+
+## Status in detail
 
 Implemented:
 
@@ -157,6 +206,12 @@ Implemented:
   control transport, and a negative-binomial count model.
 - `virtual_cell.arc.metrics`: a local reimplementation of the six scored
   `vcc2026` metrics, so a candidate can be measured before it is submitted.
+- `virtual_cell.analysis.source_reliability`: block split-half reliability for
+  datasets too large to hold in memory, main-effect reliability, noise ceilings
+  and disattenuation, used by the Kaden source-reliability diagnostic.
+- `virtual_cell.visualization` (`style`, `common`, `sources`): the figure layer.
+  One style, deterministic extraction of small figure-source tables from frozen
+  artifacts, and a provenance sidecar per table.
 - `virtual_cell.arc.bundle`: pseudobulk response to multiplicative effect, the
   unsupported-gene rule, a streaming writer for a 360,000-cell submission, and a
   local pre-submission inspection.
@@ -182,13 +237,18 @@ Implemented:
   `scripts/run_arc_dry_run.py`: the Arc count-space phase — main-effect and
   shrinkage selection on public folds, the count generator benchmark, and the
   A/B/C dry-run bundle.
+- `scripts/run_kaden_source_reliability.py`: the predeclared Kaden
+  source-reliability diagnostic (writes `predeclaration.json` before reading
+  any expression value).
+- `scripts/figures/`: `extract_figure_sources.py`, one `plot_*.py` per
+  figure, and `build_figure_manifest.py`.
 - `scripts/audit_arc2026_controls.py`: reproducible read-only audit of the
   official controls; writes tables and figures to
   `outputs/arc2026_controls_audit/`.
 - `scripts/make_synthetic_controls.py`: writes synthetic contexts A/B/C.
 - `scripts/explore_synthetic_contexts.py`: prints AnnData structure, summary
   table, basal-mean comparison, and saves a figure to `outputs/exploration/`.
-- `tests/`: **491 tests**, all passing. Data-gated tests skip when the datasets
+- `tests/`: **544 tests**, all passing. Data-gated tests skip when the datasets
   they need are absent.
 
   | area | file | tests |
@@ -214,6 +274,9 @@ Implemented:
   | synthetic fixtures | `test_synthetic.py` | 4 |
   | reliability-aware targets, selective prediction | `test_transferability.py` | 33 |
   | two-axis held-out design and priors | `test_unseen_perturbation.py` | 49 |
+  | block split-half machinery | `test_source_reliability.py` | 10 |
+  | figure-source reproducibility, frozen-model and freeze invariants | `test_figures.py` | 34 |
+  | Kaden diagnostic: predeclaration, leakage, intersections, axes | `test_kaden_diagnostic.py` | 9 |
 
 ### Official validation controls, audited 2026-09-18
 
@@ -315,7 +378,8 @@ Three results. **Basal control expression does not encode the context response
 template** — gene-wise alignment is ~0 and sign-inconsistent, and only 0.15-8.2%
 of alpha lies in the span of source basal deviations. **Scale calibration, not
 template offset, fixes the negative energy explained**: a single scalar
-shrinkage (0.43-0.47, fitted leave-one-source-out on sources alone) lifts every
+shrinkage (0.43-0.47 on the 6,640-gene space, fitted leave-one-source-out on
+sources alone; the same estimator gives 0.52-0.59 in Hallmark pathway space) lifts every
 fold, while even the *oracle* template leaves three of four negative.
 **Pathway-level gamma is ~3x more recoverable than gene-level** (Hallmark: K562
 0.185 -> 0.570, Jurkat 0.217 -> 0.510, reaching 0.60-0.65 of the measurement
@@ -326,7 +390,9 @@ Recommended next direction, chosen on evidence: **pathway-level gamma, combined
 with scale calibration and source-agreement confidence.** Template recovery from
 basal expression is ruled out. *(This recommendation was followed and the gamma
 half of it was then terminated — see the next two sections. The scale
-calibration survived and is the shrinkage scalar the Arc model uses.)*
+calibration survived *as a principle*: the Arc model shrinks its perturbation
+term, but with separately selected tier weights (0.50 / 0.25) and a separate
+main-effect scalar, not this number.)*
 
 ### Representation falsification
 
@@ -492,12 +558,15 @@ src/virtual_cell/        research package
   arc/                   Arc 2026 bridge: panel mapping, count generators, local
                          scorer, submission assembly
   priors/                biological priors for unseen perturbations, with leakage audit
-  models/ evaluation/ visualization/   empty placeholders; no deep model exists
-tests/                   pytest suite (491 tests)
+  visualization/         figure style, figure-source extraction, provenance
+  models/ evaluation/    empty placeholders; no deep model exists
+tests/                   pytest suite (544 tests)
 reports/                 literature notes, research log, data audits
+  figures/               the figure suite (PNG + SVG), index and manifest
 data/raw, data/processed, data/external   git-ignored datasets
 data/provenance/         source, checksums and manifests for downloaded data
 data/splits/             frozen, committed experimental designs
+data/figure_sources/     small figure-source tables + provenance sidecars
 outputs/                 git-ignored run outputs, figures, and the dry-run bundle
 dist/                    git-ignored build artefacts
 ```

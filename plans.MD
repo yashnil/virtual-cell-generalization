@@ -1,5 +1,15 @@
 # Zero-Shot Virtual Cell Modeling Across Unseen Cellular Contexts
 
+> **Status note (2026-09-25).** This is the original project specification
+> (last revised 2026-09-09) and is kept as written. Several of its plans were
+> overtaken by results: the Molina & Zhang reproduction gate in §62 is
+> **closed** (their processed data is not public) and was replaced by the
+> independent four-context gate, which passed; the interaction / pathway model
+> of §16 and §36 is **terminated**; prior-based prediction of unseen
+> perturbations failed externally; and no deep distributional generator (§19,
+> §37) is justified. Current state: `README.md` and
+> `reports/repository_state_notes.md`.
+
 ## A Research-Engineering Project in Scientific Machine Learning, Single-Cell Biology, and Human-Relevant Perturbation Modeling
 
 ---

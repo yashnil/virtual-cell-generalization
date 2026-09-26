@@ -1,0 +1,22 @@
+control_scheme,aggregation,seed,feature_space,n_genes,beta_corrected,gamma_corrected,gamma_uncorrected,template_corrected,noise,canonical
+shared control mean,mean of log1p,42,"all 6,640 genes",6640,30.06828383,21.04450463,42.49251761,20.26663556,28.62057597,True
+shared control mean,mean of log1p,42,"4,000 control HVGs",4000,29.69105617,21.79374835,41.37583055,22.3839939,26.13120158,False
+shared control mean,mean of log1p,42,"2,000 control HVGs",2000,30.78929164,22.21876501,38.51005567,25.25255514,21.73938821,False
+shared control mean,mean of log1p,7,"all 6,640 genes",6640,30.06104105,21.0448448,42.49251761,20.26472141,28.62939274,False
+shared control mean,mean of log1p,7,"4,000 control HVGs",4000,29.68528776,21.79519795,41.37583055,22.3818501,26.13766419,False
+shared control mean,mean of log1p,7,"2,000 control HVGs",2000,30.78341937,22.22365989,38.51005567,25.25009451,21.74282623,False
+shared control mean,mean of log1p,101,"all 6,640 genes",6640,30.06820254,21.05020064,42.49251761,20.26608991,28.61550692,False
+shared control mean,mean of log1p,101,"4,000 control HVGs",4000,29.6930666,21.80270773,41.37583055,22.38341493,26.12081075,False
+shared control mean,mean of log1p,101,"2,000 control HVGs",2000,30.79125207,22.22732579,38.51005567,25.25195265,21.72946949,False
+shared control mean,mean of log1p,2024,"all 6,640 genes",6640,30.06523612,21.04794834,42.49251761,20.26438197,28.62243357,False
+shared control mean,mean of log1p,2024,"4,000 control HVGs",4000,29.68900866,21.79934784,41.37583055,22.38152354,26.13011996,False
+shared control mean,mean of log1p,2024,"2,000 control HVGs",2000,30.78719123,22.22718294,38.51005567,25.24957837,21.73604746,False
+shared control mean,mean of log1p,31337,"all 6,640 genes",6640,30.06684147,21.0489061,42.49251761,20.27474356,28.60950887,False
+shared control mean,mean of log1p,31337,"4,000 control HVGs",4000,29.69027939,21.80004403,41.37583055,22.39298855,26.11668803,False
+shared control mean,mean of log1p,31337,"2,000 control HVGs",2000,30.78820098,22.22561005,38.51005567,25.26315785,21.72303112,False
+independent control split,mean of log1p,42,"all 6,640 genes",6640,30.06828383,21.04450463,42.49251761,20.02059747,28.86661407,False
+independent control split,mean of log1p,42,"4,000 control HVGs",4000,29.69105617,21.79374835,41.37583055,22.15955387,26.35564161,False
+independent control split,mean of log1p,42,"2,000 control HVGs",2000,30.78929164,22.21876501,38.51005567,25.06697493,21.92496842,False
+shared control mean,log of mean CP10K,42,"all 6,640 genes",6640,27.97658106,20.54543235,45.05398031,19.08524397,32.39274262,False
+shared control mean,log of mean CP10K,42,"4,000 control HVGs",4000,28.54144641,21.7714843,43.26768337,21.42153356,28.26553573,False
+shared control mean,log of mean CP10K,42,"2,000 control HVGs",2000,30.08005809,22.79616569,39.97712526,24.81370394,22.31007227,False

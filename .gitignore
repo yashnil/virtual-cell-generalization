@@ -36,4 +36,5 @@ runs/
 .DS_Store
 # Exploration outputs
 outputs/
-reports/figures/
+# reports/figures/ is tracked: the README embeds figures from it. Figures are
+# small and reproducible from data/figure_sources/ (see FIGURE_MANIFEST.md).

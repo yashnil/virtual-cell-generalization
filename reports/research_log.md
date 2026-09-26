@@ -2109,3 +2109,98 @@ is already correct and is returning ~0 for the right reason. What is needed is
 either more public contexts that perturb Arc targets, or an explanation for why
 `arch1` and `kaden25rpe1` disagree about the mean perturbation response when the
 four research contexts agree at 0.60–0.81.
+
+---
+
+## 2026-09-25 — Visualization suite + Kaden source-reliability diagnostic
+
+Two deliverables. No Arc model was evaluated, refitted or changed; no
+submission; nothing downloaded. All 15 freeze manifests (258 digests) and all 19
+raw-data checksums verified before the phase, and again after.
+
+### Visualization layer
+
+`virtual_cell.visualization` (`style`, `common`, `sources`) plus
+`scripts/figures/`: nine figures. Each is drawn from a small table in
+`data/figure_sources/`, and each table is extracted deterministically from
+frozen artifacts. Every table has a provenance sidecar (source SHA-256, pinning
+freezes, report, scripts, date, git HEAD). `reports/figures/FIGURE_MANIFEST.md`
+is generated from the sidecars, and `reports/figures/README.md` indexes the
+story. `tests/test_figures.py` re-extracts every table and requires
+byte-identical output.
+
+Three things became clearer once plotted:
+
+- **Fig 4.** The pathway correction's harm at λ_theory is largest exactly where
+  recovery is *worst* (RPE1, −0.100), while the best-recovered context (K562,
+  r = 0.78) still does not cross zero.
+- **Fig 5.** Internal prior performance falls roughly tenfold at the first
+  external context, and direct transfer is flat across the same step.
+- **Fig 6.** 73 of the 86 supported Arc targets rest on Kaden alone, which
+  made the Kaden diagnostic decisive for how much support the panel really
+  has.
+
+`.gitignore` no longer excludes `reports/figures/`, so the README can embed
+figures.
+
+### Kaden source-reliability diagnostic: CASE E
+
+Report: `reports/kaden_source_reliability_diagnostic_v1.md`. Predeclared in
+`outputs/kaden_source_reliability_v1/predeclaration.json` (seed 20260925, 50
+block split-halves, independent control splits, control pseudo-perturbation
+null, fixed quality bands and CASE rules).
+
+- **[Know] Kaden's per-perturbation reliability is low:** median
+  Spearman–Brown 0.167 on the Arc response axis. The comparison sources are
+  arch1 at 0.906 and Replogle RPE1 at 0.677 (identical axis) and the research
+  contexts at 0.38–0.42. The frozen 0.115–0.128 replicates (0.123). Signal is
+  detectable in 81% of perturbations, but small: reliable signal energy 0.8,
+  against 5.3 for arch1.
+- **[Know] Averaging partly rescues the main effect:** 0.763 over 1,836
+  perturbations. That is still the lowest of any source (the others are
+  0.95–1.00), and it is 0.40 on Kaden's Arc targets.
+- **[Know] The arch1–Kaden main-effect disagreement is not noise:** observed
+  0.095 against a noise ceiling of 0.864, and at most 0.05 of the ceiling on
+  Arc-matched subsets.
+- **[Know] Kaden disagrees with its own cell line:** per-perturbation r −0.010
+  against Replogle RPE1 (ceiling 0.30, sign agreement 0.50). Main effects agree
+  at 42% of the ceiling, while different research cell lines agree at 59–81%
+  of theirs. This is study- or protocol-level, not noise.
+- **Arc-supported targets (descriptive):** arch1 13/13 high; Kaden 5 high,
+  26 moderate, 49 low of 80 (85% above the null). For the 7 Tier-2 targets the
+  frozen `beta_hat` averages arch1 (0.78–0.99) with Kaden (0.02–0.48) at equal
+  weight.
+- **Verdict:** β source *partial*, `m_hat` source *moderate*, disagreement
+  *not explained by noise* → **CASE E**. No reliability-qualified v2 follows
+  from this diagnostic. For `m_hat`, reliability is not the obstacle.
+
+### Documentation
+
+`reports/repository_state_notes.md` gives a terminology / supersession map and
+resolves the seven audit disagreements. Summary:
+
+- source agreement ≠ neighbour agreement;
+- the two scale-calibration ranges are the same estimator on genes vs
+  Hallmark pathways;
+- the Arc tier weights and the `m_hat` scalar are separate parameters;
+- `plans.MD` gets a status banner;
+- freeze counts are reconciled;
+- the dangling "see below" in the frozen count-space report is annotated
+  there, not edited.
+
+README corrected where the evidence settles the answer.
+
+### Commands run
+
+```
+uv run python scripts/run_kaden_source_reliability.py      # 27.6 min, peak RSS 14.6 GB
+uv run python scripts/figures/extract_figure_sources.py
+for f in scripts/figures/plot_*.py; do uv run python "$f"; done
+uv run python scripts/figures/build_figure_manifest.py
+uv run pytest -q          # 544 passed
+uv run ruff check . ; uv run ruff format --check . ; uv build
+```
+
+### Next step
+
+Stop for review. Arc v2 was not built.

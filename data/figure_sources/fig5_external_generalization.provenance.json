@@ -1,0 +1,56 @@
+{
+  "figure_source": "data/figure_sources/fig5_external_generalization.csv",
+  "source_files": [
+    {
+      "path": "outputs/unseen_perturbation_v1/benchmark_summary.csv",
+      "sha256": "2476798119baade4351c456327eadf79c81287cc7d589b3673b2b48c8d432c5e",
+      "freezes": [
+        "unseen_perturbation_v1_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/unseen_perturbation_v1/arch1_external.csv",
+      "sha256": "e729c51ecd0b109a8dad6f781ba68f90759cd0f98a908ac5cec3c3c803b87d2c",
+      "freezes": [
+        "unseen_perturbation_v1_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/unseen_perturbation_v1/arch1_seen_perturbation_reference.csv",
+      "sha256": "db16e06801ce0a3e4faa2d0bad309de0d58fc542f160fb5d5a3de503160d2453",
+      "freezes": [
+        "unseen_perturbation_v1_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/feng_multicontext_v1/pooled_unseen.csv",
+      "sha256": "5fb9c19abe03e6fffcd477cfb4b8e1f9567a13b6f4e163c5f605bb91271d8986",
+      "freezes": [
+        "feng_multicontext_v1_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/feng_multicontext_v1/pooled_measured.csv",
+      "sha256": "36df118c26ab1af32f6cbc4b8b2e9363d15ec84d3222dc6968e1eba46d44d8c3",
+      "freezes": [
+        "feng_multicontext_v1_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/feng_multicontext_v1/per_line.csv",
+      "sha256": "f1ed19c0b5e0677dfbad0e1c38eee7272560ce2b68f4bfc37b34ce28ce5806de",
+      "freezes": [
+        "feng_multicontext_v1_freeze.txt"
+      ]
+    }
+  ],
+  "report": "reports/feng_multicontext_external_validation_v1.md",
+  "extraction_script": "scripts/figures/extract_figure_sources.py",
+  "figure_script": "scripts/figures/plot_external_generalization.py",
+  "generated": "2026-09-25",
+  "git_head": {
+    "commit": "be59ea69ce9e6cf6af09165ca6f8b8fb0fbd61e8",
+    "dirty": true
+  },
+  "notes": "Every value is a median per-perturbation Pearson between the predicted conserved effect and the held-out measurement centred on its context mean. Prior = STRING k-NN (k=25) for perturbations measured nowhere; direct = scale-calibrated transfer of perturbations measured in the sources. Perturbation sets and gene axes differ between stages."
+}

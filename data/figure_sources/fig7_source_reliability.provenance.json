@@ -1,0 +1,39 @@
+{
+  "figure_source": "data/figure_sources/fig7_source_reliability.csv",
+  "source_files": [
+    {
+      "path": "outputs/kaden_source_reliability_v1/per_perturbation_reliability.csv",
+      "sha256": "b0fe75f654e902eb9b76dfcbf56a96150632997a6f0ef075b7ac07151a024fcf",
+      "freezes": []
+    },
+    {
+      "path": "outputs/kaden_source_reliability_v1/null_reliability.csv",
+      "sha256": "e02a92a3b215701299b9d48876a7dacaaf0d9960fd9a64e7a2a2f8df16b33854",
+      "freezes": []
+    },
+    {
+      "path": "outputs/kaden_source_reliability_v1/main_effect_reliability.csv",
+      "sha256": "f60028c5b36e5573291770fd1597d731a6e8a4440112f5d69ae272e800e71abc",
+      "freezes": []
+    },
+    {
+      "path": "outputs/kaden_source_reliability_v1/main_effect_agreement.csv",
+      "sha256": "ed3cc43d8f3e37bb0e81ed599d26a342b0d22c116a06981a91d7077b7d92774f",
+      "freezes": []
+    },
+    {
+      "path": "outputs/kaden_source_reliability_v1/agreement_summary.csv",
+      "sha256": "0fbf74778a2c4cc0c76aa8954358b1af9f1819988865db22aa1feefa75c55e23",
+      "freezes": []
+    }
+  ],
+  "report": "reports/kaden_source_reliability_diagnostic_v1.md",
+  "extraction_script": "scripts/figures/extract_figure_sources.py",
+  "figure_script": "scripts/figures/plot_source_reliability.py",
+  "generated": "2026-09-25",
+  "git_head": {
+    "commit": "be59ea69ce9e6cf6af09165ca6f8b8fb0fbd61e8",
+    "dirty": true
+  },
+  "notes": "New diagnostic outputs (not a prior freeze). A: Spearman-Brown reliability quantiles per dataset on the identical 3-source gene axis, with the control pseudo-perturbation null. B: main-effect Spearman-Brown reliability (q10/q90 columns hold the 5th/95th percentile of the half-level Pearson). C: observed main-effect Pearson (e50 = cosine) vs noise ceiling. D: median per-perturbation Pearson with bootstrap CI (e50 = median disattenuated, e25 = n)."
+}
