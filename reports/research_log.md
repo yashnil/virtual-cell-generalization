@@ -2271,3 +2271,12 @@ Research conclusions unchanged. No submission in this phase.
   - The downloader's curl-retry truncation was fixed.
   - An accidental edit to the frozen scorecard script was reverted; the freeze verifies.
 - Report: `reports/competition_v2/competitive_baseline_expansion_v1.md`.
+
+## 2026-09-26 — Competition v2, C1 license-clean atlas baseline (competition track)
+
+- License register: H1 2025 CC0, K562 CC BY 4.0, CD4 MIT (CZI listing; caveat), GENCODE GREEN; X-Atlas BLOCKED_PENDING_PERMISSION; Kaden GREEN but excluded; UNKNOWN none.
+- Reimplemented the AtlasShift backbone in `src/virtual_cell/competition_v2/`; raw→statistics bit-identical to upstream; regenerates 9/9 C0 bundle blocks exactly.
+- License-clean coverage 287/300 (0/1/2/3+ = 13/53/210/24).
+- Public folds (H1, K562 full; CD4 effect-level): C1a local Overall +0.070/+0.089 vs C0-with-X-Atlas +0.081/+0.119. Agreement shrinkage (C1b) failed the predeclared pass rule (criteria 1, 2, 4); C1a selected. Agreement still predicts transfer (ρ 0.34–0.50 in all three folds).
+- X-Atlas marginal public value +0.018 Overall; lowers CD4 effect PDS.
+- C1a candidate packaged, all checks + `vcc prep --dry-run` pass, `.vcc` fcc4e250…; NOT submitted. Report: `reports/competition_v2/license_clean_c1_v1.md`.

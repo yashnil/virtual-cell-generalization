@@ -1,0 +1,13 @@
+model,contexts,targets
+V1,0,214
+V1,1,79
+V1,2,7
+V1,3+,0
+C0 (with X-Atlas),0,0
+C0 (with X-Atlas),1,1
+C0 (with X-Atlas),2,18
+C0 (with X-Atlas),3+,281
+C1 (license-clean),0,13
+C1 (license-clean),1,53
+C1 (license-clean),2,210
+C1 (license-clean),3+,24
