@@ -2280,3 +2280,12 @@ Research conclusions unchanged. No submission in this phase.
 - Public folds (H1, K562 full; CD4 effect-level): C1a local Overall +0.070/+0.089 vs C0-with-X-Atlas +0.081/+0.119. Agreement shrinkage (C1b) failed the predeclared pass rule (criteria 1, 2, 4); C1a selected. Agreement still predicts transfer (ρ 0.34–0.50 in all three folds).
 - X-Atlas marginal public value +0.018 Overall; lowers CD4 effect PDS.
 - C1a candidate packaged, all checks + `vcc prep --dry-run` pass, `.vcc` fcc4e250…; NOT submitted. Report: `reports/competition_v2/license_clean_c1_v1.md`.
+
+## 2026-09-29 — Competition v2, C1 official result + C2 expression/DE calibration (competition track)
+
+- C1 official (user-reported; CLI cannot list submissions, entry id pending): Overall 0.1394, rank 370/1207; PDS 0.602, MSE 0.057, NMAE 0.120, FID −0.019, REACH 0.076, JAC 0.001. Frozen in `reports/competition_v2/c1_official_result.md`. V1's entry now returns not_found via `vcc status`.
+- C2 predeclared (`c2_predeclaration.md` + amendments 1–2). Public H1/K562 folds, C1 mean fixed.
+- Mean vs generator: PDS is entirely mean-driven; the predicted effect is 0.52×/0.32× the true norm; directional precision ≈ 0.55 even for the exact mean. The C1 (G0) emitter calls 3,837 / 1,053 DE genes under a zero effect, but its over-calling and low-noise pseudobulk *raise* FID and MSE under the scorer.
+- Realistic generators (G1*, real donors) match heterogeneity (variance ratio ≈ 1.0) and pass the null, raise PDS by 15–30 %, and lose Overall. G2 fails the null; G3 not justified.
+- Amplitude: G0 a = 1.5 gives public Overall 0.090 vs 0.079, but it fails null qualification and the gain is K562-only (H1 flat); G0 a ≥ 1.75 is infeasible. Per-target β did not help.
+- **C2 FAILS rule J; nothing built; KEEP C1.** Report: `reports/competition_v2/c2_expression_de_calibration.md`.
