@@ -2271,3 +2271,64 @@ Research conclusions unchanged. No submission in this phase.
   - The downloader's curl-retry truncation was fixed.
   - An accidental edit to the frozen scorecard script was reverted; the freeze verifies.
 - Report: `reports/competition_v2/competitive_baseline_expansion_v1.md`.
+
+## 2026-09-26 — Competition v2, C1 license-clean atlas baseline (competition track)
+
+- License register: H1 2025 CC0, K562 CC BY 4.0, CD4 MIT (CZI listing; caveat), GENCODE GREEN; X-Atlas BLOCKED_PENDING_PERMISSION; Kaden GREEN but excluded; UNKNOWN none.
+- Reimplemented the AtlasShift backbone in `src/virtual_cell/competition_v2/`; raw→statistics bit-identical to upstream; regenerates 9/9 C0 bundle blocks exactly.
+- License-clean coverage 287/300 (0/1/2/3+ = 13/53/210/24).
+- Public folds (H1, K562 full; CD4 effect-level): C1a local Overall +0.070/+0.089 vs C0-with-X-Atlas +0.081/+0.119. Agreement shrinkage (C1b) failed the predeclared pass rule (criteria 1, 2, 4); C1a selected. Agreement still predicts transfer (ρ 0.34–0.50 in all three folds).
+- X-Atlas marginal public value +0.018 Overall; lowers CD4 effect PDS.
+- C1a candidate packaged, all checks + `vcc prep --dry-run` pass, `.vcc` fcc4e250…; NOT submitted. Report: `reports/competition_v2/license_clean_c1_v1.md`.
+
+## 2026-09-29 — Competition v2, C1 official result + C2 expression/DE calibration (competition track)
+
+- C1 official (user-reported; CLI cannot list submissions, entry id pending): Overall 0.1394, rank 370/1207; PDS 0.602, MSE 0.057, NMAE 0.120, FID −0.019, REACH 0.076, JAC 0.001. Frozen in `reports/competition_v2/c1_official_result.md`. V1's entry now returns not_found via `vcc status`.
+- C2 predeclared (`c2_predeclaration.md` + amendments 1–2). Public H1/K562 folds, C1 mean fixed.
+- Mean vs generator: PDS is entirely mean-driven; the predicted effect is 0.52×/0.32× the true norm; directional precision ≈ 0.55 even for the exact mean. The C1 (G0) emitter calls 3,837 / 1,053 DE genes under a zero effect, but its over-calling and low-noise pseudobulk *raise* FID and MSE under the scorer.
+- Realistic generators (G1*, real donors) match heterogeneity (variance ratio ≈ 1.0) and pass the null, raise PDS by 15–30 %, and lose Overall. G2 fails the null; G3 not justified.
+- Amplitude: G0 a = 1.5 gives public Overall 0.090 vs 0.079, but it fails null qualification and the gain is K562-only (H1 flat); G0 a ≥ 1.75 is infeasible. Per-target β did not help.
+- **C2 FAILS rule J; nothing built; KEEP C1.** Report: `reports/competition_v2/c2_expression_de_calibration.md`.
+
+## 2026-09-29 — Competition v2, C3 mean-response / source fusion (competition track)
+
+- C2 frozen (`data/provenance/competition_v2/c2_freeze_sha256.txt`, 57 files). C3 predeclared (`c3_predeclaration.md`, 2aa25c72…).
+- In the fused log2fc space the C1 mean is not too small (2.2× / 0.55× / 1.3× the truth norm); it is mostly orthogonal (cosine 0.03–0.085, negative energy explained). Direction, not magnitude, is the bottleneck.
+- Donors: H1↔K562 is the best pair, CD4 the weakest; transfer is symmetric, so global weights are unidentifiable from 3 atlases. The per-target better donor is partly predicted by source reliability (ρ ≈ 0.3). CD4 source-only reliability ≈ 0.
+- Sign consensus predicts correctness (agree beats conflict by 5.6–12.2 pts) but covers only 4–14 % of top genes; consensus down-weighting cannot change signs and lowers PDS. Gene bias is anti-reproducible (ρ −0.35 to −0.78), so no gene calibration was built. C3b infeasible (no CD4 control profile).
+- Best candidate P (per-target reliability weights): Overall 0.0822 vs 0.0793, both folds up, but fails the sign-accuracy criterion (−0.0001). Source scaling shrinks and collapses PDS.
+- **C3 FAILS rule O; KEEP C1.** Report: `reports/competition_v2/c3_mean_response_fusion.md`.
+
+## 2026-09-30 — Competition v2, C4 new direct evidence audit (competition track)
+
+- C3 frozen (45 files). C4 predeclared (`c4_predeclaration.md`, bcedc1d0…).
+- KOLF2.1J iPSC CRISPRi (Figshare+ 27261219): CC BY 4.0 from the original API. 282 / 300 Arc targets, read by HTTP range requests before download; C1 → C1+KOLF sources 0/1/2/3+ = 13/53/210/24 → 2/18/55/225. Pan-genome h5ad downloaded (189.4 GB, MD5 OK) and streamed into C1-format statistics.
+- KOLF reliability (C3 protocol): median 0.160 (H1 0.787, K562 0.088), 100 % above the NTC null, main effect 0.94, on-target −1.27 log2FC.
+- Transfer as an extra equal-weight donor: H1 Overall +0.036 (PDS 0.626 → 0.778), K562 −0.030 (PDS 0.437 → 0.393), CD4 effect PDS 0.699 → 0.646. KOLF alone transfers to K562/CD4 at cosine ≈ 0.007 and agrees only with H1: the signal is pluripotency-specific. **Fails** the source rule (PDS, cosine, both-folds, anomalous fold).
+- Jurkat GSE249595: license UNKNOWN (GEO, no dataset license; paper CC BY-NC-ND); 299 / 300 in the library; not downloaded. VIPerturb-seq: CC BY 4.0, 284 Arc targets ≥ 20 cells at median 47 cells; not a material K562 reliability gain; not downloaded.
+- X-Atlas PENDING. **No new source qualifies; KEEP C1 AND WAIT FOR X-ATLAS.** Report: `reports/competition_v2/c4_new_direct_evidence_audit.md`.
+
+## 2026-09-30 — C5 preparation and paper consolidation (no model change)
+
+- C4 frozen (`c4_freeze_sha256.txt`, 38 files); all freezes verified.
+- New figure `fig11_coverage_vs_transferability` through the frozen figure framework. Sources are pinned by `data/provenance/scperteval/competition_c4_coverage_vs_transfer_freeze.txt`; the figure index and manifest are updated.
+- `reports/competition_v2/current_champion.md`: C1a is the champion (official 0.1394, rank 370 / 1207); C2 / C3 / C4 are rejected, with the reasons recorded.
+- `reports/competition_v2/c5_predeclaration.md` (0241d204…): C5 = C1 + X-Atlas HCT116 / HEK293T with everything else fixed, plus the pass rule. `scripts/competition_v2/run_c5_xatlas.py` refuses to read X-Atlas unless the status is APPROVED and `licensing.STATUS` is GREEN (tested). **Not run: permission PENDING.**
+- `reports/project_synthesis.md`, `reports/paper_outline.md` (with contribution statements); README rewritten around findings and 5 hero figures.
+
+## 2026-09-30 — Final-panel engineering readiness (no model change, nothing submitted)
+
+- New panel-agnostic pipeline:
+  - `competition_v2/panel.py`: loader from manifest / pert_counts / gene_names / controls, with checksums; `configs/source_registry.yaml` cross-checked against `licensing.STATUS`; target × source coverage audit.
+  - `competition_v2/final.py`: frozen C1 recipe driven by panel values; K562 / CD4 statistics re-prepared from raw when the retained set changes.
+  - Scripts: `run_final_panel.py`, `package_final_panel.py`, `vcc_pack_panel.py`.
+- Regression on A/B/C:
+  - The generic path is **array-identical** to the committed `build_c1_candidate.py` (nnz 2,437,123,253).
+  - Both differ from the *submitted* package in 2,465 / 360,000 cells: ±1 count moves, depths identical, only `p_bulk` of the 269 K562-supported targets at ≤ 7.6e-5 relative. The cause is the 15:29 post-build edits on 09-26 (as in C2 amendment 2); it is pre-existing.
+- Mock D/E/F (111 shuffled targets): 16 / 16 invariants pass; `vcc prep --dry-run` exits 0; `.vcc` built (not submitted).
+- Finding: vcc-cli 0.2.0 and the vendored pack.py default to contexts A,B,C / 400 cells / 18,533 genes. The panel values are now passed explicitly.
+- Runbook: `reports/competition_v2/final_round_runbook.md`.
+- Hardening (same day):
+  - `competition_v2/vcc_compat.py` checks the vcc version, the `vcc prep` options and the `run_prep` keywords; it is recorded in the audit, and an incompatible CLI fails with exit 2.
+  - `panel.parse_manifest` / `discover_control_files`: manifest-named or uniquely content-identified control files; malformed or unknown schemas fail with a diagnostic; nothing is guessed.
+  - C1 regression still exact (0 differing entries vs the committed builder).

@@ -144,6 +144,20 @@ Result story and suitability: [`README.md`](README.md).
   - `outputs/arc_count_space_v1/generator_mean_response_fidelity.csv` — sha256 `3b99439f38244634…` — pinned by `arc_count_space_v1_freeze.txt`
 - notes: Only summary statistics were frozen (quantiles, sparsity, heterogeneity, fitted slope and r of realised vs intended pseudobulk response over 50 perturbations). Per-gene and per-cell values were not retained; the figure shows the frozen summaries rather than regenerating cells.
 
+## fig11_coverage_vs_transferability
+
+- figure: `reports/figures/fig11_coverage_vs_transferability.png`, `reports/figures/fig11_coverage_vs_transferability.svg`
+- figure source: `data/figure_sources/fig11_coverage_vs_transferability.csv`
+- report: `reports/competition_v2/c4_new_direct_evidence_audit.md`
+- extraction script: `scripts/figures/extract_figure_sources.py`
+- figure script: `scripts/figures/plot_coverage_vs_transferability.py`
+- generated: 2026-09-29 at git HEAD `12e583a280a4` (uncommitted working tree)
+- source artifacts:
+  - `data/provenance/competition_v2/c4/kolf_arc_coverage.csv` — sha256 `d77719287c941c17…` — pinned by `competition_c4_coverage_vs_transfer_freeze.txt`
+  - `outputs/competition_v2/c4_kolf/vcc_scaled.csv` — sha256 `0dbc0bdbfeba415c…` — pinned by `competition_c4_coverage_vs_transfer_freeze.txt`
+  - `outputs/competition_v2/c4_kolf/transfer_mean_level.csv` — sha256 `1d3afe06260ffd52…` — pinned by `competition_c4_coverage_vs_transfer_freeze.txt`
+- notes: C1 = equal-weight fusion of the two non-held-out GREEN atlases; C1 + KOLF adds KOLF2.1J as one more equal-weight source (same rule, no reweighting). PDS and Overall are local-scaled on the frozen C1 ruler; CD4 is effect-level.
+
 ## 10_arc_submission_scorecard
 
 - figure: `reports/figures/10_arc_submission_scorecard.png`, `.svg`, drawn from the

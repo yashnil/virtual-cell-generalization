@@ -1,0 +1,141 @@
+# Machine-readable source registry for the competition pipeline (final-panel readiness).
+#
+# Authority: `licensing.STATUS` in code is the license authority. The loader refuses a
+# registry whose `license_status` disagrees with it. A source is used by C1 automatically
+# only if ALL hold:
+#   role == c1_source  AND  qualification == QUALIFIED  AND  licensing.STATUS == GREEN.
+# BLOCKED / UNKNOWN / AUDIT_ONLY / EXCLUDED sources can appear in coverage audits but
+# are never fused. Evidence for every license: reports/competition_v2/data_license_register.md.
+#
+# `panel_dependent: true` means the source's statistics rows are the frozen C1 retained
+# set, i.e. the panel's official targets followed by the H1 2025 training targets. Its
+# centering runs over those rows, so a new panel requires re-preparing the statistics
+# from raw with the unchanged C1 code (`prepare`: k562 | cd4). H1 statistics cover all
+# 300 public H1 targets and do not depend on the panel.
+
+version: 1
+retained_extra_targets: data/raw/competition_v2/pert_counts_Training.csv  # H1 training targets
+promoter_annotation: data/raw/competition_v2/gencode.v47.annotation.gtf.gz
+
+sources:
+  - name: K562
+    licensing_key: K562
+    license_status: GREEN
+    license: CC BY 4.0 (Replogle 2022 GWPS, figshare+)
+    context: K562
+    direct_perturbation: CRISPRi Perturb-seq, genome-wide
+    qualification: QUALIFIED
+    role: c1_source
+    kind: cell_statistics
+    c1_order: 1
+    fusion_weight: 1.0
+    panel_dependent: true
+    prepare: k562
+    raw_path: data/raw/competition_v2/K562_gwps_raw_singlecell_01.h5ad
+    frozen_statistics: outputs/competition_v2/c1_license_clean/sources/K562_GWPS_CPM_full_statistics.npz
+    provenance: reports/competition_v2/data_license_register.md; data/provenance/competition_v2/download_log.jsonl
+
+  - name: H1
+    licensing_key: H1
+    license_status: GREEN
+    license: CC0 1.0 (Arc VCC 2025 H1)
+    context: H1 hESC
+    direct_perturbation: CRISPRi Perturb-seq (VCC 2025 train/validation/test)
+    qualification: QUALIFIED
+    role: c1_source
+    kind: cell_statistics
+    c1_order: 2
+    fusion_weight: 1.0
+    panel_dependent: false
+    prepare: null
+    raw_path: data/raw/competition_v2/adata_Training.h5ad
+    frozen_statistics: outputs/competition_v2/c1_license_clean/sources/H1_2025_full_statistics.npz
+    provenance: reports/competition_v2/data_license_register.md
+
+  - name: CD4
+    licensing_key: CD4
+    license_status: GREEN
+    license: MIT (CZI Virtual Cells Platform listing; caveat recorded)
+    context: primary CD4 T cells (Rest, Stim8hr, Stim48hr)
+    direct_perturbation: CRISPRi, genome-wide DE table
+    qualification: QUALIFIED
+    role: c1_source
+    kind: cd4_de
+    c1_order: 3
+    fusion_weight: 1.0
+    panel_dependent: true
+    prepare: cd4
+    raw_path: data/raw/competition_v2/GWCD4i.DE_stats.h5ad
+    frozen_statistics: outputs/competition_v2/c1_license_clean/sources/CD4_DE_statistics.npz
+    provenance: reports/competition_v2/data_license_register.md
+
+  - name: KOLF2.1J_iPSC
+    licensing_key: KOLF2.1J_iPSC
+    license_status: GREEN
+    license: CC BY 4.0 (Figshare+ 10.25452/figshare.plus.27261219.v1)
+    context: KOLF2.1J iPSC
+    direct_perturbation: CRISPRi Perturb-seq, expressed genome
+    qualification: AUDIT_ONLY  # failed C4 held-out transfer rule
+    role: audit
+    kind: coverage_obs_json
+    coverage_path: data/provenance/competition_v2/c4/kolf_pan_genome_obs.json
+    provenance: reports/competition_v2/c4_new_direct_evidence_audit.md
+
+  - name: VIPERTURB_K562
+    licensing_key: VIPERTURB_K562
+    license_status: GREEN
+    license: CC BY 4.0 (Zenodo 10.5281/zenodo.18460279)
+    context: K562
+    direct_perturbation: CRISPRi VIPerturb-seq, genome-wide
+    qualification: AUDIT_ONLY  # not downloaded; insufficient incremental K562 value
+    role: audit
+    kind: coverage_manifest
+    coverage_path: data/provenance/competition_v2/c4/viperturb_genome_wide_manifest.txt
+    provenance: reports/competition_v2/c4_new_direct_evidence_audit.md
+
+  - name: JURKAT_GSE249595
+    licensing_key: JURKAT_GSE249595
+    license_status: UNKNOWN
+    license: none on GEO; paper CC BY-NC-ND 4.0
+    context: Jurkat (unstimulated / stimulated)
+    direct_perturbation: CRISPRi Perturb-seq, genome-wide (library presence only)
+    qualification: AUDIT_ONLY
+    role: audit
+    kind: coverage_guide_library
+    coverage_path: data/provenance/competition_v2/c4/jurkat_guides_reference.fa.gz
+    provenance: reports/competition_v2/c4_new_direct_evidence_audit.md
+
+  - name: HCT116
+    licensing_key: HCT116
+    license_status: BLOCKED_PENDING_PERMISSION
+    license: CC BY-NC-SA 4.0 (X-Atlas/Orion); see xatlas_permission_status.md
+    context: HCT116
+    direct_perturbation: CRISPRi FiCS Perturb-seq, genome-wide
+    qualification: BLOCKED
+    role: audit
+    kind: coverage_counts_csv
+    coverage_path: outputs/competition_v2/xatlas_HCT116_target_counts.csv
+    provenance: reports/competition_v2/xatlas_permission_status.md
+
+  - name: HEK293T
+    licensing_key: HEK293T
+    license_status: BLOCKED_PENDING_PERMISSION
+    license: CC BY-NC-SA 4.0 (X-Atlas/Orion); see xatlas_permission_status.md
+    context: HEK293T
+    direct_perturbation: CRISPRi FiCS Perturb-seq, genome-wide
+    qualification: BLOCKED
+    role: audit
+    kind: coverage_counts_csv
+    coverage_path: outputs/competition_v2/xatlas_HEK293T_target_counts.csv
+    provenance: reports/competition_v2/xatlas_permission_status.md
+
+  - name: KADEN_RPE1
+    licensing_key: KADEN_RPE1
+    license_status: GREEN
+    license: CC BY 4.0 (Zenodo)
+    context: RPE1
+    direct_perturbation: TF perturbation screen (modality unverified; possibly CRISPRa)
+    qualification: EXCLUDED  # scientific: weak reproducibility, not in the C1 backbone
+    role: audit
+    kind: none
+    provenance: reports/kaden_source_reliability_diagnostic_v1.md

@@ -1,0 +1,35 @@
+{
+  "figure_source": "data/figure_sources/fig11_coverage_vs_transferability.csv",
+  "source_files": [
+    {
+      "path": "data/provenance/competition_v2/c4/kolf_arc_coverage.csv",
+      "sha256": "d77719287c941c17c4405c918ac6ac6082f0e43d0278e081df301799cc6f6741",
+      "freezes": [
+        "competition_c4_coverage_vs_transfer_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/competition_v2/c4_kolf/vcc_scaled.csv",
+      "sha256": "0dbc0bdbfeba415c67835f19b6fb3296267bc9dddf7cfb9e15471c882024758e",
+      "freezes": [
+        "competition_c4_coverage_vs_transfer_freeze.txt"
+      ]
+    },
+    {
+      "path": "outputs/competition_v2/c4_kolf/transfer_mean_level.csv",
+      "sha256": "1d3afe06260ffd5219001f743c30b96b506891c1d8881a28f95f6dbbdd3c9165",
+      "freezes": [
+        "competition_c4_coverage_vs_transfer_freeze.txt"
+      ]
+    }
+  ],
+  "report": "reports/competition_v2/c4_new_direct_evidence_audit.md",
+  "extraction_script": "scripts/figures/extract_figure_sources.py",
+  "figure_script": "scripts/figures/plot_coverage_vs_transferability.py",
+  "generated": "2026-09-29",
+  "git_head": {
+    "commit": "12e583a280a4e1c131545b785426edfd7b508b9f",
+    "dirty": true
+  },
+  "notes": "C1 = equal-weight fusion of the two non-held-out GREEN atlases; C1 + KOLF adds KOLF2.1J as one more equal-weight source (same rule, no reweighting). PDS and Overall are local-scaled on the frozen C1 ruler; CD4 is effect-level."
+}

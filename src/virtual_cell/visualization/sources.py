@@ -651,6 +651,86 @@ def transport_fidelity() -> Extract:
     )
 
 
+# ---------------------------------------------------------------- Figure 11
+
+C4_DIR = "outputs/competition_v2/c4_kolf"
+
+
+def coverage_vs_transferability() -> Extract:
+    """C1 vs C1 + KOLF: Arc coverage gained, and held-out transfer lost outside H1."""
+    cov_src = "data/provenance/competition_v2/c4/kolf_arc_coverage.csv"
+    vcc_src = f"{C4_DIR}/vcc_scaled.csv"
+    mean_src = f"{C4_DIR}/transfer_mean_level.csv"
+    cov = _csv(cov_src)
+    n1 = cov.c1_usable_contexts
+    n2 = n1 + cov.kolf_usable.astype(int)
+    rows = []
+    for k, label in ((1, ">=1 source"), (2, ">=2 sources"), (3, ">=3 sources")):
+        rows.append(
+            {
+                "panel": "coverage",
+                "quantity": f"Arc targets with {label}",
+                "fold": "Arc panel",
+                "c1": float((n1 >= k).sum()),
+                "c1_kolf": float((n2 >= k).sum()),
+            }
+        )
+    rows.append(
+        {
+            "panel": "coverage",
+            "quantity": "C1-unsupported targets filled",
+            "fold": "Arc panel",
+            "c1": 0.0,
+            "c1_kolf": float(((n1 == 0) & cov.kolf_usable).sum()),
+        }
+    )
+    vcc = _csv(vcc_src).set_index(["fold", "arm"])
+    for fold in ("H1", "K562"):
+        for q in ("PDS", "Overall"):
+            rows.append(
+                {
+                    "panel": "transfer",
+                    "quantity": f"{q} (local scaled)",
+                    "fold": fold,
+                    "c1": float(vcc.loc[(fold, "C1a"), q]),
+                    "c1_kolf": float(vcc.loc[(fold, "C1a_KOLF"), q]),
+                }
+            )
+    mean = _csv(mean_src)
+    mean = mean[mean.scope == "all_cells"].set_index(["heldout", "arm"])
+    rows.append(
+        {
+            "panel": "transfer",
+            "quantity": "effect PDS",
+            "fold": "CD4",
+            "c1": float(mean.loc[("CD4", "C1a"), "effect_pds"]),
+            "c1_kolf": float(mean.loc[("CD4", "C1a_KOLF"), "effect_pds"]),
+        }
+    )
+    for fold in ("H1", "K562", "CD4"):
+        rows.append(
+            {
+                "panel": "transfer",
+                "quantity": "mean-response cosine",
+                "fold": fold,
+                "c1": float(mean.loc[(fold, "C1a"), "cosine"]),
+                "c1_kolf": float(mean.loc[(fold, "C1a_KOLF"), "cosine"]),
+            }
+        )
+    table = pd.DataFrame(rows)
+    table["delta"] = table.c1_kolf - table.c1
+    return Extract(
+        "fig11_coverage_vs_transferability",
+        table,
+        [cov_src, vcc_src, mean_src],
+        "reports/competition_v2/c4_new_direct_evidence_audit.md",
+        "scripts/figures/plot_coverage_vs_transferability.py",
+        "C1 = equal-weight fusion of the two non-held-out GREEN atlases; C1 + KOLF adds "
+        "KOLF2.1J as one more equal-weight source (same rule, no reweighting). PDS and "
+        "Overall are local-scaled on the frozen C1 ruler; CD4 is effect-level.",
+    )
+
+
 EXTRACTORS: dict[str, Callable[[], Extract]] = {
     "fig1_decomposition": decomposition,
     "fig2_decomposition_robustness": decomposition_robustness,
@@ -661,4 +741,5 @@ EXTRACTORS: dict[str, Callable[[], Extract]] = {
     "fig7_source_reliability": source_reliability,
     "fig8_count_generator_benchmark": count_generator_benchmark,
     "fig9_transport_fidelity": transport_fidelity,
+    "fig11_coverage_vs_transferability": coverage_vs_transferability,
 }
