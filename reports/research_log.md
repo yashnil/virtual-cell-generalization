@@ -2315,3 +2315,16 @@ Research conclusions unchanged. No submission in this phase.
 - `reports/competition_v2/current_champion.md`: C1a is the champion (official 0.1394, rank 370 / 1207); C2 / C3 / C4 are rejected, with the reasons recorded.
 - `reports/competition_v2/c5_predeclaration.md` (0241d204…): C5 = C1 + X-Atlas HCT116 / HEK293T with everything else fixed, plus the pass rule. `scripts/competition_v2/run_c5_xatlas.py` refuses to read X-Atlas unless the status is APPROVED and `licensing.STATUS` is GREEN (tested). **Not run: permission PENDING.**
 - `reports/project_synthesis.md`, `reports/paper_outline.md` (with contribution statements); README rewritten around findings and 5 hero figures.
+
+## 2026-09-30 — Final-panel engineering readiness (no model change, nothing submitted)
+
+- New panel-agnostic pipeline:
+  - `competition_v2/panel.py`: loader from manifest / pert_counts / gene_names / controls, with checksums; `configs/source_registry.yaml` cross-checked against `licensing.STATUS`; target × source coverage audit.
+  - `competition_v2/final.py`: frozen C1 recipe driven by panel values; K562 / CD4 statistics re-prepared from raw when the retained set changes.
+  - Scripts: `run_final_panel.py`, `package_final_panel.py`, `vcc_pack_panel.py`.
+- Regression on A/B/C:
+  - The generic path is **array-identical** to the committed `build_c1_candidate.py` (nnz 2,437,123,253).
+  - Both differ from the *submitted* package in 2,465 / 360,000 cells: ±1 count moves, depths identical, only `p_bulk` of the 269 K562-supported targets at ≤ 7.6e-5 relative. The cause is the 15:29 post-build edits on 09-26 (as in C2 amendment 2); it is pre-existing.
+- Mock D/E/F (111 shuffled targets): 16 / 16 invariants pass; `vcc prep --dry-run` exits 0; `.vcc` built (not submitted).
+- Finding: vcc-cli 0.2.0 and the vendored pack.py default to contexts A,B,C / 400 cells / 18,533 genes. The panel values are now passed explicitly.
+- Runbook: `reports/competition_v2/final_round_runbook.md`.
