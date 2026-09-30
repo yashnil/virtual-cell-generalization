@@ -2289,3 +2289,29 @@ Research conclusions unchanged. No submission in this phase.
 - Realistic generators (G1*, real donors) match heterogeneity (variance ratio ≈ 1.0) and pass the null, raise PDS by 15–30 %, and lose Overall. G2 fails the null; G3 not justified.
 - Amplitude: G0 a = 1.5 gives public Overall 0.090 vs 0.079, but it fails null qualification and the gain is K562-only (H1 flat); G0 a ≥ 1.75 is infeasible. Per-target β did not help.
 - **C2 FAILS rule J; nothing built; KEEP C1.** Report: `reports/competition_v2/c2_expression_de_calibration.md`.
+
+## 2026-09-29 — Competition v2, C3 mean-response / source fusion (competition track)
+
+- C2 frozen (`data/provenance/competition_v2/c2_freeze_sha256.txt`, 57 files). C3 predeclared (`c3_predeclaration.md`, 2aa25c72…).
+- In the fused log2fc space the C1 mean is not too small (2.2× / 0.55× / 1.3× the truth norm); it is mostly orthogonal (cosine 0.03–0.085, negative energy explained). Direction, not magnitude, is the bottleneck.
+- Donors: H1↔K562 is the best pair, CD4 the weakest; transfer is symmetric, so global weights are unidentifiable from 3 atlases. The per-target better donor is partly predicted by source reliability (ρ ≈ 0.3). CD4 source-only reliability ≈ 0.
+- Sign consensus predicts correctness (agree beats conflict by 5.6–12.2 pts) but covers only 4–14 % of top genes; consensus down-weighting cannot change signs and lowers PDS. Gene bias is anti-reproducible (ρ −0.35 to −0.78), so no gene calibration was built. C3b infeasible (no CD4 control profile).
+- Best candidate P (per-target reliability weights): Overall 0.0822 vs 0.0793, both folds up, but fails the sign-accuracy criterion (−0.0001). Source scaling shrinks and collapses PDS.
+- **C3 FAILS rule O; KEEP C1.** Report: `reports/competition_v2/c3_mean_response_fusion.md`.
+
+## 2026-09-30 — Competition v2, C4 new direct evidence audit (competition track)
+
+- C3 frozen (45 files). C4 predeclared (`c4_predeclaration.md`, bcedc1d0…).
+- KOLF2.1J iPSC CRISPRi (Figshare+ 27261219): CC BY 4.0 from the original API. 282 / 300 Arc targets, read by HTTP range requests before download; C1 → C1+KOLF sources 0/1/2/3+ = 13/53/210/24 → 2/18/55/225. Pan-genome h5ad downloaded (189.4 GB, MD5 OK) and streamed into C1-format statistics.
+- KOLF reliability (C3 protocol): median 0.160 (H1 0.787, K562 0.088), 100 % above the NTC null, main effect 0.94, on-target −1.27 log2FC.
+- Transfer as an extra equal-weight donor: H1 Overall +0.036 (PDS 0.626 → 0.778), K562 −0.030 (PDS 0.437 → 0.393), CD4 effect PDS 0.699 → 0.646. KOLF alone transfers to K562/CD4 at cosine ≈ 0.007 and agrees only with H1: the signal is pluripotency-specific. **Fails** the source rule (PDS, cosine, both-folds, anomalous fold).
+- Jurkat GSE249595: license UNKNOWN (GEO, no dataset license; paper CC BY-NC-ND); 299 / 300 in the library; not downloaded. VIPerturb-seq: CC BY 4.0, 284 Arc targets ≥ 20 cells at median 47 cells; not a material K562 reliability gain; not downloaded.
+- X-Atlas PENDING. **No new source qualifies; KEEP C1 AND WAIT FOR X-ATLAS.** Report: `reports/competition_v2/c4_new_direct_evidence_audit.md`.
+
+## 2026-09-30 — C5 preparation and paper consolidation (no model change)
+
+- C4 frozen (`c4_freeze_sha256.txt`, 38 files); all freezes verified.
+- New figure `fig11_coverage_vs_transferability` through the frozen figure framework. Sources are pinned by `data/provenance/scperteval/competition_c4_coverage_vs_transfer_freeze.txt`; the figure index and manifest are updated.
+- `reports/competition_v2/current_champion.md`: C1a is the champion (official 0.1394, rank 370 / 1207); C2 / C3 / C4 are rejected, with the reasons recorded.
+- `reports/competition_v2/c5_predeclaration.md` (0241d204…): C5 = C1 + X-Atlas HCT116 / HEK293T with everything else fixed, plus the pass rule. `scripts/competition_v2/run_c5_xatlas.py` refuses to read X-Atlas unless the status is APPROVED and `licensing.STATUS` is GREEN (tested). **Not run: permission PENDING.**
+- `reports/project_synthesis.md`, `reports/paper_outline.md` (with contribution statements); README rewritten around findings and 5 hero figures.

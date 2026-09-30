@@ -1,0 +1,13 @@
+panel,quantity,fold,c1,c1_kolf,delta
+coverage,Arc targets with >=1 source,Arc panel,287,298,11
+coverage,Arc targets with >=2 sources,Arc panel,234,280,46
+coverage,Arc targets with >=3 sources,Arc panel,24,225,201
+coverage,C1-unsupported targets filled,Arc panel,0,11,11
+transfer,PDS (local scaled),H1,0.625649758,0.7778275677,0.1521778096
+transfer,Overall (local scaled),H1,0.06977500805,0.1060895206,0.03631451256
+transfer,PDS (local scaled),K562,0.4365874956,0.3928047503,-0.04378274537
+transfer,Overall (local scaled),K562,0.08880811852,0.05851496886,-0.03029314966
+transfer,effect PDS,CD4,0.6989193265,0.6458113429,-0.05310798358
+transfer,mean-response cosine,H1,0.06470855207,0.06373315638,-0.0009753956919
+transfer,mean-response cosine,K562,0.04511758449,0.02579633366,-0.01932125083
+transfer,mean-response cosine,CD4,0.03092960483,0.0161658197,-0.01476378513

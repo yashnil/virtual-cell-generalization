@@ -31,6 +31,7 @@ Allowed statuses: **PENDING**, **APPROVED**, **DENIED**.
 |---|---|---|
 | 2026-09-26 | Status set to PENDING at the start of C1. No request or reply is recorded in this repository. | — |
 | 2026-09-26 | No permission received during C1. C1 was built without X-Atlas. | — |
+| 2026-09-29 | Checked at the start of C4. No written reply is recorded; status remains PENDING. X-Atlas was not used in C2, C3 or C4. | — |
 
 ## What permission would be worth (public folds; details in `license_clean_c1_v1.md` §13)
 

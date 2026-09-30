@@ -20,6 +20,9 @@ STATUS: dict[str, str] = {
     "CD4": GREEN,  # Marson GWCD4i: "MIT License" (CZI Virtual Cells Platform listing)
     "GENCODE": GREEN,  # GENCODE v47: EMBL-EBI terms / Ensembl "no restrictions"
     "KADEN_RPE1": GREEN,  # CC BY 4.0 (Zenodo) — license-GREEN, scientifically excluded
+    "KOLF2.1J_iPSC": GREEN,  # C4: Figshare+ 10.25452/figshare.plus.27261219.v1, CC BY 4.0
+    "VIPERTURB_K562": GREEN,  # C4: Zenodo 10.5281/zenodo.18460279, CC BY 4.0 (not downloaded)
+    "JURKAT_GSE249595": UNKNOWN,  # C4: GEO, no dataset license; paper CC BY-NC-ND 4.0
     "HCT116": BLOCKED,  # X-Atlas/Orion: CC BY-NC-SA 4.0
     "HEK293T": BLOCKED,  # X-Atlas/Orion: CC BY-NC-SA 4.0
 }

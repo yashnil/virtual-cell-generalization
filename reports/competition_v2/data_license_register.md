@@ -171,6 +171,48 @@ Governed by the Challenge Terms of Use (https://virtualcellchallenge.org/terms):
 
 It is used only as the Challenge input and never redistributed.
 
+## C4 additions (2026-09-29)
+
+### KOLF2.1J iPSC genome-scale CRISPRi atlas: GREEN
+
+* **Status:** GREEN.
+* **Source:** "A genome-scale CRISPRi perturbation atlas of human induced pluripotent
+  stem cells", *Nat Biotechnol* (2026), `10.1038/s41587-026-03199-w`.
+* **Data record:** Figshare+ `10.25452/figshare.plus.27261219.v1`, article 27261219,
+  published 2026-05-18.
+* **License evidence:** the original Figshare API returns
+  `license = {"name": "CC BY 4.0", "url": "https://creativecommons.org/licenses/by/4.0/"}`.
+  The saved response is `data/provenance/competition_v2/c4/kolf_figshare_article.json`.
+* **Files, sizes and MD5s** are recorded from the same response.
+* **Used:** `KOLF_Pan_Genome_QC_Filtered.h5ad`, 189,393,177,972 bytes,
+  MD5 `afd30fde1e6ad32969c29868394385d1`.
+* **Attribution required.** `licensing.STATUS["KOLF2.1J_iPSC"] = GREEN`.
+
+### Jurkat genome-scale CRISPRi (GSE249595 / PRJNA1049794): UNKNOWN
+
+* **Status:** UNKNOWN.
+* **Repository:** GEO series GSE249595, a SubSeries of GSE247601. It carries **no
+  dataset license**.
+* **NCBI GEO disclaimer:** "NCBI places no restrictions on the use or distribution of the
+  GEO data. However, some submitters may claim patent, copyright, or other intellectual
+  property rights in all or a portion of the data they have submitted. NCBI … cannot
+  provide comment or unrestricted permission concerning the use, copying, or
+  distribution of the information contained in GEO."
+* **Publication:** Nat Cell Biol 2025 (PMC11906366) is licensed CC BY-NC-ND 4.0. That
+  covers the article, not the dataset. Its data statement only points to GEO.
+* **Commercial authors:** several are Myllia Biotechnology employees.
+* **Consequence:** without an explicit permissive dataset license it is UNKNOWN, and
+  `licensing.STATUS["JURKAT_GSE249595"] = UNKNOWN`. Not downloaded.
+
+### VIPerturb-seq (K562 genome-wide): GREEN
+
+* **Status:** GREEN. **Not downloaded** (see the C4 report, gate G).
+* **Record:** Zenodo `10.5281/zenodo.18460279` (concept `…18460278`), published
+  2026-02-02.
+* **License evidence:** Zenodo API `metadata.license.id = "cc-by-4.0"`. The saved
+  response is `data/provenance/competition_v2/c4/viperturb_zenodo_record.json`.
+* `licensing.STATUS["VIPERTURB_K562"] = GREEN`.
+
 ## Change control
 
 A status may change only with new written evidence, and only by a dated addition to this
