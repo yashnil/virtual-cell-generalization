@@ -29,7 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
-from virtual_cell.competition_v2 import panel  # noqa: E402
+from virtual_cell.competition_v2 import panel, vcc_compat  # noqa: E402
 
 UPSTREAM = ROOT / "third_party" / "atlasshift"
 
@@ -43,6 +43,13 @@ def main() -> int:
     args = ap.parse_args()
     out = Path(args.output_dir).resolve()
     controls = Path(args.controls_dir).resolve()
+    try:
+        cli = vcc_compat.require()
+    except vcc_compat.VccCompatibilityError as exc:
+        raise SystemExit(f"VCC CLI INCOMPATIBLE; not packaging\n{exc}") from exc
+    print(f"vcc CLI {cli.version} ({'tested' if cli.tested_version else 'UNTESTED'})")
+    for w in cli.warnings:
+        print(f"WARNING: {w}")
     prov = json.loads((out / "provenance.json").read_text())
     if not prov.get("validation", {}).get("all_pass"):
         raise SystemExit("local invariants did not pass; refusing to package")
@@ -98,6 +105,7 @@ def main() -> int:
         },
         "vcc_prep_dry_run": dry_report,
         "model_git": prov["git"],
+        "vcc_cli": cli.as_dict(),
     }
     (out / "package_manifest.json").write_text(json.dumps(manifest, indent=2, default=str) + "\n")
     print(f"packaged {package} (sha256 {manifest['vcc_package']['sha256']}); NOT submitted")

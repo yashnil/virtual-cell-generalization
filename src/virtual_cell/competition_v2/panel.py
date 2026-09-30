@@ -62,6 +62,7 @@ class Panel:
     context_col: str
     manifest: dict
     checksums: dict[str, str] = field(default_factory=dict)
+    discovery: dict[str, str] = field(default_factory=dict)
 
     @property
     def n_cells(self) -> int:
@@ -80,6 +81,8 @@ class Panel:
             "target_list_sha256": list_sha(self.targets),
             "gene_list_sha256": list_sha(self.genes),
             "file_sha256": dict(self.checksums),
+            "control_files": {c: str(p) for c, p in self.control_files.items()},
+            "control_file_discovery": dict(self.discovery),
         }
 
 
@@ -106,6 +109,159 @@ def _read_obs_column(path: Path, col: str) -> np.ndarray:
         return np.array([v.decode() if isinstance(v, bytes) else str(v) for v in node[()]])
 
 
+MANIFEST_SCHEMA_HELP = (
+    "expected manifest.json: 'contexts' = a non-empty list of unique labels, or of objects "
+    "with a label ('label' | 'context' | 'name') and optionally a file ('file' | 'filename' "
+    "| 'path' | 'h5ad'); 'cells_per_pert' = a positive integer; optional per-context files "
+    "under 'files' {label: filename} or 'per_context' {label: {file: ...}}; optional "
+    "strings 'pert_col', 'context_col', 'control_label'; optional integers 'n_genes', "
+    "'n_constructs'"
+)
+_LABEL_KEYS = ("label", "context", "name")
+_FILE_KEYS = ("file", "filename", "path", "h5ad")
+
+
+def _is_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool)
+
+
+def parse_manifest(manifest: dict) -> dict:
+    """Validate the manifest fields the pipeline needs; raise a diagnostic if not understood.
+
+    Returns ``{"contexts", "cells_per_pert", "files", "pert_col", "context_col",
+    "control_label"}``, where ``files`` maps each context to a manifest-named file or None.
+    Nothing is guessed: an unknown or malformed schema is an error.
+    """
+    problems: list[str] = []
+    if not isinstance(manifest, dict):
+        raise PanelError(f"manifest.json is not a JSON object. {MANIFEST_SCHEMA_HELP}")
+    raw = manifest.get("contexts")
+    contexts: list[str] = []
+    files: dict[str, str | None] = {}
+    if isinstance(raw, dict):
+        raw = [{"label": k, **(v if isinstance(v, dict) else {"file": v})} for k, v in raw.items()]
+    if not isinstance(raw, list) or not raw:
+        problems.append("'contexts' is missing or not a non-empty list")
+    else:
+        for item in raw:
+            if isinstance(item, str) and item:
+                contexts.append(item)
+                files[item] = None
+            elif isinstance(item, dict):
+                labels = [item[k] for k in _LABEL_KEYS if isinstance(item.get(k), str)]
+                names = [item[k] for k in _FILE_KEYS if isinstance(item.get(k), str)]
+                if len(set(labels)) != 1:
+                    problems.append(f"context entry {item!r} has no single label")
+                    continue
+                if len(set(names)) > 1:
+                    problems.append(f"context entry {item!r} names several files")
+                    continue
+                contexts.append(labels[0])
+                files[labels[0]] = names[0] if names else None
+            else:
+                problems.append(f"context entry {item!r} is neither a label nor an object")
+        if len(set(contexts)) != len(contexts):
+            problems.append(f"duplicate context labels {contexts}")
+    for label, name in (
+        (manifest.get("files") or {}).items() if isinstance(manifest.get("files"), dict) else []
+    ):
+        if label in files and isinstance(name, str):
+            if files[label] not in (None, name):
+                problems.append(f"context {label!r} names two different files")
+            files[label] = name
+    per = manifest.get("per_context")
+    if isinstance(per, dict):
+        for label, meta in per.items():
+            if label not in files and contexts:
+                problems.append(f"'per_context' has unknown context {label!r}")
+                continue
+            if isinstance(meta, dict):
+                names = [meta[k] for k in _FILE_KEYS if isinstance(meta.get(k), str)]
+                if len(set(names)) > 1:
+                    problems.append(f"'per_context'[{label!r}] names several files")
+                elif names and label in files:
+                    if files[label] not in (None, names[0]):
+                        problems.append(f"context {label!r} names two different files")
+                    files[label] = names[0]
+    cells = manifest.get("cells_per_pert")
+    if not _is_int(cells) or cells <= 0:
+        problems.append(f"'cells_per_pert' must be a positive integer, got {cells!r}")
+    for key in ("pert_col", "context_col", "control_label"):
+        if key in manifest and not (isinstance(manifest[key], str) and manifest[key]):
+            problems.append(f"{key!r} must be a non-empty string")
+    for key in ("n_genes", "n_constructs"):
+        if key in manifest and not _is_int(manifest[key]):
+            problems.append(f"{key!r} must be an integer")
+    if problems:
+        raise PanelError(
+            "manifest.json schema not understood:\n  - "
+            + "\n  - ".join(problems)
+            + f"\nfound keys: {sorted(manifest)}\n{MANIFEST_SCHEMA_HELP}"
+        )
+    return {
+        "contexts": tuple(contexts),
+        "cells_per_pert": int(cells),
+        "files": files,
+        "pert_col": manifest.get("pert_col", "target_gene"),
+        "context_col": manifest.get("context_col", "context"),
+        "control_label": manifest.get("control_label", "non-targeting"),
+    }
+
+
+def discover_control_files(
+    d: Path, contexts, named: dict, context_col: str
+) -> tuple[dict[str, Path], dict[str, str]]:
+    """Resolve each context's control ``.h5ad`` without guessing.
+
+    The order of precedence is: (1) the file the manifest names; (2) the validation-era
+    ``context_<label>.h5ad``; (3) the *unique* ``.h5ad`` in the bundle whose obs
+    ``context_col`` is uniformly the label. Zero or several candidates is an error.
+    """
+    d = Path(d).resolve()
+    files, how, errors = {}, {}, []
+    for c in contexts:
+        name = named.get(c)
+        if name:
+            p = (d / name).resolve()
+            if d not in p.parents:
+                errors.append(f"{c}: manifest file {name!r} is outside the bundle directory")
+            elif not p.exists() or p.suffix != ".h5ad":
+                errors.append(f"{c}: manifest file {name!r} is missing or not an .h5ad")
+            else:
+                files[c], how[c] = p, "named by manifest"
+        elif (d / f"context_{c}.h5ad").exists():
+            files[c], how[c] = d / f"context_{c}.h5ad", "validation-era filename"
+    unresolved = [c for c in contexts if c not in files]
+    if unresolved and not errors:
+        taken = set(files.values())
+        labels = {}
+        for p in sorted(d.glob("*.h5ad")):
+            if p.resolve() in {f.resolve() for f in taken}:
+                continue
+            try:
+                vals = set(_read_obs_column(p, context_col))
+            except Exception as exc:  # noqa: BLE001 - reported, never guessed around
+                labels[p] = f"unreadable ({type(exc).__name__})"
+                continue
+            labels[p] = next(iter(vals)) if len(vals) == 1 else f"mixed {sorted(vals)[:5]}"
+        for c in unresolved:
+            hits = [p for p, lab in labels.items() if lab == c]
+            if len(hits) == 1:
+                files[c], how[c] = hits[0], f"unique file with obs {context_col!r} == {c!r}"
+            else:
+                seen = {p.name: lab for p, lab in labels.items()}
+                errors.append(
+                    f"{c}: {'no' if not hits else len(hits)} candidate .h5ad files whose obs "
+                    f"{context_col!r} is uniformly {c!r} (not guessing); "
+                    f"unassigned files and their context labels: {seen}"
+                )
+    if len(set(files.values())) != len(files):
+        errors.append("two contexts resolve to the same file")
+    if errors:
+        raise PanelError("cannot identify control files:\n  - " + "\n  - ".join(errors))
+    return files, how
+
+
 def load_panel(
     controls_dir: str | Path,
     *,
@@ -121,13 +277,22 @@ def load_panel(
     """
     d = Path(controls_dir)
     manifest_path = d / "manifest.json"
-    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
-    if manifest:
-        contexts = tuple(str(c) for c in manifest["contexts"])
-        mcells = int(manifest["cells_per_pert"])
+    manifest = {}
+    if manifest_path.exists():
+        try:
+            manifest = json.loads(manifest_path.read_text())
+        except json.JSONDecodeError as exc:
+            raise PanelError(f"manifest.json is not valid JSON: {exc}") from exc
+    if manifest_path.exists():
+        spec = parse_manifest(manifest)
+        contexts = spec["contexts"]
+        mcells = spec["cells_per_pert"]
         if cells_per_pert is not None and int(cells_per_pert) != mcells:
             raise PanelError(f"cells_per_pert {cells_per_pert} disagrees with manifest {mcells}")
         cells_per_pert = mcells
+        named = spec["files"]
+        pert_col, context_col = spec["pert_col"], spec["context_col"]
+        control_label = spec["control_label"]
     else:
         contexts = tuple(
             sorted(
@@ -138,12 +303,14 @@ def load_panel(
         )
         if cells_per_pert is None:
             raise PanelError("no manifest.json: cells_per_pert must be supplied")
+        named = {}
+        pert_col, context_col, control_label = "target_gene", "context", "non-targeting"
     if not contexts:
         raise PanelError("no contexts found")
-    pert_col = manifest.get("pert_col", "target_gene")
-    context_col = manifest.get("context_col", "context")
-    control_label = manifest.get("control_label", "non-targeting")
-    files = {c: d / f"context_{c}.h5ad" for c in contexts}
+    for f in ("gene_names.csv", "pert_counts.csv"):
+        if not (d / f).exists():
+            raise PanelError(f"missing bundle files: {[str(d / f)]}")
+    files, discovery = discover_control_files(d, contexts, named, context_col)
     needed = [d / "gene_names.csv", d / "pert_counts.csv", *files.values()]
     missing = [str(p) for p in needed if not p.exists()]
     if missing:
@@ -191,7 +358,7 @@ def load_panel(
             sums[p.name] = sha256(p)
     return Panel(
         d, contexts, files, targets, genes, int(cells_per_pert), control_label, pert_col,
-        context_col, manifest, sums,
+        context_col, manifest, sums, discovery,
     )  # fmt: skip
 
 

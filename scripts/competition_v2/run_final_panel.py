@@ -38,7 +38,7 @@ from pathlib import Path  # noqa: E402
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
-from virtual_cell.competition_v2 import final, panel  # noqa: E402
+from virtual_cell.competition_v2 import final, panel, vcc_compat  # noqa: E402
 
 
 def git_state() -> dict:
@@ -70,11 +70,29 @@ def audit_markdown(
         f"| target list SHA-256 (pert_counts.csv order) | `{s['target_list_sha256']}` |",
         f"| gene list SHA-256 | `{s['gene_list_sha256']}` |",
         "",
+        "Control files:",
+        "",
+        "| context | file | identified by |",
+        "|---|---|---|",
+        *[
+            f"| {c} | `{Path(f).name}` | {s['control_file_discovery'][c]} |"
+            for c, f in s["control_files"].items()
+        ],
+        "",
         "File checksums:",
         "",
         "| file | SHA-256 |",
         "|---|---|",
         *[f"| `{k}` | `{v}` |" for k, v in s["file_sha256"].items()],
+        "",
+        "## VCC CLI compatibility",
+        "",
+        f"- detected version: **{prov['vcc_cli']['version']}** "
+        f"({'tested' if prov['vcc_cli']['tested_version'] else 'UNTESTED'}; tested: 0.2.0)",
+        f"- executable: `{prov['vcc_cli']['info']['executable']}`",
+        f"- required `vcc prep` options and `run_prep` keywords present: "
+        f"{prov['vcc_cli']['compatible']}",
+        *[f"- WARNING: {w}" for w in prov["vcc_cli"]["warnings"]],
         "",
         "## Source coverage (C1 sources)",
         "",
@@ -158,7 +176,22 @@ def main() -> int:
     def log(m):
         print(m, flush=True)
 
-    p = panel.load_panel(args.controls_dir, cells_per_pert=args.cells_per_pert)  # steps 1-2
+    try:  # step 0: fail before any work if packaging could not run later
+        cli = vcc_compat.require()
+    except vcc_compat.VccCompatibilityError as exc:
+        log(f"[0] VCC CLI INCOMPATIBLE\n{exc}")
+        return 2
+    log(f"[0] vcc CLI {cli.version} ({'tested' if cli.tested_version else 'UNTESTED'}): "
+        "required prep/package capabilities present")  # fmt: skip
+    for w in cli.warnings:
+        log(f"  WARNING: {w}")
+    try:
+        p = panel.load_panel(args.controls_dir, cells_per_pert=args.cells_per_pert)  # steps 1-2
+    except panel.PanelError as exc:
+        log(f"[1-2] OFFICIAL BUNDLE NOT UNDERSTOOD\n{exc}")
+        return 3
+    for c, how in p.discovery.items():
+        log(f"  context {c}: {p.control_files[c].name} ({how})")
     log(f"[1-2] panel {p.contexts} | {len(p.targets)} targets | {len(p.genes)} genes | "
         f"{p.cells_per_pert} cells/pert | gene axes verified")  # fmt: skip
     reg = panel.load_registry(args.source_registry)
@@ -175,6 +208,7 @@ def main() -> int:
         "sources": prepared,
         "coverage": summary,
         "git": git_state(),
+        "vcc_cli": cli.as_dict(),
         "submitted": False,
     }
     emit_info = val = None

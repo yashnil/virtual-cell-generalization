@@ -128,7 +128,7 @@ def test_panel_rejects_gene_order_and_inconsistencies(mock, tmp_path):
     with pytest.raises(panel.PanelError, match="disagrees"):
         panel.load_panel(d, cells_per_pert=CELLS + 1, checksums=False)
     (bad / "context_E.h5ad").unlink()
-    with pytest.raises(panel.PanelError, match="missing"):
+    with pytest.raises(panel.PanelError, match="cannot identify control files"):
         panel.load_panel(bad, checksums=False)
 
 

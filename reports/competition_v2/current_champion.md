@@ -13,6 +13,21 @@ judged against a rule predeclared before its results existed. None replaced C1.
 | code | commit `5a2831419ba45547046f0fec84dac86dbc21ec52` (package built at `d375f935`, with the code then uncommitted and byte-unchanged since) |
 | submitted | yes, as submission #2 (validation phase) |
 
+> **Provenance note.**
+> * **Code basis:** the final-round implementation is built on the committed C1 source code
+>   (`5a28314`).
+> * **Why the submitted package differs:** the validation package that was submitted was
+>   emitted from an earlier, uncommitted state of the same code. After emission, four
+>   source files (`fusion.py`, `generator.py`, `sources.py`, `evaluation.py`) were edited,
+>   apparently a formatting pass. The source statistics are byte-identical.
+> * **Size of the difference:** 2,465 of 360,000 cells (0.68 %), each by a one-count
+>   redistribution between genes with unchanged library size.
+> * **Reproduction:** the current implementation exactly reproduces the committed C1 builder.
+>   That builder is the code every C2–C4 public-fold evaluation used; the C1 fold scores
+>   match it to ≤ 1e-6.
+> * **Frozen separately:** the original validation package remains frozen by SHA-256
+>   (`fcc4e2508798805d93b9f1bb3a6957ca7cc8fbaa9f8318296161e4184bc43ea7`).
+
 ## Official hidden-validation result
 
 The scores are user-reported from the leaderboard; the entry id is pending (see

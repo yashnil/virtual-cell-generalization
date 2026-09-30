@@ -18,6 +18,23 @@ Pipeline code:
 
 ---
 
+> **Provenance note.**
+> * **Code basis:** the final-round implementation is built on the committed C1 source code
+>   (`5a28314`).
+> * **Why the submitted package differs:** the validation package that was submitted was
+>   emitted from an earlier, uncommitted state of the same code. After emission, four
+>   source files (`fusion.py`, `generator.py`, `sources.py`, `evaluation.py`) were edited,
+>   apparently a formatting pass. The source statistics are byte-identical.
+> * **Size of the difference:** 2,465 of 360,000 cells (0.68 %), each by a one-count
+>   redistribution between genes with unchanged library size.
+> * **Reproduction:** the current implementation exactly reproduces the committed C1 builder.
+>   That builder is the code every C2–C4 public-fold evaluation used; the C1 fold scores
+>   match it to ≤ 1e-6.
+> * **Frozen separately:** the original validation package remains frozen by SHA-256
+>   (`fcc4e2508798805d93b9f1bb3a6957ca7cc8fbaa9f8318296161e4184bc43ea7`).
+
+---
+
 ## BEFORE FINAL RELEASE
 
 ### Readiness status (2026-09-30)
@@ -98,9 +115,24 @@ vcc whoami
 uv run pytest -q tests/test_competition_v2_final.py tests/test_competition_v2_c5.py
 ```
 
-If `vcc-cli` is not 0.2.0, check that `vcc prep --help` still has `--contexts`,
-`--cells-per-pert` and `--expected-gene-dim`, and that `vcc.prep.run_prep` still accepts
-the same keywords. `vcc_pack_panel.py` relies on them.
+`run_final_panel.py` (step 0) and `package_final_panel.py` both run the compatibility
+gate `competition_v2/vcc_compat.py`:
+
+* It **records** the detected vcc version in `panel_audit.md` and the provenance files.
+* It **checks** the `vcc prep` options and the `vcc.prep.run_prep` keywords the pipeline
+  uses.
+* On a mismatch it **stops with an actionable error** (exit code 2) and never adapts
+  silently.
+* An untested version with every capability present proceeds, with an explicit
+  WARNING.
+
+Control files are identified, in order of precedence, by:
+
+1. the file the manifest names;
+2. the validation-era `context_<label>.h5ad`;
+3. the unique `.h5ad` whose obs `context` is the label.
+
+Ambiguous or unknown layouts stop with a diagnostic (exit code 3). Nothing is guessed.
 
 ### 1. Download (network-bound)
 

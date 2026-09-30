@@ -2328,3 +2328,7 @@ Research conclusions unchanged. No submission in this phase.
 - Mock D/E/F (111 shuffled targets): 16 / 16 invariants pass; `vcc prep --dry-run` exits 0; `.vcc` built (not submitted).
 - Finding: vcc-cli 0.2.0 and the vendored pack.py default to contexts A,B,C / 400 cells / 18,533 genes. The panel values are now passed explicitly.
 - Runbook: `reports/competition_v2/final_round_runbook.md`.
+- Hardening (same day):
+  - `competition_v2/vcc_compat.py` checks the vcc version, the `vcc prep` options and the `run_prep` keywords; it is recorded in the audit, and an incompatible CLI fails with exit 2.
+  - `panel.parse_manifest` / `discover_control_files`: manifest-named or uniquely content-identified control files; malformed or unknown schemas fail with a diagnostic; nothing is guessed.
+  - C1 regression still exact (0 differing entries vs the committed builder).
