@@ -2332,3 +2332,30 @@ Research conclusions unchanged. No submission in this phase.
   - `competition_v2/vcc_compat.py` checks the vcc version, the `vcc prep` options and the `run_prep` keywords; it is recorded in the audit, and an incompatible CLI fails with exit 2.
   - `panel.parse_manifest` / `discover_control_files`: manifest-named or uniquely content-identified control files; malformed or unknown schemas fail with a diagnostic; nothing is guessed.
   - C1 regression still exact (0 differing entries vs the committed builder).
+
+## 2026-10-02 — C6 uncertainty-aware conserved response estimation (competition track)
+
+- Predeclared (`c6_predeclaration.md`, c0a0ba82…). σ²: delta-method from cell moments (K562, H1; all 491k H1 cells streamed); CD4 from supplied lfcSE.
+- Calibration: H1 calibrated (split-half sign agreement 0.88 → 0.62 across σ deciles); K562 predicts error size but not direction (0.57 → 0.51, gap below threshold); CD4 proxy uncalibrated.
+- Key test: when sources disagree in sign, the lower-σ source is right 0.466 / 0.500 / 0.514 (raw σ 0.489 / 0.507 / 0.515), no fold above 0.5, so the weighting branch (IVW, random effects) was stopped. Larger |e|/σ is right 0.55 / 0.54 / 0.52, ≈ C1's implicit 0.55 / 0.53 / 0.51.
+- U3 (EB, shrinks the calibrated H1 only): K562 fold Overall 0.0888 → 0.0836; H1 fold identical. Spectrum: H1 low-rank (20 components, 67 % of energy), K562 not; L1 not run.
+- **C6 FAILS; KEEP C1.** Report: `reports/competition_v2/c6_uncertainty_aware_transfer.md`; freeze `c6_freeze_sha256.txt`.
+
+## 2026-10-06/07 — N1 calibration budget + N4 agreement null (research track)
+
+- Preregistered `reports/n1_n4_protocol.md` (cc2e0f0f…; digest recorded before data, re-hashed identical after). New disjoint F/E1/E2 cell **and control** splits (5 repeats). Deviation D1 (declared before N4 output): per-repeat energies instead of repeat-averaged halves.
+- **N1 FAIL-A.** Template/scale need ~10–20 random anchors (1 anchor is harmful). γ⊥ (orthogonal to source consensus; template/scale score exactly 0): E4 at k=20 +0.05–0.17 (CIs > 0 in 4/4, barely in 3), k_ref 885 +0.35–0.44, log-linear, no plateau; k20/k_ref ≥ 0.25 only in RPE1. E3 weaker (k_ref 0.11–0.14). F3a permutation null ≤ 0; shared controls inflate raw M0 by ≤ 0.024, not M3. Exploratory: learned γ⊥ is low-rank (1 axis = 46–79 % of the k=20 gain).
+- **N4 WEAK.** Partial ρ(agreement, −D | b1–b5) 0.12–0.22 > 0 in 4/4; beats magnitude/reliability/energy/noise ceiling in 2/4 (worse than source reliability in HepG2); T3 below exchangeable null in 3/4 (RPE1 above; null crude).
+- **Correction (exploratory, frozen reports not edited):** v1 agreement–transfer Spearman 0.55–0.79 was inflated by repeat-averaged halves (reproduced to ±0.005); unbiased 0.29–0.59.
+- Freezes verified (17 manifests, 0 failures). Report `reports/n1_n4_results.md`. Next recommended: N3 unchanged-protocol replication on 6 contexts (needs X-Atlas research-use license memo). N2 not started.
+
+## 2026-10-07 — N3 six-context replication (research track; X-Atlas research-use memo)
+
+- Corrections (dated) added to README, project_synthesis, paper_outline: agreement Spearman 0.55–0.79 → 0.29–0.59 (n1_n4_results §3.4). Frozen reports untouched.
+- `reports/xatlas_license_memo.md`: SLAF re-release @598aa544 of Xaira's X-Atlas/Orion, CC BY-NC-SA 4.0; all 8,689 files re-verified against HF etags (0 mismatches). Research-only; competition status unchanged (BLOCKED).
+- Preregistered `reports/n3_protocol.md` (81d3e69e…, re-hashed identical). Design 6 contexts × 1,062 perts × 6,499 genes; gates G1–G4 pass.
+- **N3-A:** FAIL-A replicates in HCT116 and HEK293T (k=20 γ⊥ ≈ 9–13 % of k_ref 743; k=20 draw CI includes 0). RPE1 PASS again. Template/scale "cheap" weakened: k_T50 10–100. F3a/F3b clean.
+- **N3-B:** Outcome-B criterion met (Q1 5/6, Q2 6/6), but exploratory decomposition shows a fixed-reference offset: own-frame k=20 γ⊥ is flat in m; more sources improve the zero-shot start, not calibration efficiency. Q3: reliability yes, complementarity no (diversity negative); basal partner strongest (descriptive, p<0.001). Implementation: memory-light algebraically identical path (verified ≤7e-15).
+- **N3-C:** Outcome D not met (k=20 axes not stable vs permuted null in X-Atlas); learnable γ⊥ low-rank (r_eff90 ≤7), axes stable by k≈50; not novel vs gene-program literature.
+- **N4 (6 folds):** WEAK; HCT116 agreement worse than source reliability.
+- Outcome C (c3): HEK293T zero-shot M1 −0.109. Mechanical direction "retain"; recommendation **revise** (limits/sample-complexity), departure from mapping stated. Next: N5 partner-vs-lab ladder (K562 GWPS as same-line source). Report `reports/n3_results.md`.

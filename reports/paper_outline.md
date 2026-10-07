@@ -80,6 +80,8 @@ caveat. Figures refer to `reports/figures/` unless prefixed `competition_v2/`.
 
 ## 7. Transferability depends on source context
 
+> **Correction (2026-10-07).** The previously reported source-agreement Spearman range 0.55–0.79 was inflated by the evaluation-half averaging procedure (halves averaged over repeats before forming energies). The corrected repeat-wise range is **0.29–0.59**, and in HepG2 agreement is worse than plain source reliability. See [`reports/n1_n4_results.md`](n1_n4_results.md) §3.4. Frozen historical reports are unchanged. Claim 1 below must be restated with the corrected range; per N4 (WEAK) agreement is a signal-strength-driven trust baseline, not a contribution.
+
 * **Claim 1:** source agreement predicts which responses transfer. It holds in 4 / 4
   research contexts and replicates on 3 new atlases (ρ 0.34–0.50). But using it to
   shrink or reweight does not improve the predictor.
@@ -143,6 +145,7 @@ caveat. Figures refer to `reports/figures/` unless prefixed `competition_v2/`.
    * γ is genuinely recoverable at pathway level against structure-preserving nulls.
    * Recovering it does not improve response prediction, even at r = 0.78.
 3. **Source agreement as a transferability predictor.**
+   * *Corrected 2026-10-07: see the note in §7; demoted to a baseline.*
    * Raw agreement beats fitted alternatives in 4 / 4 contexts.
    * It replicates on 3 independent atlases.
    * It works as a trust score but *not* as shrinkage or weighting (C1b, C3).

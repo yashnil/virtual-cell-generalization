@@ -72,6 +72,8 @@ atlas works, not how much coverage alone contributes. Part of the answer is in f
 
 ### 5. Source agreement predicts transferability, but acting on it does not help
 
+> **Correction (2026-10-07).** The previously reported source-agreement Spearman range 0.55–0.79 was inflated by the evaluation-half averaging procedure (halves averaged over repeats before forming energies). The corrected repeat-wise range is **0.29–0.59**, and in HepG2 agreement is worse than plain source reliability. See [`reports/n1_n4_results.md`](n1_n4_results.md) §3.4. Frozen historical reports are unchanged. A preregistered follow-up (N4) also found agreement's incremental information beyond signal strength and reliability to be modest (partial ρ 0.12–0.22) and not dominant in 2 of 4 contexts.
+
 * **Research track:** raw agreement among source-context responses predicts held-out
   transfer quality in all four contexts (Spearman **0.55–0.79**). It beat every fitted
   alternative (`transferability_confidence_model_v1.md`).
