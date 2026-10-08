@@ -1,0 +1,41 @@
+{
+  "figure": "ext_fig5_n3_reference_frame",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/ext_fig5_n3_reference_frame.svg",
+      "sha256": "5327133283e8c4632eb6f53165ea3d2052965c43d4081b0f784dd73f5e9a3afd"
+    },
+    "png": {
+      "path": "reports/paper_figures/ext_fig5_n3_reference_frame.png",
+      "sha256": "199d018f07a6f613ebd493bceefcef49c12f0b52d4fa2116de700f57df73b299"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/ext_fig5_n3_reference_frame.pdf",
+      "sha256": "77d4d89f7fcc2f7e233f0f3e7b21540d4b6a502be5d16d190cd3f6bfa352dee6"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/ext5_delta20.csv",
+      "sha256": "07a70014966204708bed91f32a9add1dbc50745da009381bd01185af11a54f56"
+    },
+    {
+      "path": "data/figure_sources/paper/ext5_reference_frame.csv",
+      "sha256": "87a4bfcc1931e35ca1ce9ebb2404cdfc01db3a1e8312cd78055fa69636eba708"
+    },
+    {
+      "path": "data/figure_sources/paper/fig3_source_count.csv",
+      "sha256": "eee8b9fc2596b58557fe0dad297454e7dc0ef20b3fa085477b418daf96c2a7fb"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_ext_fig5.py",
+  "frozen_upstream": [
+    "outputs/n3/n3b",
+    "outputs/n3/n3_decision.json"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

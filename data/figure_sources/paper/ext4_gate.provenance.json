@@ -1,0 +1,28 @@
+{
+  "figure_source": "data/figure_sources/paper/ext4_gate.csv",
+  "sha256": "781f5405f6d44e1b0970c39bc383aba7f4af154bba658af76e209c2cbff15f67",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n6/source_gate.json",
+      "sha256": "3d64a53c6bb870f5004bd1732f37cf18f69c6fa88f64845afd11131e29d2ef95",
+      "verified_against": "outputs/n6/manifest_sha256.txt"
+    },
+    {
+      "path": "outputs/n6/n6_decision.json",
+      "sha256": "b89496341da64e196e652ecbf319c467820fbfc8b4da7ce1d6685e66303767fa",
+      "verified_against": "outputs/n6/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n6_results.md",
+    "reports/n6_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig4.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Preregistered Outcome-D gate items; one failing item yields Outcome D."
+}

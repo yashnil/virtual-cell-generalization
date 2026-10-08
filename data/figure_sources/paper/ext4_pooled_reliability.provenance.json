@@ -1,0 +1,26 @@
+{
+  "figure_source": "data/figure_sources/paper/ext4_pooled_reliability.csv",
+  "sha256": "917a360629c9c291fe84b184116cadcb758a48d86668d47f377203801bc7bae8",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n6/source_gate.json",
+      "sha256": "3d64a53c6bb870f5004bd1732f37cf18f69c6fa88f64845afd11131e29d2ef95",
+      "verified_against": "outputs/n6/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n6_results.md",
+    "reports/n6_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig4.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Pooled split-half reliability (mean over repeats of the pooled Pearson of centred split halves). Only the VIPerturb value is a frozen gate statistic.",
+  "transcribed_from_reports": {
+    "0.109 and 0.341": "n6_results.md §4 table (exploratory post-hoc, read-only, not in outputs/n6)"
+  }
+}

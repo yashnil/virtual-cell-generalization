@@ -1,0 +1,32 @@
+{
+  "figure_source": "data/figure_sources/paper/fig1_components.csv",
+  "sha256": "aa4aed16357eff01df794efd9903404f7b2e6d10b2ab7cf42419e5371c746db0",
+  "frozen_inputs": [
+    {
+      "path": "outputs/four_context_v1/summary.json",
+      "sha256": "e67022255fdd961fd42934444001e1ac4162e38f5e81015e351ab5773059058e",
+      "verified_against": "data/provenance/scperteval/canonical_v1_freeze.txt"
+    },
+    {
+      "path": "outputs/four_context_sensitivity/variant_table.csv",
+      "sha256": "a54e022702a91ca26c5f37d73fddcd27e6a887a38acbd358660606bacbdfd9da",
+      "verified_against": "data/provenance/scperteval/decomposition_phase_freeze.txt"
+    },
+    {
+      "path": "data/figure_sources/fig1_decomposition.csv",
+      "sha256": "cfaf1b496664e75bc27cd20d5df76b2a0261355319210cc95312c72a40913faf"
+    }
+  ],
+  "reports": [
+    "reports/four_context_decomposition_v1.md",
+    "reports/four_context_decomposition_sensitivity.md"
+  ],
+  "build_script": "scripts/paper_figures/build_fig1_sources.py",
+  "plot_script": "scripts/paper_figures/plot_fig1.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Energy shares are % of total response energy (4 contexts x 1,264 perturbations x 6,640 genes). Corrected = split-half noise correction, mean of 50 resamples. Reproducible % = cross-half signal SS / raw SS. Template reproducibility combines mu and alpha weighted by SS. Variant min/max = range over the 21 predeclared preprocessing variants (not a confidence interval)."
+}

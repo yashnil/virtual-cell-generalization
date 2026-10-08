@@ -1,0 +1,36 @@
+{
+  "figure": "fig2_sample_complexity",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/fig2_sample_complexity.svg",
+      "sha256": "86c281bb62d9df38d5ef8a639a96612bf5bfdd1a71875efe423c4f3ab36602b9"
+    },
+    "png": {
+      "path": "reports/paper_figures/fig2_sample_complexity.png",
+      "sha256": "e3ff9f40f74b1164584fac45676eaf0663438fe6eba1d094e5b7f89e9be092d6"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/fig2_sample_complexity.pdf",
+      "sha256": "8a7b787d141f12b048de15a866a08cb3a848a9b3834b314cadde177faa0389e3"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/fig2_curves.csv",
+      "sha256": "d9d9aafa56e2147fce9fb691706f326355e69fbd26044babe465bd26f52146ec"
+    },
+    {
+      "path": "data/figure_sources/paper/fig2_gain_fraction.csv",
+      "sha256": "ac930f321f4be816062398d388a300cc9c73df0da99e84f71a06fe7ee691815c"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_fig2.py",
+  "frozen_upstream": [
+    "outputs/n3/n3a (N3-A, reports/n3_results.md §1)"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

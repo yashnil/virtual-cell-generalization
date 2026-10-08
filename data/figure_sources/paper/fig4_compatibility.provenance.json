@@ -1,0 +1,28 @@
+{
+  "figure_source": "data/figure_sources/paper/fig4_compatibility.csv",
+  "sha256": "077cbdfe46dded6af060877b8f9a9b840fac9d7bf6c47ff39f132632d4c827b4",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n5/n5_decision.json",
+      "sha256": "de4369c77fc5a0479bfbf473569c0851be23e6449609dbd99fe9f2f01d9c137b",
+      "verified_against": "outputs/n5/manifest_sha256.txt"
+    },
+    {
+      "path": "outputs/n5/n5_summary.json",
+      "sha256": "6177504cc60f34652ddfae1e149a8d1e5bb5814440ebb359c3a045cd7406a43e",
+      "verified_against": "outputs/n5/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n5_results.md",
+    "reports/n5_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_fig4_sources.py",
+  "plot_script": "scripts/paper_figures/plot_fig4.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "C_S = pooled noise-corrected (both-sided) latent cosine between template-removed source and target (K562 essential) response fields, 1,054 perturbations x 6,408 genes; 95% paired perturbation bootstrap (2,000)."
+}

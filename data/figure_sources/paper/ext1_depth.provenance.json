@@ -1,0 +1,25 @@
+{
+  "figure_source": "data/figure_sources/paper/ext1_depth.csv",
+  "sha256": "717a9dc84fb66995127e85d0c70a7bec2bb6103c462410e84043630a0b7f3ee7",
+  "frozen_inputs": [
+    {
+      "path": "outputs/four_context_sensitivity/depth_experiment.csv",
+      "sha256": "b0970744126e75985de4e687b749140679f8d9eab8bd48a664e739c3708c399d",
+      "verified_against": "data/provenance/scperteval/decomposition_phase_freeze.txt"
+    }
+  ],
+  "reports": [
+    "reports/four_context_decomposition_sensitivity.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig1.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Controlled depth experiment: the same 643 (context, perturbation) pairs at n = 15/30/50/100 cells per half; median split-half reliability over pairs.",
+  "transcribed_from_reports": {
+    "ci_lo/ci_hi": "four_context_decomposition_sensitivity.md §B, 'Median reliability by depth (bootstrap 95 % CI over pairs)'; medians asserted against depth_experiment.csv"
+  }
+}

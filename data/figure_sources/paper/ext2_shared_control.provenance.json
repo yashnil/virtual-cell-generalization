@@ -1,0 +1,23 @@
+{
+  "figure_source": "data/figure_sources/paper/ext2_shared_control.csv",
+  "sha256": "241680d09e83021819140046736352c404b479afa25db11263cd7d7f92e5b7d6",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n3/n3a/n3a_f3b_summary.csv",
+      "sha256": "3f51ed6b9262a0f9e468b94c2a3fd010bc616197b150d9f0c1f4f219cc6b4375",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n1_n4_results.md",
+    "reports/n3_results.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig2.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "F3b (N3-A): medians over 50 paired draws with one shared control mean vs disjoint control parts; differences shared - split."
+}

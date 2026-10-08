@@ -1,0 +1,28 @@
+{
+  "figure_source": "data/figure_sources/paper/fig3_source_count.csv",
+  "sha256": "eee8b9fc2596b58557fe0dad297454e7dc0ef20b3fa085477b418daf96c2a7fb",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n3/n3b/n3b_R_gamma.csv",
+      "sha256": "acb5218c0d91dc66c20cee8e1be0d0b2f6d3ed79a68b0590bebd61c2353a4c35",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    },
+    {
+      "path": "outputs/n3/n3b/n3b_draws.csv",
+      "sha256": "d17e0ca0a1e7b3779ee65f5bc489779548e718babed1541a8da8ec2d653e6bc3",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n3_results.md",
+    "reports/n3_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_fig3_sources.py",
+  "plot_script": "scripts/paper_figures/plot_fig3.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "N3-B: E4 with every non-empty subset of the 5 sources (31 per target), 40 anchor draws per k, the N3-A test set (319). R_gamma = preregistered fixed-reference gamma-perp (5-source consensus); R_gamma_own = gamma-perp relative to the subset's own consensus (exploratory; 0 at k = 0 by construction); R_full = template-removed full response M1 (k = 0: zero-shot E0s). Values: per draw mean over subsets of size m, then median over draws; own_lo/own_hi and R_*_lo/hi = 2.5/97.5% over draws; for k = 0 (one value per cell-split repeat) R_*_k0_rep_min/max = range over the 5 repeats. m = 1 zero-shot uses an unshrunk single source (fit_scale = 1.0)."
+}

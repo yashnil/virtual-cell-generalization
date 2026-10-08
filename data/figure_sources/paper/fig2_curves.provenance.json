@@ -1,0 +1,34 @@
+{
+  "figure_source": "data/figure_sources/paper/fig2_curves.csv",
+  "sha256": "d9d9aafa56e2147fce9fb691706f326355e69fbd26044babe465bd26f52146ec",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n3/n3a/n3a_summary.csv",
+      "sha256": "3bdabc3cd16be1595f2a557e4e324adc1eaf185ca3437370e734baf4274d8b9e",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    },
+    {
+      "path": "outputs/n3/n3a/n3a_boot.csv",
+      "sha256": "ddb688c1e6b38f92e8960190b05df80ec4e11b74db036b7534d4f0ffb4bf287b",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    },
+    {
+      "path": "outputs/n3/n3_decision.json",
+      "sha256": "f9fb84a3b0dfa7b4125230fae8f289392153211dc30ee14e581427212ee68f32",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n3_results.md",
+    "reports/n3_protocol.md",
+    "reports/n1_n4_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_fig2_sources.py",
+  "plot_script": "scripts/paper_figures/plot_fig2.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "N3-A, E4 (gamma) and E2 (template/scale), 319 held-out test perturbations per context, k_ref = 743. gamma_M3_* = unbiased fraction of reliable held-out gamma-perp energy explained; *_median/_draw_* = median and 2.5-97.5% over 200 draws; *_boot_* = perturbation bootstrap (2,000) on draw-averaged terms. template_frac = (M0_E2(k) - M0_E0s) / (M0_E2(k_ref) - M0_E0s) from draw medians; reproduces the frozen k_T50 (asserted). k = 0 is the zero-shot E0s predictor (gamma_M3 = 0 by construction)."
+}

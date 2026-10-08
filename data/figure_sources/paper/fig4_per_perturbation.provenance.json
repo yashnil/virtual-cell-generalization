@@ -1,0 +1,23 @@
+{
+  "figure_source": "data/figure_sources/paper/fig4_per_perturbation.csv",
+  "sha256": "119ce3126f7bbe440b6ea0f930f42db9368803d69637859692366e7b854e56c7",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n5/per_perturbation_terms.csv",
+      "sha256": "96847d4ce196c150368d3d25108e0eccbe47ea3a38834b38a1c502393012fd6c",
+      "verified_against": "outputs/n5/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n5_results.md",
+    "reports/n5_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_fig4_sources.py",
+  "plot_script": "scripts/paper_figures/plot_fig4.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Per-perturbation r_GWPS - r_RPE1 (template-removed Pearson across 6,408 genes), n = 1,054."
+}

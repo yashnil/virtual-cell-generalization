@@ -1,0 +1,7 @@
+estimand,variant,estimate,lo,hi,interval
+cosine,"Primary: pooled latent cosine, Δ = C_GWPS − C_RPE1",0.443682341,0.4197297496,0.4686895211,"paired perturbation bootstrap, 2,000"
+cosine,GWPS subsampled to RPE1 cell counts (Adj-4),0.4390332012,0.414384238,0.4643319903,"paired perturbation bootstrap, 2,000"
+pearson,Raw median per-perturbation r difference,0.1380635086,0.1246496821,0.1489083109,"perturbation bootstrap, 2,000"
+pearson,"Reliability + magnitude adjusted, perturbation FE (Adj-2)",0.2207019122,0.2069898117,0.2350540204,"perturbation-cluster bootstrap, 2,000"
+pearson,Adj-2 with depth-matched GWPS,0.1809315255,0.16810107,0.1941176858,"perturbation-cluster bootstrap, 2,000"
+pearson,"Reliability-matched perturbations, n = 108 (Adj-3)",0.232956261,0.2001519232,0.2727778029,perturbation bootstrap

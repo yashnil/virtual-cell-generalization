@@ -1,0 +1,5 @@
+component,label,energy_pct_corrected,energy_pct_uncorrected,reproducible_pct,reproducible_pct_variant_min,reproducible_pct_variant_max,energy_pct_variant_min,energy_pct_variant_max,energy_sd_over_50_splits_pp,n_variants
+template,Template (μ + α),20.26748083,20.29026825,99.88769286,98.67118258,102.2843254,19.08524397,25.26315785,0.009922681698,21
+beta,Conserved effect β,30.06762459,37.21724124,80.78950396,77.38500487,85.01421076,27.97658106,30.79125207,0.01572057682,21
+gamma,Context interaction γ,21.04682975,42.49249051,49.53070413,45.6018141,57.71823853,20.54543235,22.79616569,0.03277207646,21
+noise,Measurement noise,28.61806483,,,,,21.72303112,32.39274262,0.04448161693,21

@@ -1,0 +1,36 @@
+{
+  "figure": "ext_fig1_robustness",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/ext_fig1_robustness.svg",
+      "sha256": "9c622f87677ceec93b29e0e019c7dff01c118d56b826f7c81d46d041aa0ee406"
+    },
+    "png": {
+      "path": "reports/paper_figures/ext_fig1_robustness.png",
+      "sha256": "a5d079174dc0405a4bba5a7e648b33d9cc9b16f3072e7441a1f5e33dce65f5da"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/ext_fig1_robustness.pdf",
+      "sha256": "590c9f6574a42abd1b786d21257a559e344fbbbf3e490fca7434400294487d3b"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/ext1_variants.csv",
+      "sha256": "2aa1acffb2e3e45d7e6c581109dd20657e222898fe14e9c14cf6a4a7ce74eea2"
+    },
+    {
+      "path": "data/figure_sources/paper/ext1_depth.csv",
+      "sha256": "717a9dc84fb66995127e85d0c70a7bec2bb6103c462410e84043630a0b7f3ee7"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_ext_fig1.py",
+  "frozen_upstream": [
+    "outputs/four_context_sensitivity"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "figure": "fig3_source_count",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/fig3_source_count.svg",
+      "sha256": "6f3fcc8eec5de40c4a9994bb964409d412e75a3ca0a338d326d5186491503efe"
+    },
+    "png": {
+      "path": "reports/paper_figures/fig3_source_count.png",
+      "sha256": "8998dc9fde04644a631b5bc241d72762a61b4d1646123dcfcb61de22e1f3838f"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/fig3_source_count.pdf",
+      "sha256": "8b07be65a3f1070d954c8a0cef756970c8c1819f6bdfb2b28ea5b08eccfe33fd"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/fig3_source_count.csv",
+      "sha256": "eee8b9fc2596b58557fe0dad297454e7dc0ef20b3fa085477b418daf96c2a7fb"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_fig3.py",
+  "frozen_upstream": [
+    "outputs/n3/n3b (N3-B, reports/n3_results.md §3; zero-shot M1 only)"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}
