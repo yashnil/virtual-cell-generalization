@@ -1,0 +1,2 @@
+# N1/N4 preregistration digest — recorded 2026-10-06T22:47:58Z, before any N1/N4 data object or result existed
+cc2e0f0f5f254fbcd2a3a829d605b47625ee8e97876d22cd28003d75ed6b04a4  reports/n1_n4_protocol.md

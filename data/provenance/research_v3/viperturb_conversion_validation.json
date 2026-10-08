@@ -1,0 +1,144 @@
+{
+  "bins": {
+    "genome_wide_binA": {
+      "checks": {
+        "dims": true,
+        "nnz": true,
+        "total_counts": true,
+        "col_sums": true,
+        "row_sums": true,
+        "entries": true,
+        "meta_rows_match_cells": true,
+        "integer_nonnegative": true,
+        "gene_axis_identical_to_binA": true
+      },
+      "dims_genes_cells": [
+        19068,
+        321022
+      ],
+      "nnz": 1676324776,
+      "total_counts": 5118746603,
+      "md5_input": "31d690848cb1d93e04c9bce0c0ad3726",
+      "class": "Seurat",
+      "assays": [
+        "RNA",
+        "GDO"
+      ],
+      "layers": {
+        "RNA": "counts",
+        "GDO": [
+          "counts",
+          "data"
+        ]
+      },
+      "meta_columns": [
+        "orig.ident",
+        "nCount_RNA",
+        "nFeature_RNA",
+        "nCount_GDO",
+        "guide",
+        "gene",
+        "sample",
+        "nFeature_GDO"
+      ],
+      "r_version": "R version 4.4.3 (2025-02-28)",
+      "SeuratObject": "5.4.0"
+    },
+    "genome_wide_binB": {
+      "checks": {
+        "dims": true,
+        "nnz": true,
+        "total_counts": true,
+        "col_sums": true,
+        "row_sums": true,
+        "entries": true,
+        "meta_rows_match_cells": true,
+        "integer_nonnegative": true,
+        "gene_axis_identical_to_binA": true
+      },
+      "dims_genes_cells": [
+        19068,
+        341182
+      ],
+      "nnz": 1780612863,
+      "total_counts": 5436366789,
+      "md5_input": "0b24448645231da466b9059dcc7f3c43",
+      "class": "Seurat",
+      "assays": [
+        "RNA",
+        "GDO"
+      ],
+      "layers": {
+        "RNA": "counts",
+        "GDO": [
+          "counts",
+          "data"
+        ]
+      },
+      "meta_columns": [
+        "orig.ident",
+        "nCount_RNA",
+        "nFeature_RNA",
+        "nCount_GDO",
+        "guide",
+        "gene",
+        "sample",
+        "nFeature_GDO"
+      ],
+      "r_version": "R version 4.4.3 (2025-02-28)",
+      "SeuratObject": "5.4.0"
+    },
+    "genome_wide_binC": {
+      "checks": {
+        "dims": true,
+        "nnz": true,
+        "total_counts": true,
+        "col_sums": true,
+        "row_sums": true,
+        "entries": true,
+        "meta_rows_match_cells": true,
+        "integer_nonnegative": true,
+        "gene_axis_identical_to_binA": true
+      },
+      "dims_genes_cells": [
+        19068,
+        260531
+      ],
+      "nnz": 1357917183,
+      "total_counts": 4137263374,
+      "md5_input": "af9e5908510f6765863d728f5ef18595",
+      "class": "Seurat",
+      "assays": [
+        "RNA",
+        "GDO"
+      ],
+      "layers": {
+        "RNA": "counts",
+        "GDO": [
+          "counts",
+          "data"
+        ]
+      },
+      "meta_columns": [
+        "orig.ident",
+        "nCount_RNA",
+        "nFeature_RNA",
+        "nCount_GDO",
+        "guide",
+        "gene",
+        "sample",
+        "nFeature_GDO"
+      ],
+      "r_version": "R version 4.4.3 (2025-02-28)",
+      "SeuratObject": "5.4.0"
+    }
+  },
+  "n_cells": 906837,
+  "n_genes": 19068,
+  "nnz": 4731586400,
+  "total_counts": 14436147174,
+  "duplicated_barcodes": 15898,
+  "duplicated_identical": 15898,
+  "h5ad": "data/raw/viperturb/viperturb_k562_genome_wide.h5ad",
+  "h5ad_sha256": "04ef7c27f3be73cde138d4b91871c7527671a7f2632d48a187d7f0b66c7d4372"
+}

@@ -1,0 +1,2 @@
+# N3 preregistration digest — recorded 2026-10-06T23:53:30Z; no X-Atlas expression value read, no six-context data object or N3 result existed
+81d3e69ec5a702f9e914750e8d2ac61771d8262d90494fc115337354b5729ab1  reports/n3_protocol.md

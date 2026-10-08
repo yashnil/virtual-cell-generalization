@@ -2332,3 +2332,60 @@ Research conclusions unchanged. No submission in this phase.
   - `competition_v2/vcc_compat.py` checks the vcc version, the `vcc prep` options and the `run_prep` keywords; it is recorded in the audit, and an incompatible CLI fails with exit 2.
   - `panel.parse_manifest` / `discover_control_files`: manifest-named or uniquely content-identified control files; malformed or unknown schemas fail with a diagnostic; nothing is guessed.
   - C1 regression still exact (0 differing entries vs the committed builder).
+
+## 2026-10-02 — C6 uncertainty-aware conserved response estimation (competition track)
+
+- Predeclared (`c6_predeclaration.md`, c0a0ba82…). σ²: delta-method from cell moments (K562, H1; all 491k H1 cells streamed); CD4 from supplied lfcSE.
+- Calibration: H1 calibrated (split-half sign agreement 0.88 → 0.62 across σ deciles); K562 predicts error size but not direction (0.57 → 0.51, gap below threshold); CD4 proxy uncalibrated.
+- Key test: when sources disagree in sign, the lower-σ source is right 0.466 / 0.500 / 0.514 (raw σ 0.489 / 0.507 / 0.515), no fold above 0.5, so the weighting branch (IVW, random effects) was stopped. Larger |e|/σ is right 0.55 / 0.54 / 0.52, ≈ C1's implicit 0.55 / 0.53 / 0.51.
+- U3 (EB, shrinks the calibrated H1 only): K562 fold Overall 0.0888 → 0.0836; H1 fold identical. Spectrum: H1 low-rank (20 components, 67 % of energy), K562 not; L1 not run.
+- **C6 FAILS; KEEP C1.** Report: `reports/competition_v2/c6_uncertainty_aware_transfer.md`; freeze `c6_freeze_sha256.txt`.
+
+## 2026-10-06/07 — N1 calibration budget + N4 agreement null (research track)
+
+- Preregistered `reports/n1_n4_protocol.md` (cc2e0f0f…; digest recorded before data, re-hashed identical after). New disjoint F/E1/E2 cell **and control** splits (5 repeats). Deviation D1 (declared before N4 output): per-repeat energies instead of repeat-averaged halves.
+- **N1 FAIL-A.** Template/scale need ~10–20 random anchors (1 anchor is harmful). γ⊥ (orthogonal to source consensus; template/scale score exactly 0): E4 at k=20 +0.05–0.17 (CIs > 0 in 4/4, barely in 3), k_ref 885 +0.35–0.44, log-linear, no plateau; k20/k_ref ≥ 0.25 only in RPE1. E3 weaker (k_ref 0.11–0.14). F3a permutation null ≤ 0; shared controls inflate raw M0 by ≤ 0.024, not M3. Exploratory: learned γ⊥ is low-rank (1 axis = 46–79 % of the k=20 gain).
+- **N4 WEAK.** Partial ρ(agreement, −D | b1–b5) 0.12–0.22 > 0 in 4/4; beats magnitude/reliability/energy/noise ceiling in 2/4 (worse than source reliability in HepG2); T3 below exchangeable null in 3/4 (RPE1 above; null crude).
+- **Correction (exploratory, frozen reports not edited):** v1 agreement–transfer Spearman 0.55–0.79 was inflated by repeat-averaged halves (reproduced to ±0.005); unbiased 0.29–0.59.
+- Freezes verified (17 manifests, 0 failures). Report `reports/n1_n4_results.md`. Next recommended: N3 unchanged-protocol replication on 6 contexts (needs X-Atlas research-use license memo). N2 not started.
+
+## 2026-10-07 — N3 six-context replication (research track; X-Atlas research-use memo)
+
+- Corrections (dated) added to README, project_synthesis, paper_outline: agreement Spearman 0.55–0.79 → 0.29–0.59 (n1_n4_results §3.4). Frozen reports untouched.
+- `reports/xatlas_license_memo.md`: SLAF re-release @598aa544 of Xaira's X-Atlas/Orion, CC BY-NC-SA 4.0; all 8,689 files re-verified against HF etags (0 mismatches). Research-only; competition status unchanged (BLOCKED).
+- Preregistered `reports/n3_protocol.md` (81d3e69e…, re-hashed identical). Design 6 contexts × 1,062 perts × 6,499 genes; gates G1–G4 pass.
+- **N3-A:** FAIL-A replicates in HCT116 and HEK293T (k=20 γ⊥ ≈ 9–13 % of k_ref 743; k=20 draw CI includes 0). RPE1 PASS again. Template/scale "cheap" weakened: k_T50 10–100. F3a/F3b clean.
+- **N3-B:** Outcome-B criterion met (Q1 5/6, Q2 6/6), but exploratory decomposition shows a fixed-reference offset: own-frame k=20 γ⊥ is flat in m; more sources improve the zero-shot start, not calibration efficiency. Q3: reliability yes, complementarity no (diversity negative); basal partner strongest (descriptive, p<0.001). Implementation: memory-light algebraically identical path (verified ≤7e-15).
+- **N3-C:** Outcome D not met (k=20 axes not stable vs permuted null in X-Atlas); learnable γ⊥ low-rank (r_eff90 ≤7), axes stable by k≈50; not novel vs gene-program literature.
+- **N4 (6 folds):** WEAK; HCT116 agreement worse than source reliability.
+- Outcome C (c3): HEK293T zero-shot M1 −0.109. Mechanical direction "retain"; recommendation **revise** (limits/sample-complexity), departure from mapping stated. Next: N5 partner-vs-lab ladder (K562 GWPS as same-line source). Report `reports/n3_results.md`.
+
+## 2026-10-07 — N5 coverage audit + preregistration (no N5 outcome computed)
+
+- Read-only audit `reports/n5_coverage_audit.md`: K562 GWPS (Replogle 2022, figshare+ 20029387, CC BY 4.0, raw integer counts, 1,989,578 cells, 9,866 dual-sgRNA targets, 75,328 controls, 267 gem groups) covers 1,054 of the 1,062 N3 perturbations (≥30 cells, median 223) and 6,408 of 6,499 genes; no naming mismatches. No K562 Illumina/Ultima technical pair locally; no usable same-cell different-lab K562 source (VIPerturb not local/Seurat/shallow; Kaden RPE1 103 perts, unreliable).
+- Verdict **PARTIAL (strong)**: ladder levels B (same cell, same study, different screen), C (different cell, same study), C′ (same lab, companion study), D (different lab) supported; A (technical) and same-cell/different-study not.
+- Preregistered `reports/n5_protocol.md` (43161f6e…) with code/axes/metadata digest `data/provenance/research_v3/n5_protocol_digest.txt`. Primary endpoint: pooled both-sided reliability-corrected latent cosine C_S; primary contrast C_GWPS − C_RPE1; Adj-2 FE regression, Adj-3 matched pairs, Adj-4 depth matching; outcomes A/B/C′/D′/E. Code written and tested on synthetic data only; not run.
+- Next: `bash scripts/research_v3/run_n5_pipeline.sh`.
+
+## 2026-10-07 — N5 results (frozen protocol; report only)
+
+- Digest and output manifest verified. C_GWPS 0.822 [0.808, 0.837] vs C_RPE1 0.379 [0.358, 0.398]; Δ_BC +0.444 [+0.420, +0.469]. Adj-2 FE +0.221 (depth-matched +0.181); Adj-3 matched pairs +0.233 (n=108); depth-matched Δ_BC +0.439. Depth-matched GWPS reliability 0.146 < RPE1 0.531 yet C 0.818. 86 % (71 % depth-matched) of perturbations favour GWPS.
+- Mechanical: **Outcome A**. Ladder fails at RPE1 > mean(HepG2, Jurkat) (−0.145, reversed): same-study/same-library RPE1 is the least compatible non-K562 source. Matched comparator Jurkat: GWPS − Jurkat +0.264.
+- Interpretation: within-study source compatibility; cell identity not separable from same-lab compatibility. Decision **REVISE AGAIN**; next: preregistered same-cell different-lab test (VIPerturb-seq K562). Report `reports/n5_results.md`.
+
+## 2026-10-07 — N5 frozen; VIPerturb conversion; N6 audit + preregistration (N6 not run)
+
+- N5 frozen: digest + manifest re-verified (0 failures), all artefacts hashed in `data/provenance/research_v3/n5_freeze_sha256.txt`, `outputs/n5` read-only.
+- VIPerturb-seq (Bradu…Satija, bioRxiv 2026.02.12.705613; Zenodo 10.5281/zenodo.18460279, CC BY 4.0): K562, dCas9-KRAB-MeCP2, 3-guide GuEST-List, day 6, 10x Flex v2 fixed cells, Ultima UG100. Bins A/B/C downloaded (MD5 = Zenodo) and converted losslessly in an isolated mamba env (R 4.4.3, SeuratObject 5.4.0): 906,837 cells × 19,068 genes; per-label counts match the manifest exactly; duplicated controls byte-identical. `reports/viperturb_conversion_audit.md`.
+- N6 coverage `reports/n6_coverage_audit.md`: PARTIAL (strong) — 637 of 1,054 N5 perturbations with ≥30 cells (median 47), 6,083 genes; panel enriched for milder perturbations (403 with 1–29 cells). Pre-run fix: alias map wrongly applied to probe-axis genes (6,080 → 6,083).
+- `reports/n6_protocol.md` (frozen N5 endpoint; primary C_VIP − C_Jurkat; position f vs GWPS; gate D incl. GWPS-at-VIP-depth positive control) + digest `data/provenance/research_v3/n6_protocol_digest.txt`. Next: `bash scripts/research_v3/run_n6_pipeline.sh`.
+
+## 2026-10-07 — N6 results: Outcome D (frozen protocol; report only)
+
+- Integrity: the N6 digest (23/23), the output manifest (16/16) and `outputs/n6/data/sha256.txt` (8/8) all re-hash OK. The decision `code_sha256` matches the digest. The N5 freeze (33/33) and N5 digest re-hash OK. N6 was not re-run or modified.
+- Gate: **d1 FAILED**. VIPerturb pooled split-half reliability is 0.0866, against a threshold of 0.10. d2 passed (energy 2.5th percentile 2,481), d3 passed (|C_vipdepth − C_GWPS| = 0.007, width 0.049) and d4 passed (637 perturbations). G3: VIP −0.281, GWPS_vipdepth −0.259.
+- **Outcome D. All compatibility comparisons are non-interpretable.** They are kept in full in the report: C_VIP 0.285, C_GWPS 0.818, C_vipdepth 0.811, C_RPE1 0.316, C_Jurkat 0.522; VIP − Jurkat −0.237; f −0.80; Adj-2 −0.033; Adj-3 −0.037; panel B (n = 137) VIP 0.409. No biological reading of VIPerturb vs Jurkat.
+- The positive control (GWPS at VIPerturb depth, median 46 vs 47 cells) passed. Low cell count alone does not explain the failed gate, and the endpoint is stable at this depth.
+- Exploratory read-only check (not preregistered): GWPS_vipdepth pooled reliability is 0.109, so it only narrowly clears 0.10. Depth explains most of the gap from full-depth GWPS (0.341). VIP keeps about 20 % less reproducible energy at equal depth.
+- Independent-K562 search (literature only): none meets independent study + low MOI + ≥ 300 panel perturbations at ≥ 30 cells + plausible reliability. Gasperini 2019 is high-MOI enhancer screening. Jiang 2025 is Satija-lab pathway regulators. The 2025 CROP-seq preprint is small. The Weissman-lab sets share the target's lab. X-Atlas Orion/Pisces have no K562 context.
+- Recommendation (not implemented): do not reopen N6. Optional N7-desk, a preregistered metadata-only go/no-go audit, is expected to come out no-go. Then record the same-cell/different-study rung as unidentifiable with public data and move to writing. Report `reports/n6_results.md`.
