@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/fig1_transfer_components.svg",
-      "sha256": "93ef6f3127420d501256ae7ea8cf59f5ccc9218099ee46789677e054dab7d3f1"
+      "sha256": "7ed5a4399b0f2a7307dcd830fef4cbd9d4da4edebee1db1b55e9e6feace466a6"
     },
     "png": {
       "path": "reports/paper_figures/fig1_transfer_components.png",
@@ -24,10 +24,5 @@
   "frozen_upstream": [
     "outputs/four_context_v1/summary.json",
     "outputs/four_context_sensitivity/variant_table.csv"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

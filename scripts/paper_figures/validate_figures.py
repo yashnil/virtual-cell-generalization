@@ -5,6 +5,7 @@
 2. For every source table: its CSV hash and every frozen input hash in its provenance sidecar match the current files.
 3. For every figure manifest: the SVG/PNG/PDF and every source table hash match the current files.
 4. Every figure has a caption file, and every source table named by a manifest exists.
+5. No sidecar carries volatile fields (wall-clock date, git HEAD/dirty state) that would make a rebuild non-idempotent.
 
 Writes ``reports/paper_figures/validation.json``; exits non-zero on any failure.
 """
@@ -25,6 +26,8 @@ FROZEN_MANIFESTS = [
     "data/provenance/scperteval/canonical_v1_freeze.txt",
     "data/provenance/research_v3/n5_freeze_sha256.txt",
 ]
+
+VOLATILE_KEYS = {"generated", "git_head"}
 
 FIGURES = [
     ("fig1_transfer_components", "fig1_caption.md"),
@@ -64,7 +67,7 @@ def check_sources() -> dict:
     for side in sorted(SRC_DIR.glob("*.provenance.json")):
         rec = json.loads(side.read_text())
         csv = ROOT / rec["figure_source"]
-        errs = []
+        errs = [f"volatile field {k}" for k in sorted(VOLATILE_KEYS & rec.keys())]
         if sha256(csv) != rec["sha256"]:
             errs.append("table hash")
         for inp in rec["frozen_inputs"]:
@@ -77,8 +80,8 @@ def check_sources() -> dict:
 def check_figures() -> dict:
     out = {}
     for name, cap in FIGURES:
-        errs = []
         man = json.loads((OUT_DIR / f"{name}.manifest.json").read_text())
+        errs = [f"volatile field {k}" for k in sorted(VOLATILE_KEYS & man.keys())]
         for ext, rec in man["outputs"].items():
             if sha256(ROOT / rec["path"]) != rec["sha256"]:
                 errs.append(f"{ext} hash")
@@ -108,14 +111,14 @@ def main() -> None:
         if v:
             print("BAD source", k, v)
     print(
-        f"{'OK ' if not any(res['sources'].values()) else 'BAD'} {len(res['sources'])} source tables (table + frozen-input hashes)"
+        f"{'OK ' if not any(res['sources'].values()) else 'BAD'} {len(res['sources'])} source tables (table + frozen-input hashes, no volatile fields)"
     )
     for k, v in res["figures"].items():
         fail += bool(v)
         if v:
             print("BAD figure", k, v)
     print(
-        f"{'OK ' if not any(res['figures'].values()) else 'BAD'} {len(res['figures'])} figures (SVG/PNG/PDF + source hashes + caption)"
+        f"{'OK ' if not any(res['figures'].values()) else 'BAD'} {len(res['figures'])} figures (SVG/PNG/PDF + source hashes + caption, no volatile fields)"
     )
     (OUT_DIR / "validation.json").write_text(json.dumps(res, indent=2) + "\n")
     sys.exit(1 if fail else 0)

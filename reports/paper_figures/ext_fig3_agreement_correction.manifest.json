@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/ext_fig3_agreement_correction.svg",
-      "sha256": "b6b3495877d645e6586e1df15879ecf79ed26d334e8deadf54b9fda67eae624c"
+      "sha256": "02380bba6b54a393a2b305968c167cc1abcc2683b799b575f92b827ecc4a7c30"
     },
     "png": {
       "path": "reports/paper_figures/ext_fig3_agreement_correction.png",
@@ -32,10 +32,5 @@
   "frozen_upstream": [
     "outputs/n1_n4/n4",
     "outputs/n3/n4"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

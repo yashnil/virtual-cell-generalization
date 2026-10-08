@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/fig2_sample_complexity.svg",
-      "sha256": "86c281bb62d9df38d5ef8a639a96612bf5bfdd1a71875efe423c4f3ab36602b9"
+      "sha256": "aaa848cbfd9b66d2c61f71ae6f97efb2c9c0c8bfcdc5673641ce6c9bfe80af47"
     },
     "png": {
       "path": "reports/paper_figures/fig2_sample_complexity.png",
@@ -27,10 +27,5 @@
   "plot_script": "scripts/paper_figures/plot_fig2.py",
   "frozen_upstream": [
     "outputs/n3/n3a (N3-A, reports/n3_results.md §1)"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

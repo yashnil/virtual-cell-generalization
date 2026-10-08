@@ -13,10 +13,5 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig1.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "All 21 predeclared variant x feature-space rows. Shares are % of total response energy; rep_* = % reproducible (cross-half signal / raw SS)."
 }

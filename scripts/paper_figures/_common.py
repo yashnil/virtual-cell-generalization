@@ -8,6 +8,9 @@
   ``<name>.provenance.json`` sidecar.
 * Every figure is written to ``reports/paper_figures/<name>.{svg,png,pdf}`` with a
   ``<name>.manifest.json`` sidecar listing the source tables (with SHA-256) it was drawn from.
+* Sidecars are deterministic: they hold only content hashes, paths and notes. No wall-clock date and no git
+  HEAD/dirty state is written (both would change every time the artefacts themselves are committed); git history
+  identifies the code revision of every tracked artefact. The repository state is printed to the terminal instead.
 """
 
 from __future__ import annotations
@@ -16,7 +19,6 @@ import hashlib
 import json
 import subprocess
 from collections.abc import Iterable
-from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -35,12 +37,18 @@ def sha256(path: Path) -> str:
 
 
 def git_head() -> dict[str, object]:
+    """Repository state, for terminal diagnostics only; never written to a tracked artefact."""
+
     def run(*args: str) -> str:
         return subprocess.run(
             ["git", *args], cwd=ROOT, capture_output=True, text=True, check=False
         ).stdout.strip()
 
     return {"commit": run("rev-parse", "HEAD"), "dirty": bool(run("status", "--porcelain"))}
+
+
+def dump_json(path: Path, rec: dict) -> None:
+    path.write_text(json.dumps(rec, indent=2, ensure_ascii=False) + "\n")
 
 
 def _manifest_entries() -> dict[str, tuple[str, str]]:
@@ -119,15 +127,12 @@ def write_source(
         "reports": list(reports),
         "build_script": build_script,
         "plot_script": plot_script,
-        "generated": date.today().isoformat(),
-        "git_head": git_head(),
         "notes": notes,
     }
     if report_values:
         rec["transcribed_from_reports"] = report_values
-    (SRC_DIR / f"{name}.provenance.json").write_text(
-        json.dumps(rec, indent=2, ensure_ascii=False) + "\n"
-    )
+    dump_json(SRC_DIR / f"{name}.provenance.json", rec)
+    print(f"wrote {csv.relative_to(ROOT)} (repo state: {git_head()})")
     return csv
 
 
@@ -157,10 +162,7 @@ def save(
         "figure_sources": source_record(srcs),
         "plot_script": plot_script,
         "frozen_upstream": list(upstream),
-        "generated": date.today().isoformat(),
-        "git_head": git_head(),
     }
-    (OUT_DIR / f"{name}.manifest.json").write_text(
-        json.dumps(man, indent=2, ensure_ascii=False) + "\n"
-    )
+    dump_json(OUT_DIR / f"{name}.manifest.json", man)
+    print(f"wrote reports/paper_figures/{name}.{{svg,png,pdf}} (repo state: {git_head()})")
     return paths

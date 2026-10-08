@@ -19,10 +19,5 @@
   ],
   "build_script": "scripts/paper_figures/build_fig3_sources.py",
   "plot_script": "scripts/paper_figures/plot_fig3.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "N3-B: E4 with every non-empty subset of the 5 sources (31 per target), 40 anchor draws per k, the N3-A test set (319). R_gamma = preregistered fixed-reference gamma-perp (5-source consensus); R_gamma_own = gamma-perp relative to the subset's own consensus (exploratory; 0 at k = 0 by construction); R_full = template-removed full response M1 (k = 0: zero-shot E0s). Values: per draw mean over subsets of size m, then median over draws; own_lo/own_hi and R_*_lo/hi = 2.5/97.5% over draws; for k = 0 (one value per cell-split repeat) R_*_k0_rep_min/max = range over the 5 repeats. m = 1 zero-shot uses an unshrunk single source (fit_scale = 1.0)."
 }

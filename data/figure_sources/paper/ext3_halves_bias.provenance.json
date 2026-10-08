@@ -14,11 +14,6 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig3.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "Spearman rho(agreement, transfer quality -D) on the same disjoint N1 splits: per-repeat unbiased energies (N4 estimator) vs halves averaged over repeats first (v1 construction). Exploratory, not preregistered.",
   "transcribed_from_reports": {
     "rho_frozen_v1_report": "n1_n4_results.md §3.4 table, row 'frozen v1 report (M0, transferability_confidence_model_v1.md §3)'"

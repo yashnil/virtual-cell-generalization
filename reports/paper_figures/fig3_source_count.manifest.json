@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/fig3_source_count.svg",
-      "sha256": "6f3fcc8eec5de40c4a9994bb964409d412e75a3ca0a338d326d5186491503efe"
+      "sha256": "04006fa5f2d34fe93e0552846b152de3cb82bc50044ee42c96610538deb3304d"
     },
     "png": {
       "path": "reports/paper_figures/fig3_source_count.png",
@@ -23,10 +23,5 @@
   "plot_script": "scripts/paper_figures/plot_fig3.py",
   "frozen_upstream": [
     "outputs/n3/n3b (N3-B, reports/n3_results.md §3; zero-shot M1 only)"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

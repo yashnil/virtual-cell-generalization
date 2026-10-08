@@ -14,10 +14,5 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig4.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "C_S vs the K562-essential target on the N6 panel (637 x 6,083); 95% paired bootstrap. Only the positive-control rows are interpretable under Outcome D."
 }

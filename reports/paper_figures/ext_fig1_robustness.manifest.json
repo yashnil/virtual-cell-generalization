@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/ext_fig1_robustness.svg",
-      "sha256": "9c622f87677ceec93b29e0e019c7dff01c118d56b826f7c81d46d041aa0ee406"
+      "sha256": "cfe05aa06268ce1e88ded32f705dadb6adda7afc676f6a2c1d10c8cc00f484f0"
     },
     "png": {
       "path": "reports/paper_figures/ext_fig1_robustness.png",
@@ -27,10 +27,5 @@
   "plot_script": "scripts/paper_figures/plot_ext_fig1.py",
   "frozen_upstream": [
     "outputs/four_context_sensitivity"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

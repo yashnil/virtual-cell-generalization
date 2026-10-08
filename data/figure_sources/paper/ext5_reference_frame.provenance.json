@@ -14,10 +14,5 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig5.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "Frozen N3-B R(k, m) table: R_gamma (preregistered, fixed 5-source reference) and R_gamma_own (subset's own consensus)."
 }

@@ -25,10 +25,5 @@
   ],
   "build_script": "scripts/paper_figures/build_fig2_sources.py",
   "plot_script": "scripts/paper_figures/plot_fig2.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "N3-A, E4 (gamma) and E2 (template/scale), 319 held-out test perturbations per context, k_ref = 743. gamma_M3_* = unbiased fraction of reliable held-out gamma-perp energy explained; *_median/_draw_* = median and 2.5-97.5% over 200 draws; *_boot_* = perturbation bootstrap (2,000) on draw-averaged terms. template_frac = (M0_E2(k) - M0_E0s) / (M0_E2(k_ref) - M0_E0s) from draw medians; reproduces the frozen k_T50 (asserted). k = 0 is the zero-shot E0s predictor (gamma_M3 = 0 by construction)."
 }

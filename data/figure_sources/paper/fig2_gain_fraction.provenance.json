@@ -15,10 +15,5 @@
   ],
   "build_script": "scripts/paper_figures/build_fig2_sources.py",
   "plot_script": "scripts/paper_figures/plot_fig2.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "G(k) = fraction of the k_ref (743) value reached at k. point = ratio of draw medians (for gamma_perp at k = 20 this is the preregistered C3 quantity). lo/hi = 2.5/97.5 percentiles over the 200 draws of the per-draw ratio, with the k_ref value taken from the same cell-split repeat (descriptive). template_scale uses M0 gain of E2 over the repeat's zero-shot E0s."
 }

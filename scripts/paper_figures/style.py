@@ -80,6 +80,7 @@ LW = 1.0  # data lines
 LW_THIN = 0.6
 LW_SUMMARY = 1.9
 MS = 3.4  # marker size (points)
+SVG_HASHSALT = "virtual-cell-paper-v1"
 
 
 def apply() -> None:
@@ -120,12 +121,17 @@ def apply() -> None:
             "mathtext.it": "Arial:italic",
             "mathtext.bf": "Arial:bold",
             "mathtext.fallback": "stixsans",
+            # unused \mathcal slot; the default "cursive" resolves to Apple Chancery (OS/2 weight 0) and logs a
+            # spurious findfont weight warning on every build
+            "mathtext.cal": "Arial:italic",
             "text.color": INK,
             "figure.facecolor": "white",
             "axes.facecolor": "white",
             "savefig.facecolor": "white",
             "savefig.dpi": 600,
             "svg.fonttype": "none",
+            # fixed salt: Matplotlib otherwise draws clipPath/hatch/marker IDs from uuid4, so every SVG differs per run
+            "svg.hashsalt": SVG_HASHSALT,
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
             "hatch.linewidth": 0.4,

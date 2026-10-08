@@ -19,10 +19,5 @@
   ],
   "build_script": "scripts/paper_figures/build_fig4_sources.py",
   "plot_script": "scripts/paper_figures/plot_fig4.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "C_S = pooled noise-corrected (both-sided) latent cosine between template-removed source and target (K562 essential) response fields, 1,054 perturbations x 6,408 genes; 95% paired perturbation bootstrap (2,000)."
 }

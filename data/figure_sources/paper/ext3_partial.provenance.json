@@ -19,10 +19,5 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig3.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "T2 partial Spearman of agreement with transfer quality, controlling for b1-b5; 2,000-resample bootstrap 95% CI."
 }

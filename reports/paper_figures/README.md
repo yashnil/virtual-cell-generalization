@@ -30,6 +30,11 @@ This takes about 25 s. It runs four steps:
 
 Shared style and semantics: `scripts/paper_figures/style.py`. Provenance and saving: `scripts/paper_figures/_common.py`.
 
+The rebuild is idempotent: a second run against the same frozen inputs and code leaves every file byte-identical.
+SVG IDs come from a fixed Matplotlib `svg.hashsalt`. The sidecars contain no date and no git HEAD/dirty state;
+git history identifies the code revision of each artefact. `validate_figures.py` and
+`tests/test_paper_figures_determinism.py` enforce this.
+
 ## Evidentiary status labels
 
 | label | meaning |

@@ -14,10 +14,5 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig2.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "E1 (target template from k anchors) M0 gain over the same repeat's zero-shot E0s; median and 2.5-97.5% over 200 draws."
 }

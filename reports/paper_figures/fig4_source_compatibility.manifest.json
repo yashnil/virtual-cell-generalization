@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/fig4_source_compatibility.svg",
-      "sha256": "cbda88d54e83605682b2ffa51623894823239e18551f56880ceae07ea72b971c"
+      "sha256": "8ff07a9786f132d506c287226460c1fd50ced0ba52fc40177c4b90f656a0667e"
     },
     "png": {
       "path": "reports/paper_figures/fig4_source_compatibility.png",
@@ -32,10 +32,5 @@
   "frozen_upstream": [
     "outputs/n5 (N5, reports/n5_results.md)",
     "reports/n6_results.md (panel D facts only)"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

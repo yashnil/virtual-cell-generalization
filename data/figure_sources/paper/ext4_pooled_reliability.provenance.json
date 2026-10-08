@@ -14,11 +14,6 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig4.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "Pooled split-half reliability (mean over repeats of the pooled Pearson of centred split halves). Only the VIPerturb value is a frozen gate statistic.",
   "transcribed_from_reports": {
     "0.109 and 0.341": "n6_results.md §4 table (exploratory post-hoc, read-only, not in outputs/n6)"

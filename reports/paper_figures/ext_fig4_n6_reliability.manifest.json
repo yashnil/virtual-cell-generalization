@@ -3,7 +3,7 @@
   "outputs": {
     "svg": {
       "path": "reports/paper_figures/ext_fig4_n6_reliability.svg",
-      "sha256": "58273cbd7889157acaf6809fe10606ac727e342651f42f66c2ecce1a926063d6"
+      "sha256": "b2ead46bc7df43ef23582f071c50e4cee0c37e5d0737ea16e38d488ebf5b4469"
     },
     "png": {
       "path": "reports/paper_figures/ext_fig4_n6_reliability.png",
@@ -36,10 +36,5 @@
   "frozen_upstream": [
     "outputs/n6",
     "reports/n6_results.md §4 (exploratory values)"
-  ],
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  }
+  ]
 }

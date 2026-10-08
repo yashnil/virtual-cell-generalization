@@ -13,11 +13,6 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig1.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "Controlled depth experiment: the same 643 (context, perturbation) pairs at n = 15/30/50/100 cells per half; median split-half reliability over pairs.",
   "transcribed_from_reports": {
     "ci_lo/ci_hi": "four_context_decomposition_sensitivity.md §B, 'Median reliability by depth (bootstrap 95 % CI over pairs)'; medians asserted against depth_experiment.csv"

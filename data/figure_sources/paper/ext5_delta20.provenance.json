@@ -19,10 +19,5 @@
   ],
   "build_script": "scripts/paper_figures/build_ext_sources.py",
   "plot_script": "scripts/paper_figures/plot_ext_fig5.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "Delta(20) = R(20, m=5) - R(20, m=3), paired per draw (40 draws), 2.5-97.5% draw interval. Fixed frame = the preregistered Q1 quantity, copied from n3_decision.json. Own frame = the same pairing on M3_own from n3b_draws.csv (exploratory)."
 }

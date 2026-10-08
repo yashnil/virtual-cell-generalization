@@ -23,10 +23,5 @@
   ],
   "build_script": "scripts/paper_figures/build_fig1_sources.py",
   "plot_script": "scripts/paper_figures/plot_fig1.py",
-  "generated": "2026-10-08",
-  "git_head": {
-    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
-    "dirty": true
-  },
   "notes": "Energy shares are % of total response energy (4 contexts x 1,264 perturbations x 6,640 genes). Corrected = split-half noise correction, mean of 50 resamples. Reproducible % = cross-half signal SS / raw SS. Template reproducibility combines mu and alpha weighted by SS. Variant min/max = range over the 21 predeclared preprocessing variants (not a confidence interval)."
 }
