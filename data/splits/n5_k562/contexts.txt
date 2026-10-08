@@ -1,0 +1,7 @@
+K562_essential (target)
+K562_GWPS
+RPE1_essential
+HepG2
+Jurkat
+HCT116
+HEK293T

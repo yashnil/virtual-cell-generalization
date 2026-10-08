@@ -1,0 +1,23 @@
+{
+  "n_cells_total": 906837,
+  "n_cells_qc": 906837,
+  "controls_qc": 7949,
+  "n_vip_labels": 18885,
+  "n5_panel": 1054,
+  "n6_panel": 637,
+  "n5_panel_present_any": 1040,
+  "median_cells_included": 47.0,
+  "guides_per_included_perturbation": {
+    "3": 583,
+    "2": 53,
+    "1": 1
+  },
+  "n6_genes": 6083,
+  "n5_genes": 6408,
+  "vip_probe_genes": 19068,
+  "alias_map": {
+    "GET1": "WRB",
+    "GET3": "ASNA1",
+    "MICOS10": "MINOS1"
+  }
+}
