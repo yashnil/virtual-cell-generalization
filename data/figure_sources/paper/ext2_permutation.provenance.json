@@ -1,0 +1,28 @@
+{
+  "figure_source": "data/figure_sources/paper/ext2_permutation.csv",
+  "sha256": "0129672b2f374d4f4f75a4e68fc36a4b8a006b154f98f58feec39d27b54c6c4b",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n3/n3a/n3a_f3a.csv",
+      "sha256": "27bbe3b56f0f93b940f151dc3c37983bd0a18c2d09db860330cdf229987b82ef",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    },
+    {
+      "path": "outputs/n3/n3a/n3a_summary.csv",
+      "sha256": "3bdabc3cd16be1595f2a557e4e324adc1eaf185ca3437370e734baf4274d8b9e",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n1_n4_results.md",
+    "reports/n3_results.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig2.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "F3a anchor-permutation null (N3-A, E4): anchors' fit rows permuted among anchors before fitting (50 draws) vs the unpermuted 200 draws; median and 2.5-97.5% over draws."
+}

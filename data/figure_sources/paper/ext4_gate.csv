@@ -1,0 +1,5 @@
+item,condition_to_pass,observed,failed
+d1,Pooled split-half reliability ≥ 0.10,0.0866,True
+d2,Reliable energy 2.5th pct > 0,"2,481",False
+d3,Positive control stable at VIPerturb depth (|ΔC| ≤ 0.10),0.007,False
+d4,Panel ≥ 300 perturbations,637,False

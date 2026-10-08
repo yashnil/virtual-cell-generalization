@@ -1,0 +1,41 @@
+{
+  "figure": "fig4_source_compatibility",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/fig4_source_compatibility.svg",
+      "sha256": "cbda88d54e83605682b2ffa51623894823239e18551f56880ceae07ea72b971c"
+    },
+    "png": {
+      "path": "reports/paper_figures/fig4_source_compatibility.png",
+      "sha256": "ea2608165abc266ed83afdb1b6ea113685feb45b25219cebad95fa6f0689614e"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/fig4_source_compatibility.pdf",
+      "sha256": "43939e9116f67a9d4bfc67d808723551c87675817aef665ae372d85658e7a387"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/fig4_compatibility.csv",
+      "sha256": "077cbdfe46dded6af060877b8f9a9b840fac9d7bf6c47ff39f132632d4c827b4"
+    },
+    {
+      "path": "data/figure_sources/paper/fig4_robustness.csv",
+      "sha256": "373d270298b56cc7fb6e443596c96349533e76ceb522b86c6db00bb1d502515c"
+    },
+    {
+      "path": "data/figure_sources/paper/fig4_per_perturbation.csv",
+      "sha256": "119ce3126f7bbe440b6ea0f930f42db9368803d69637859692366e7b854e56c7"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_fig4.py",
+  "frozen_upstream": [
+    "outputs/n5 (N5, reports/n5_results.md)",
+    "reports/n6_results.md (panel D facts only)"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

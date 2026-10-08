@@ -1,0 +1,28 @@
+{
+  "figure_source": "data/figure_sources/paper/ext3_partial.csv",
+  "sha256": "68af7fc8e1a66789b5d855d89dfb4bef9d38e1baf2cdf5927c9a8df02d0a1081",
+  "frozen_inputs": [
+    {
+      "path": "data/figure_sources/n1_n4/n4_t2.csv",
+      "sha256": "6d49c343fdfc47c34e67340786fe0d4569958cf97abc71854d31333ce083e4c3"
+    },
+    {
+      "path": "outputs/n3/n4/n4_t2.csv",
+      "sha256": "f00e3eeee7cc95cc3327cd2d67faca101a5fd2ac6652bbee88409872559fbc6c",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n1_n4_results.md",
+    "reports/n3_results.md",
+    "reports/transferability_confidence_model_v1.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig3.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "T2 partial Spearman of agreement with transfer quality, controlling for b1-b5; 2,000-resample bootstrap 95% CI."
+}

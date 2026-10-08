@@ -1,0 +1,26 @@
+{
+  "figure_source": "data/figure_sources/paper/ext3_halves_bias.csv",
+  "sha256": "c9e050b8d61e7b2658e9799c087551e68f295d6c2a3b581650c441c2856c9af0",
+  "frozen_inputs": [
+    {
+      "path": "data/figure_sources/n1_n4/exploratory_halves_bias.csv",
+      "sha256": "b5f0c3534c8fc413c4346c9e84d7064cc2ce3c84c4f848fe0cf1db1e793eabe2"
+    }
+  ],
+  "reports": [
+    "reports/n1_n4_results.md",
+    "reports/n3_results.md",
+    "reports/transferability_confidence_model_v1.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig3.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Spearman rho(agreement, transfer quality -D) on the same disjoint N1 splits: per-repeat unbiased energies (N4 estimator) vs halves averaged over repeats first (v1 construction). Exploratory, not preregistered.",
+  "transcribed_from_reports": {
+    "rho_frozen_v1_report": "n1_n4_results.md §3.4 table, row 'frozen v1 report (M0, transferability_confidence_model_v1.md §3)'"
+  }
+}

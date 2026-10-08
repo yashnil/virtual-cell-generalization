@@ -1,0 +1,146 @@
+{
+  "fig1_transfer_components": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      4.25
+    ],
+    "size_mm": [
+      183,
+      108
+    ],
+    "n_text": 71,
+    "min_font_pt": 6.0,
+    "max_font_pt": 12.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "fig2_sample_complexity": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      5.55
+    ],
+    "size_mm": [
+      183,
+      141
+    ],
+    "n_text": 112,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "fig3_source_count": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      2.6
+    ],
+    "size_mm": [
+      183,
+      66
+    ],
+    "n_text": 59,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "fig4_source_compatibility": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      4.9
+    ],
+    "size_mm": [
+      183,
+      124
+    ],
+    "n_text": 92,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "ext_fig1_robustness": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      3.9
+    ],
+    "size_mm": [
+      183,
+      99
+    ],
+    "n_text": 65,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "ext_fig2_n1_controls": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      4.6
+    ],
+    "size_mm": [
+      183,
+      117
+    ],
+    "n_text": 74,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "ext_fig3_agreement_correction": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      4.3
+    ],
+    "size_mm": [
+      183,
+      109
+    ],
+    "n_text": 67,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "ext_fig4_n6_reliability": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      4.2
+    ],
+    "size_mm": [
+      183,
+      107
+    ],
+    "n_text": 58,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  },
+  "ext_fig5_n3_reference_frame": {
+    "text_on_data": [],
+    "size_in": [
+      7.2,
+      8.74
+    ],
+    "size_mm": [
+      183,
+      222
+    ],
+    "n_text": 218,
+    "min_font_pt": 6.0,
+    "max_font_pt": 8.5,
+    "clipped_text": [],
+    "text_overlaps": []
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "figure_source": "data/figure_sources/paper/ext4_per_perturbation_rel.csv",
+  "sha256": "1f9f04d93603d9c75af03f9309baa098b00e005483c1d51bd94b8b0f351f3969",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n6/per_perturbation_terms.csv",
+      "sha256": "34678e345126215a3e1e2f2bfaf29d9526a7bcacd744c26c231ed85e4ee432ad",
+      "verified_against": "outputs/n6/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n6_results.md",
+    "reports/n6_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig4.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "Per-perturbation split-half reliability (637 panel perturbations) for the K562 sources."
+}

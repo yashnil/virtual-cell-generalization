@@ -1,0 +1,24 @@
+{
+  "figure_source": "data/figure_sources/paper/ext3_t1.csv",
+  "sha256": "dcf8e769b747eb923ced06c08124c63e79f34d9914b40a8a554f5bf5f593098f",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n3/n4/n4_t1.csv",
+      "sha256": "0396896f11b6e5c94e771bbcdaa0ca39ffe29c4216f79f7dc103169ece128d83",
+      "verified_against": "outputs/n3/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n1_n4_results.md",
+    "reports/n3_results.md",
+    "reports/transferability_confidence_model_v1.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig3.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "T1 (N3, six folds): rho(agreement) - |rho(b_j)| with paired bootstrap 95% CI for the four required baselines."
+}

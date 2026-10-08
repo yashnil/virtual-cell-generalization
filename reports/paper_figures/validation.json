@@ -1,0 +1,74 @@
+{
+  "frozen": {
+    "outputs/n1_n4/manifest_sha256.txt": {
+      "entries": 27,
+      "mismatch": [],
+      "missing": []
+    },
+    "outputs/n3/manifest_sha256.txt": {
+      "entries": 34,
+      "mismatch": [],
+      "missing": []
+    },
+    "outputs/n5/manifest_sha256.txt": {
+      "entries": 17,
+      "mismatch": [],
+      "missing": []
+    },
+    "outputs/n6/manifest_sha256.txt": {
+      "entries": 16,
+      "mismatch": [],
+      "missing": []
+    },
+    "data/provenance/scperteval/decomposition_phase_freeze.txt": {
+      "entries": 21,
+      "mismatch": [],
+      "missing": []
+    },
+    "data/provenance/scperteval/canonical_v1_freeze.txt": {
+      "entries": 12,
+      "mismatch": [],
+      "missing": []
+    },
+    "data/provenance/research_v3/n5_freeze_sha256.txt": {
+      "entries": 33,
+      "mismatch": [],
+      "missing": []
+    }
+  },
+  "sources": {
+    "ext1_depth.csv": [],
+    "ext1_variants.csv": [],
+    "ext2_n1_vs_n3.csv": [],
+    "ext2_permutation.csv": [],
+    "ext2_shared_control.csv": [],
+    "ext2_single_anchor.csv": [],
+    "ext3_halves_bias.csv": [],
+    "ext3_partial.csv": [],
+    "ext3_t1.csv": [],
+    "ext4_gate.csv": [],
+    "ext4_per_perturbation_rel.csv": [],
+    "ext4_pooled_reliability.csv": [],
+    "ext4_positive_control.csv": [],
+    "ext5_delta20.csv": [],
+    "ext5_reference_frame.csv": [],
+    "fig1_components.csv": [],
+    "fig2_curves.csv": [],
+    "fig2_gain_fraction.csv": [],
+    "fig3_source_count.csv": [],
+    "fig4_compatibility.csv": [],
+    "fig4_per_perturbation.csv": [],
+    "fig4_robustness.csv": []
+  },
+  "figures": {
+    "fig1_transfer_components": [],
+    "fig2_sample_complexity": [],
+    "fig3_source_count": [],
+    "fig4_source_compatibility": [],
+    "ext_fig1_robustness": [],
+    "ext_fig2_n1_controls": [],
+    "ext_fig3_agreement_correction": [],
+    "ext_fig4_n6_reliability": [],
+    "ext_fig5_n3_reference_frame": []
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "figure_source": "data/figure_sources/paper/ext1_variants.csv",
+  "sha256": "2aa1acffb2e3e45d7e6c581109dd20657e222898fe14e9c14cf6a4a7ce74eea2",
+  "frozen_inputs": [
+    {
+      "path": "outputs/four_context_sensitivity/variant_table.csv",
+      "sha256": "a54e022702a91ca26c5f37d73fddcd27e6a887a38acbd358660606bacbdfd9da",
+      "verified_against": "data/provenance/scperteval/decomposition_phase_freeze.txt"
+    }
+  ],
+  "reports": [
+    "reports/four_context_decomposition_sensitivity.md"
+  ],
+  "build_script": "scripts/paper_figures/build_ext_sources.py",
+  "plot_script": "scripts/paper_figures/plot_ext_fig1.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "All 21 predeclared variant x feature-space rows. Shares are % of total response energy; rep_* = % reproducible (cross-half signal / raw SS)."
+}

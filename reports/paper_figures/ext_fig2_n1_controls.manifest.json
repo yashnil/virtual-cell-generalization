@@ -1,0 +1,45 @@
+{
+  "figure": "ext_fig2_n1_controls",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/ext_fig2_n1_controls.svg",
+      "sha256": "51ff6af9cfe992d40cdc53dbc0417264fecfa428211beb787dfdc9315839103e"
+    },
+    "png": {
+      "path": "reports/paper_figures/ext_fig2_n1_controls.png",
+      "sha256": "ecc5bc70fe8df579d7bbcf0632487405e19264803529ae2487df1439344346c5"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/ext_fig2_n1_controls.pdf",
+      "sha256": "1b7c0c0b41c2f403571710e1248184af2d3f839195d88928eef02d05e1792d4f"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/ext2_permutation.csv",
+      "sha256": "0129672b2f374d4f4f75a4e68fc36a4b8a006b154f98f58feec39d27b54c6c4b"
+    },
+    {
+      "path": "data/figure_sources/paper/ext2_shared_control.csv",
+      "sha256": "241680d09e83021819140046736352c404b479afa25db11263cd7d7f92e5b7d6"
+    },
+    {
+      "path": "data/figure_sources/paper/ext2_single_anchor.csv",
+      "sha256": "78314660d0e2151de8530c0794364a367f8adf56554b85b425107237275f0632"
+    },
+    {
+      "path": "data/figure_sources/paper/ext2_n1_vs_n3.csv",
+      "sha256": "af006022a97f56176738c112c2ee090849300d575ea7d8f6a9bd8856ae216239"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_ext_fig2.py",
+  "frozen_upstream": [
+    "outputs/n3/n3a",
+    "outputs/n1_n4/n1"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

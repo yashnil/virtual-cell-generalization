@@ -1,0 +1,45 @@
+{
+  "figure": "ext_fig4_n6_reliability",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/ext_fig4_n6_reliability.svg",
+      "sha256": "58273cbd7889157acaf6809fe10606ac727e342651f42f66c2ecce1a926063d6"
+    },
+    "png": {
+      "path": "reports/paper_figures/ext_fig4_n6_reliability.png",
+      "sha256": "8deb4a1813cedb8dd22985ebaa4ec0bd1329be4d59480fa3a99f36679e9cae55"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/ext_fig4_n6_reliability.pdf",
+      "sha256": "bb6f0f2af30833edad3c25487d841f650fd036667ec44fa2b035a41150ae8e8d"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/ext4_pooled_reliability.csv",
+      "sha256": "917a360629c9c291fe84b184116cadcb758a48d86668d47f377203801bc7bae8"
+    },
+    {
+      "path": "data/figure_sources/paper/ext4_per_perturbation_rel.csv",
+      "sha256": "1f9f04d93603d9c75af03f9309baa098b00e005483c1d51bd94b8b0f351f3969"
+    },
+    {
+      "path": "data/figure_sources/paper/ext4_positive_control.csv",
+      "sha256": "9f64c2d0b5b2703c977fb3278aab2d5cd719efe09d6fd893be6927ff62a164a0"
+    },
+    {
+      "path": "data/figure_sources/paper/ext4_gate.csv",
+      "sha256": "781f5405f6d44e1b0970c39bc383aba7f4af154bba658af76e209c2cbff15f67"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_ext_fig4.py",
+  "frozen_upstream": [
+    "outputs/n6",
+    "reports/n6_results.md §4 (exploratory values)"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

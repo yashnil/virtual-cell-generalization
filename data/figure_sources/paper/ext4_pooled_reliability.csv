@@ -1,0 +1,4 @@
+source,pooled_split_half_reliability,status,median_cells,gate
+VIPerturb-seq K562,0.08656587345,frozen gate statistic (d1),47,0.1
+K562 GWPS at VIPerturb depth,0.109,exploratory post-hoc (n6_results §4),46,0.1
+"K562 GWPS, full depth",0.341,exploratory post-hoc (n6_results §4),255,0.1

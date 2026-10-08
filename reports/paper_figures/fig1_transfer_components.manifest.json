@@ -1,0 +1,33 @@
+{
+  "figure": "fig1_transfer_components",
+  "outputs": {
+    "svg": {
+      "path": "reports/paper_figures/fig1_transfer_components.svg",
+      "sha256": "93ef6f3127420d501256ae7ea8cf59f5ccc9218099ee46789677e054dab7d3f1"
+    },
+    "png": {
+      "path": "reports/paper_figures/fig1_transfer_components.png",
+      "sha256": "9b3e76edd7b8d1b3fba6b8c1b51a4c7baf547aecf26a64fc76233b28ccaa5514"
+    },
+    "pdf": {
+      "path": "reports/paper_figures/fig1_transfer_components.pdf",
+      "sha256": "e94989c13def87a9ba35b5b5f42371e9eae93ca9a4861f2e805b3597e0c5a59a"
+    }
+  },
+  "figure_sources": [
+    {
+      "path": "data/figure_sources/paper/fig1_components.csv",
+      "sha256": "aa4aed16357eff01df794efd9903404f7b2e6d10b2ab7cf42419e5371c746db0"
+    }
+  ],
+  "plot_script": "scripts/paper_figures/plot_fig1.py",
+  "frozen_upstream": [
+    "outputs/four_context_v1/summary.json",
+    "outputs/four_context_sensitivity/variant_table.csv"
+  ],
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  }
+}

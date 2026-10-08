@@ -1,0 +1,23 @@
+{
+  "figure_source": "data/figure_sources/paper/fig4_robustness.csv",
+  "sha256": "373d270298b56cc7fb6e443596c96349533e76ceb522b86c6db00bb1d502515c",
+  "frozen_inputs": [
+    {
+      "path": "outputs/n5/n5_decision.json",
+      "sha256": "de4369c77fc5a0479bfbf473569c0851be23e6449609dbd99fe9f2f01d9c137b",
+      "verified_against": "outputs/n5/manifest_sha256.txt"
+    }
+  ],
+  "reports": [
+    "reports/n5_results.md",
+    "reports/n5_protocol.md"
+  ],
+  "build_script": "scripts/paper_figures/build_fig4_sources.py",
+  "plot_script": "scripts/paper_figures/plot_fig4.py",
+  "generated": "2026-10-08",
+  "git_head": {
+    "commit": "cd6da63790709ea1c2c8974dfdc571bba18ec95d",
+    "dirty": true
+  },
+  "notes": "GWPS minus RPE1 advantage under each preregistered control. Two estimands: pooled latent cosine difference, and per-perturbation template-removed Pearson difference (raw median; Adj-2 coefficient difference; Adj-3 matched-pair median)."
+}
